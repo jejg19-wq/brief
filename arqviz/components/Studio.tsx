@@ -11,6 +11,9 @@ import {
   SPACES, STYLES, LIGHTING, CAMERAS,
   buildRenderPrompt, buildVideoPrompt,
 } from '@/lib/prompts';
+import {
+  DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, fileToDataUrl,
+} from '@/lib/demo';
 
 // ── utilidades ───────────────────────────────────────────────────────────────
 
@@ -33,17 +36,22 @@ export default function Studio() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
+  const [demo, setDemo] = useState(false);
   const [margin, setMargin] = useMargin();
   const [showNewProject, setShowNewProject] = useState(false);
   const [videoSource, setVideoSource] = useState<Generation | null>(null);
   const [lightboxUrl, setLightboxUrl] = useState<{ url: string; kind: 'image' | 'video' } | null>(null);
 
-  // hidratar desde localStorage
+  // hidratar desde localStorage + detectar modo demo
   useEffect(() => {
     const loaded = loadProjects();
     setProjects(loaded);
     if (loaded.length > 0) setActiveId(loaded[0].id);
     setHydrated(true);
+    fetch('/api/health')
+      .then((r) => r.json())
+      .then((d) => setDemo(Boolean(d.demo)))
+      .catch(() => setDemo(true));
   }, []);
 
   // persistir
@@ -57,7 +65,7 @@ export default function Studio() {
     setProjects((prev) => prev.map((p) => (p.id === projectId ? fn(p) : p)));
   }, []);
 
-  // ── polling de generaciones pendientes ──
+  // ── polling de generaciones pendientes (las demo se completan solas) ──
   useEffect(() => {
     const pending = projects.flatMap((p) =>
       p.generations
@@ -68,6 +76,17 @@ export default function Studio() {
 
     const timer = setInterval(async () => {
       for (const { projectId, gen } of pending) {
+        // Modo demo: completar localmente con placeholder de marca
+        if (isDemoGen(gen.id)) {
+          const url = gen.kind === 'video' ? demoVideoImage(gen.label) : demoRenderImage(gen.label);
+          updateProject(projectId, (p) => ({
+            ...p,
+            generations: p.generations.map((g) =>
+              g.id === gen.id ? { ...g, status: 'done', resultUrls: [url] } : g,
+            ),
+          }));
+          continue;
+        }
         try {
           const res = await fetch(
             `/api/status?endpoint=${encodeURIComponent(gen.endpoint)}&requestId=${encodeURIComponent(gen.id)}`,
@@ -99,7 +118,7 @@ export default function Studio() {
           // error transitorio de red: se reintenta en el próximo tick
         }
       }
-    }, 4000);
+    }, 3500);
     return () => clearInterval(timer);
   }, [projects, updateProject]);
 
@@ -149,7 +168,7 @@ export default function Studio() {
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'arqviz-costos.csv';
+    a.download = 'numan-costos.csv';
     a.click();
     URL.revokeObjectURL(a.href);
   };
@@ -160,8 +179,8 @@ export default function Studio() {
     <div className="shell">
       <aside className="sidebar">
         <div className="brand">
-          <span className="brand-name">Arq<em>Viz</em></span>
-          <span className="brand-tag">studio</span>
+          <span className="logo-mark">numan</span>
+          <span className="brand-tag">estudio 3D</span>
         </div>
         <div className="side-label">Proyectos</div>
         {projects.map((p) => (
@@ -180,12 +199,23 @@ export default function Studio() {
       </aside>
 
       <main className="main">
+        {demo && (
+          <div className="demo-banner">
+            <span className="demo-pill">Modo demo</span>
+            <span>Explora toda la app sin pagar nada.</span>
+            <span className="note">
+              Las generaciones son de muestra y los costos son lo que costaría en real.
+              Al configurar la clave de fal.ai se activan los renders y videos reales.
+            </span>
+          </div>
+        )}
         {!active ? (
           <EmptyState onCreate={() => setShowNewProject(true)} />
         ) : (
           <ProjectView
             key={active.id}
             project={active}
+            demo={demo}
             onUpdate={(fn) => updateProject(active.id, fn)}
             onAddGeneration={(g) => addGeneration(active.id, g)}
             onDelete={() => deleteProject(active.id)}
@@ -197,7 +227,7 @@ export default function Studio() {
 
       <div className="cost-bar">
         <div className="cost-item">
-          <span className="c-label">Costo API total</span>
+          <span className="c-label">Costo API total{demo ? ' (simulado)' : ''}</span>
           <span className="c-value">{usd(totals.total)}</span>
         </div>
         {active && (
@@ -227,13 +257,14 @@ export default function Studio() {
       {videoSource && active && (
         <VideoModal
           source={videoSource}
+          demo={demo}
           onClose={() => setVideoSource(null)}
           onQueued={(g) => { addGeneration(active.id, g); setVideoSource(null); }}
         />
       )}
       {lightboxUrl && (
         <div className="lightbox" onClick={() => setLightboxUrl(null)}>
-          {lightboxUrl.kind === 'video'
+          {lightboxUrl.kind === 'video' && !lightboxUrl.url.startsWith('data:image')
             ? <video src={lightboxUrl.url} controls autoPlay loop onClick={(e) => e.stopPropagation()} />
             : <img src={lightboxUrl.url} alt="Vista ampliada" />}
         </div>
@@ -293,9 +324,10 @@ function NewProjectModal({
 // ── vista de proyecto ────────────────────────────────────────────────────────
 
 function ProjectView({
-  project, onUpdate, onAddGeneration, onDelete, onMakeVideo, onOpen,
+  project, demo, onUpdate, onAddGeneration, onDelete, onMakeVideo, onOpen,
 }: {
   project: Project;
+  demo: boolean;
   onUpdate: (fn: (p: Project) => Project) => void;
   onAddGeneration: (g: Generation) => void;
   onDelete: () => void;
@@ -304,16 +336,16 @@ function ProjectView({
 }) {
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 26 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 26, gap: 12, flexWrap: 'wrap' }}>
         <div>
-          <h1 style={{ fontSize: 22, fontWeight: 700 }}>{project.name}</h1>
+          <h1 style={{ fontSize: 23, fontWeight: 800 }}>{project.name}</h1>
           {project.clientName && <div className="empty-note">Cliente: {project.clientName}</div>}
         </div>
         <button className="btn-ghost" onClick={onDelete}>Eliminar proyecto</button>
       </div>
 
-      <PlanSection project={project} onUpdate={onUpdate} />
-      <RenderSection project={project} onAddGeneration={onAddGeneration} />
+      <PlanSection project={project} demo={demo} onUpdate={onUpdate} />
+      <RenderSection project={project} demo={demo} onAddGeneration={onAddGeneration} />
       <GallerySection project={project} onMakeVideo={onMakeVideo} onOpen={onOpen} />
     </>
   );
@@ -322,8 +354,8 @@ function ProjectView({
 // ── paso 1: plano ────────────────────────────────────────────────────────────
 
 function PlanSection({
-  project, onUpdate,
-}: { project: Project; onUpdate: (fn: (p: Project) => Project) => void }) {
+  project, demo, onUpdate,
+}: { project: Project; demo: boolean; onUpdate: (fn: (p: Project) => Project) => void }) {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [drag, setDrag] = useState(false);
@@ -333,12 +365,18 @@ function PlanSection({
     setError('');
     setUploading(true);
     try {
-      const form = new FormData();
-      form.append('file', file);
-      const res = await fetch('/api/upload', { method: 'POST', body: form });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Error al subir');
-      onUpdate((p) => ({ ...p, planUrl: data.url }));
+      if (demo) {
+        // En demo el plano se queda en el navegador, no se sube a ningún lado
+        const dataUrl = await fileToDataUrl(file);
+        onUpdate((p) => ({ ...p, planUrl: dataUrl }));
+      } else {
+        const form = new FormData();
+        form.append('file', file);
+        const res = await fetch('/api/upload', { method: 'POST', body: form });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error al subir');
+        onUpdate((p) => ({ ...p, planUrl: data.url }));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al subir el plano');
     } finally {
@@ -395,8 +433,8 @@ function PlanSection({
 // ── paso 2: generar renders ──────────────────────────────────────────────────
 
 function RenderSection({
-  project, onAddGeneration,
-}: { project: Project; onAddGeneration: (g: Generation) => void }) {
+  project, demo, onAddGeneration,
+}: { project: Project; demo: boolean; onAddGeneration: (g: Generation) => void }) {
   const [spaceIds, setSpaceIds] = useState<string[]>(['sala']);
   const [styleId, setStyleId] = useState('moderno');
   const [lightId, setLightId] = useState('dia');
@@ -421,17 +459,23 @@ function RenderSection({
       for (const spaceId of spaceIds) {
         const space = SPACES.find((s) => s.id === spaceId)!;
         const prompt = buildRenderPrompt({ space, style, lighting, extra });
-        const { requestId } = await postJSON<{ requestId: string }>('/api/generate', {
-          endpoint: IMAGE_MODEL.id,
-          input: {
-            prompt,
-            image_urls: [project.planUrl],
-            num_images: 1,
-            output_format: 'png',
-            resolution,
-            aspect_ratio: '4:3',
-          },
-        });
+        let requestId: string;
+        if (demo) {
+          requestId = DEMO_PREFIX + uid();
+        } else {
+          const res = await postJSON<{ requestId: string }>('/api/generate', {
+            endpoint: IMAGE_MODEL.id,
+            input: {
+              prompt,
+              image_urls: [project.planUrl],
+              num_images: 1,
+              output_format: 'png',
+              resolution,
+              aspect_ratio: '4:3',
+            },
+          });
+          requestId = res.requestId;
+        }
         onAddGeneration({
           id: requestId,
           endpoint: IMAGE_MODEL.id,
@@ -490,7 +534,7 @@ function RenderSection({
               ))}
             </div>
           </div>
-          <div className="field" style={{ maxWidth: 160 }}>
+          <div className="field" style={{ maxWidth: 190 }}>
             <label>Resolución</label>
             <select value={resolution} onChange={(e) => setResolution(e.target.value as '1K' | '2K' | '4K')}>
               <option value="1K">1K — borrador</option>
@@ -510,7 +554,9 @@ function RenderSection({
           <button className="btn" onClick={generate} disabled={submitting || !project.planUrl}>
             {submitting ? 'Encolando…' : `Generar ${spaceIds.length} render${spaceIds.length === 1 ? '' : 's'}`}
           </button>
-          <span className="empty-note">Costo estimado: <strong>{usd(estCost)}</strong></span>
+          <span className="empty-note">
+            Costo {demo ? 'que tendría en real' : 'estimado'}: <strong>{usd(estCost)}</strong>
+          </span>
           {!project.planUrl && <span className="empty-note">⚠ Sube el plano primero</span>}
         </div>
         {error && <div className="error-note">{error}</div>}
@@ -557,6 +603,8 @@ function GenerationCard({
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const url = gen.resultUrls?.[0];
+  // Los videos demo son imágenes SVG con insignia de play
+  const isStillVideo = gen.kind === 'video' && !!url && url.startsWith('data:image');
   const statusLabel: Record<string, string> = {
     queued: 'En cola', running: 'Generando…', done: 'Listo', error: 'Error',
   };
@@ -568,7 +616,7 @@ function GenerationCard({
         onClick={() => url && onOpen(url, gen.kind)}
       >
         {gen.status === 'done' && url ? (
-          gen.kind === 'video'
+          gen.kind === 'video' && !isStillVideo
             ? <video src={url} muted loop playsInline onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => e.currentTarget.pause()} />
             : <img src={url} alt={gen.label} loading="lazy" />
         ) : gen.status === 'error' ? (
@@ -581,7 +629,7 @@ function GenerationCard({
         <span className="g-label">{gen.kind === 'video' ? '🎬 ' : ''}{gen.label}</span>
         <span className="g-sub">
           <span className={`status-pill status-${gen.status}`}>{statusLabel[gen.status]}</span>
-          <span>{usd(gen.costUsd)}</span>
+          <span>{isDemoGen(gen.id) ? `${usd(gen.costUsd)} en real` : usd(gen.costUsd)}</span>
         </span>
       </div>
       {gen.status === 'done' && url && (
@@ -604,9 +652,10 @@ function GenerationCard({
 // ── modal de video ───────────────────────────────────────────────────────────
 
 function VideoModal({
-  source, onClose, onQueued,
+  source, demo, onClose, onQueued,
 }: {
   source: Generation;
+  demo: boolean;
   onClose: () => void;
   onQueued: (g: Generation) => void;
 }) {
@@ -629,20 +678,26 @@ function VideoModal({
     setSubmitting(true);
     try {
       const prompt = buildVideoPrompt({ camera, durationSec: duration, extra });
-      const { requestId } = await postJSON<{ requestId: string }>('/api/generate', {
-        endpoint: model.id,
-        input: {
-          prompt,
-          image_url: sourceUrl,
-          resolution,
-          duration: String(duration),
-        },
-      });
+      let requestId: string;
+      if (demo) {
+        requestId = DEMO_PREFIX + uid();
+      } else {
+        const res = await postJSON<{ requestId: string }>('/api/generate', {
+          endpoint: model.id,
+          input: {
+            prompt,
+            image_url: sourceUrl,
+            resolution,
+            duration: String(duration),
+          },
+        });
+        requestId = res.requestId;
+      }
       onQueued({
         id: requestId,
         endpoint: model.id,
         kind: 'video',
-        label: `Video: ${source.label} — ${camera.label}`,
+        label: `${source.label} — ${camera.label}`,
         prompt,
         status: 'queued',
         createdAt: Date.now(),
@@ -703,7 +758,7 @@ function VideoModal({
         {error && <div className="error-note">{error}</div>}
         <div className="modal-actions">
           <span className="empty-note" style={{ marginRight: 'auto' }}>
-            Costo estimado: <strong>{usd(estCost)}</strong>
+            Costo {demo ? 'que tendría en real' : 'estimado'}: <strong>{usd(estCost)}</strong>
           </span>
           <button className="btn-ghost" onClick={onClose}>Cancelar</button>
           <button className="btn" onClick={generate} disabled={submitting}>
