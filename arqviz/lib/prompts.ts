@@ -1,0 +1,130 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// Construcción de prompts. Los prompts van en inglés (los modelos rinden
+// mejor así); la UI se mantiene en español.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface SpacePreset { id: string; label: string; en: string; interior: boolean }
+
+export const SPACES: SpacePreset[] = [
+  { id: 'sala',      label: 'Sala',                en: 'living room', interior: true },
+  { id: 'cocina',    label: 'Cocina',              en: 'kitchen', interior: true },
+  { id: 'comedor',   label: 'Comedor',             en: 'dining room', interior: true },
+  { id: 'principal', label: 'Habitación principal', en: 'master bedroom', interior: true },
+  { id: 'bano',      label: 'Baño',                en: 'bathroom', interior: true },
+  { id: 'estudio',   label: 'Estudio',             en: 'home office / study', interior: true },
+  { id: 'terraza',   label: 'Terraza',             en: 'terrace', interior: false },
+  { id: 'fachada',   label: 'Fachada',             en: 'front facade of the house', interior: false },
+  { id: 'aerea',     label: 'Vista 3D del plano',  en: '3D isometric cutaway view of the full floor plan', interior: false },
+];
+
+export interface StylePreset { id: string; label: string; en: string }
+
+export const STYLES: StylePreset[] = [
+  { id: 'moderno',    label: 'Moderno cálido',   en: 'warm modern style: oak wood, off-white walls, matte black accents, linen textiles' },
+  { id: 'minimal',    label: 'Minimalista',      en: 'minimalist style: clean lines, neutral palette, hidden storage, few carefully chosen objects' },
+  { id: 'industrial', label: 'Industrial',       en: 'industrial style: exposed concrete, black steel frames, warm brick accents, leather furniture' },
+  { id: 'clasico',    label: 'Clásico contemporáneo', en: 'contemporary classic style: mouldings, marble surfaces, brass details, elegant upholstery' },
+  { id: 'tropical',   label: 'Tropical / mediterráneo', en: 'tropical mediterranean style: white stucco, natural rattan, indoor plants, terracotta floors' },
+];
+
+export interface LightPreset { id: string; label: string; en: string }
+
+export const LIGHTING: LightPreset[] = [
+  { id: 'dia',       label: 'Día',       en: 'bright natural daylight streaming through the windows, soft shadows' },
+  { id: 'atardecer', label: 'Atardecer', en: 'golden hour light, warm low sun entering at an angle, long soft shadows' },
+  { id: 'noche',     label: 'Noche',     en: 'evening scene, warm interior artificial lighting, cozy practical lamps, deep blue sky outside' },
+];
+
+/** Prompt para nano-banana-pro/edit: plano (imagen de referencia) → render fotorrealista */
+export function buildRenderPrompt(opts: {
+  space: SpacePreset;
+  style: StylePreset;
+  lighting: LightPreset;
+  extra?: string;
+}): string {
+  const { space, style, lighting, extra } = opts;
+  const base =
+    `The reference image is an architectural floor plan. ` +
+    `Respect its exact room layout, wall positions, door and window placement.`;
+
+  let scene: string;
+  if (space.id === 'aerea') {
+    scene =
+      `Generate a photorealistic ${space.en}, seen from a high three-quarter angle, ` +
+      `with realistic miniature furniture, materials and lighting inside each room, ` +
+      `on a clean neutral background, architectural visualization quality.`;
+  } else if (!space.interior) {
+    scene =
+      `Generate a photorealistic exterior photograph of the ${space.en} implied by this floor plan, ` +
+      `eye-level shot, 35mm lens, realistic landscaping and materials.`;
+  } else {
+    scene =
+      `Generate a photorealistic interior photograph of the ${space.en}, ` +
+      `eye-level shot from a natural standing position, 24mm lens, ` +
+      `fully furnished and styled as a real lived-in home.`;
+  }
+
+  const parts = [
+    base,
+    scene,
+    `Interior design: ${style.en}.`,
+    `Lighting: ${lighting.en}.`,
+    `Photorealistic, high-end architectural photography, accurate global illumination, ` +
+      `realistic material textures, no people, no text, no watermarks.`,
+  ];
+  if (extra?.trim()) parts.push(`Additional client notes: ${extra.trim()}.`);
+  return parts.join(' ');
+}
+
+export interface CameraPreset { id: string; label: string; en: string }
+
+export const CAMERAS: CameraPreset[] = [
+  {
+    id: 'recorrido',
+    label: 'Recorrido hacia adelante',
+    en: 'Camera pushes in slowly at walking pace through the space, gimbal glide at chest height, and comes to a gentle stop',
+  },
+  {
+    id: 'orbita',
+    label: 'Órbita suave',
+    en: 'Camera orbits slowly around the space, about 20 degrees total, at eye level, steady speed, and stops',
+  },
+  {
+    id: 'paneo',
+    label: 'Paneo lateral',
+    en: 'Camera pans slowly from left to right across the space at eye level, locked height, and stops at the far side',
+  },
+  {
+    id: 'revelacion',
+    label: 'Revelación (pull-out)',
+    en: 'Camera pulls out slowly from a detail to reveal the full space, steady reverse dolly, and stops on a wide shot',
+  },
+];
+
+/** Prompt para Seedance image-to-video: render → video recorrido */
+export function buildVideoPrompt(opts: {
+  camera: CameraPreset;
+  durationSec: number;
+  extra?: string;
+}): string {
+  const { camera, durationSec, extra } = opts;
+  const parts = [
+    `Architectural visualization walkthrough. The scene is exactly the interior shown in the input image: ` +
+      `same furniture, same materials, same lighting.`,
+    `${camera.en}.`,
+    `The space itself is completely static: nothing moves except subtle natural elements ` +
+      `(curtains breathing slightly, soft light shifts). Real-time speed, single continuous take.`,
+  ];
+  if (durationSec >= 10) {
+    parts.push(
+      `Timeline: 0-${Math.round(durationSec / 2)}s the camera movement described above develops smoothly; ` +
+        `${Math.round(durationSec / 2)}-${durationSec}s the camera decelerates and settles on a final composed frame.`,
+    );
+  }
+  parts.push(
+    `Constraints: no cuts, no morphing, no people, no on-screen text, no logos, ` +
+      `no furniture changes, no zoom, no music.`,
+  );
+  if (extra?.trim()) parts.push(`Additional notes: ${extra.trim()}.`);
+  return parts.join(' ');
+}
