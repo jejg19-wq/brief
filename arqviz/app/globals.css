@@ -70,8 +70,20 @@ img, video { max-width: 100%; display: block; }
 
 @media (max-width: 860px) {
   .shell { flex-direction: column; }
-  .sidebar { width: 100%; height: auto; position: static; }
-  .main { padding: 20px 16px 150px; }
+  .sidebar {
+    width: 100%; height: auto; position: static;
+    flex-direction: row; flex-wrap: wrap; align-items: center;
+    gap: 8px; padding: 14px 16px;
+  }
+  .brand { flex-direction: row; align-items: baseline; gap: 8px; padding: 0; width: 100%; }
+  .logo-mark { font-size: 26px; }
+  .side-label { display: none; }
+  .proj-item { width: auto; padding: 8px 12px; }
+  .proj-item .p-client { display: none; }
+  .btn-new-proj { margin-top: 0; width: auto; padding: 8px 14px; }
+  .main { padding: 18px 14px 170px; }
+  .cost-bar { gap: 12px; padding: 10px 14px; }
+  .cost-item .c-value { font-size: 14px; }
 }
 
 /* ── Sidebar proyectos ──────────────────────────── */
