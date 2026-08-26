@@ -14,6 +14,10 @@ import {
 import {
   DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, fileToDataUrl,
 } from '@/lib/demo';
+import GenerationCard from './GenerationCard';
+import Decostone from './Decostone';
+
+const DECO_PROJECT_ID = 'decostone';
 
 // ── utilidades ───────────────────────────────────────────────────────────────
 
@@ -40,6 +44,7 @@ export default function Studio() {
   const [margin, setMargin] = useMargin();
   const [showNewProject, setShowNewProject] = useState(false);
   const [videoSource, setVideoSource] = useState<Generation | null>(null);
+  const [tab, setTab] = useState<'proyectos' | 'decostone'>('proyectos');
   const [lightboxUrl, setLightboxUrl] = useState<{ url: string; kind: 'image' | 'video' } | null>(null);
 
   // hidratar desde localStorage + detectar modo demo
@@ -59,7 +64,21 @@ export default function Studio() {
     if (hydrated) saveProjects(projects);
   }, [projects, hydrated]);
 
-  const active = projects.find((p) => p.id === activeId) ?? null;
+  const visibleProjects = projects.filter((p) => p.id !== DECO_PROJECT_ID);
+  const active = visibleProjects.find((p) => p.id === activeId) ?? null;
+  const decoProject: Project = projects.find((p) => p.id === DECO_PROJECT_ID) ?? {
+    id: DECO_PROJECT_ID, name: 'Decostone', clientName: '', createdAt: 0, generations: [],
+  };
+
+  const addDecoGeneration = (gen: Generation) => {
+    setProjects((prev) => {
+      const exists = prev.some((p) => p.id === DECO_PROJECT_ID);
+      const base = exists ? prev : [...prev, { ...decoProject }];
+      return base.map((p) =>
+        p.id === DECO_PROJECT_ID ? { ...p, generations: [gen, ...p.generations] } : p,
+      );
+    });
+  };
 
   const updateProject = useCallback((projectId: string, fn: (p: Project) => Project) => {
     setProjects((prev) => prev.map((p) => (p.id === projectId ? fn(p) : p)));
@@ -124,6 +143,7 @@ export default function Studio() {
 
   // ── acciones ──
   const createProject = (name: string, clientName: string) => {
+    setTab('proyectos');
     const p: Project = { id: uid(), name, clientName, createdAt: Date.now(), generations: [] };
     setProjects((prev) => [p, ...prev]);
     setActiveId(p.id);
@@ -183,18 +203,26 @@ export default function Studio() {
           <span className="brand-tag">estudio 3D</span>
         </div>
         <div className="side-label">Proyectos</div>
-        {projects.map((p) => (
+        {visibleProjects.map((p) => (
           <button
             key={p.id}
-            className={`proj-item ${p.id === activeId ? 'active' : ''}`}
-            onClick={() => setActiveId(p.id)}
+            className={`proj-item ${tab === 'proyectos' && p.id === activeId ? 'active' : ''}`}
+            onClick={() => { setTab('proyectos'); setActiveId(p.id); }}
           >
             <div className="p-name">{p.name}</div>
             <div className="p-client">{p.clientName || 'Sin cliente'} · {p.generations.length} generaciones</div>
           </button>
         ))}
-        <button className="btn-new-proj" onClick={() => setShowNewProject(true)}>
+        <button className="btn-new-proj" onClick={() => { setTab('proyectos'); setShowNewProject(true); }}>
           + Nuevo proyecto
+        </button>
+        <div className="side-label" style={{ marginTop: 14 }}>Fábrica</div>
+        <button
+          className={`proj-item ${tab === 'decostone' ? 'active' : ''}`}
+          onClick={() => setTab('decostone')}
+        >
+          <div className="p-name">🧱 Decostone</div>
+          <div className="p-client">Revestimientos · {decoProject.generations.length} trabajos</div>
         </button>
       </aside>
 
@@ -209,7 +237,14 @@ export default function Studio() {
             </span>
           </div>
         )}
-        {!active ? (
+        {tab === 'decostone' ? (
+          <Decostone
+            project={decoProject}
+            demo={demo}
+            onAddGeneration={addDecoGeneration}
+            onOpen={(url, kind) => setLightboxUrl({ url, kind })}
+          />
+        ) : !active ? (
           <EmptyState onCreate={() => setShowNewProject(true)} />
         ) : (
           <ProjectView
@@ -592,60 +627,6 @@ function GallerySection({
         </div>
       )}
     </section>
-  );
-}
-
-function GenerationCard({
-  gen, onMakeVideo, onOpen,
-}: {
-  gen: Generation;
-  onMakeVideo: (g: Generation) => void;
-  onOpen: (url: string, kind: 'image' | 'video') => void;
-}) {
-  const url = gen.resultUrls?.[0];
-  // Los videos demo son imágenes SVG con insignia de play
-  const isStillVideo = gen.kind === 'video' && !!url && url.startsWith('data:image');
-  const statusLabel: Record<string, string> = {
-    queued: 'En cola', running: 'Generando…', done: 'Listo', error: 'Error',
-  };
-  return (
-    <div className="card">
-      <div
-        className="media"
-        style={{ cursor: url ? 'zoom-in' : 'default' }}
-        onClick={() => url && onOpen(url, gen.kind)}
-      >
-        {gen.status === 'done' && url ? (
-          gen.kind === 'video' && !isStillVideo
-            ? <video src={url} muted loop playsInline onMouseEnter={(e) => e.currentTarget.play()} onMouseLeave={(e) => e.currentTarget.pause()} />
-            : <img src={url} alt={gen.label} loading="lazy" />
-        ) : gen.status === 'error' ? (
-          <span style={{ fontSize: 26 }}>⚠️</span>
-        ) : (
-          <div className="spinner" />
-        )}
-      </div>
-      <div className="meta">
-        <span className="g-label">{gen.kind === 'video' ? '🎬 ' : ''}{gen.label}</span>
-        <span className="g-sub">
-          <span className={`status-pill status-${gen.status}`}>{statusLabel[gen.status]}</span>
-          <span>{isDemoGen(gen.id) ? `${usd(gen.costUsd)} en real` : usd(gen.costUsd)}</span>
-        </span>
-      </div>
-      {gen.status === 'done' && url && (
-        <div className="actions">
-          {gen.kind === 'image' && (
-            <button className="btn-ghost" onClick={() => onMakeVideo(gen)}>🎬 Crear video</button>
-          )}
-          <a className="btn-ghost" href={url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
-            Descargar
-          </a>
-        </div>
-      )}
-      {gen.status === 'error' && gen.error && (
-        <div className="error-note" style={{ padding: '0 12px 12px', marginTop: 0 }}>{gen.error}</div>
-      )}
-    </div>
   );
 }
 

@@ -246,3 +246,21 @@ img, video { max-width: 100%; display: block; }
 
 .lightbox { position: fixed; inset: 0; background: rgba(5, 46, 36, 0.92); z-index: 70; display: grid; place-items: center; padding: 24px; cursor: zoom-out; }
 .lightbox img, .lightbox video { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 8px; }
+
+/* ── Decostone ──────────────────────────────────── */
+.deco-pieces { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.deco-piece {
+  background: #FBFAF7; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: 10px; display: flex; flex-direction: column; gap: 4px; align-items: flex-start;
+  text-align: left;
+}
+.deco-piece:hover { border-color: var(--brand); }
+.deco-piece.on { border-color: var(--brand); background: var(--brand-softer); box-shadow: 0 0 0 3px var(--brand-soft); }
+.deco-piece img { width: 100%; border-radius: 6px; }
+.deco-piece .dp-name { font-weight: 800; font-size: 13.5px; color: var(--text); }
+.deco-piece .dp-desc { font-size: 11px; color: var(--text-faint); line-height: 1.3; }
+.chip.deco-color { display: inline-flex; align-items: center; gap: 7px; }
+.chip .swatch {
+  width: 14px; height: 14px; border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.15); display: inline-block; flex-shrink: 0;
+}
