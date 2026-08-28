@@ -1,0 +1,172 @@
+<title>Activación numan 3D</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green-950:#052E24; --brand:#0B4A3A; --brand-soft:rgba(11,74,58,0.08);
+  --bg:#F4F3EE; --panel:#FFFFFF; --border:#E3E1D8; --border-soft:#EAE8E0;
+  --text:#14271F; --dim:#56675E; --faint:#8A968F;
+  --ok:#1F7A54; --warn:#A8752B; --danger:#B44A41; --accent-l:#8FD8B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito','Segoe UI',sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 70px}
+.hero{background:linear-gradient(135deg,var(--brand),var(--green-950));color:#fff;padding:38px 20px 34px;margin-bottom:28px}
+.hero-in{max-width:760px;margin:0 auto;padding:0 20px}
+.logo{font-size:38px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.sub{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.65);margin-top:5px}
+.hero h1{font-size:24px;font-weight:800;margin-top:22px;text-wrap:balance}
+.hero p{color:rgba(255,255,255,.82);margin-top:8px;max-width:560px}
+.timer{display:inline-block;margin-top:14px;background:rgba(255,255,255,.12);border-radius:999px;
+  padding:5px 14px;font-size:12.5px;font-weight:700;color:var(--accent-l)}
+
+.step{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;
+  padding:20px 22px;margin-bottom:14px;box-shadow:0 1px 3px rgba(9,45,35,.06),0 6px 20px rgba(9,45,35,.05)}
+.step-head{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.num{width:30px;height:30px;border-radius:50%;background:var(--brand);color:#fff;flex-shrink:0;
+  display:grid;place-items:center;font-weight:800;font-size:14px}
+.step-head h2{font-size:17px;font-weight:800;letter-spacing:-.01em}
+.mins{font-size:11.5px;color:var(--faint);font-weight:700}
+ol.acts{margin:0 0 0 20px}
+ol.acts li{padding:5px 0;color:var(--dim)}
+ol.acts li strong{color:var(--text)}
+code{background:var(--brand-soft);color:var(--brand);padding:2px 7px;border-radius:5px;
+  font-family:ui-monospace,Menlo,monospace;font-size:13px;font-weight:700;word-break:break-all}
+.field-tbl{width:100%;border-collapse:collapse;margin:12px 0;font-size:13.5px}
+.field-tbl td{padding:8px 10px;border-bottom:1px solid var(--border-soft);vertical-align:top}
+.field-tbl td:first-child{color:var(--dim);font-weight:700;white-space:nowrap;width:44%}
+.field-tbl tr:last-child td{border-bottom:none}
+.note{border-left:4px solid var(--warn);background:rgba(168,117,43,.07);border-radius:0 8px 8px 0;
+  padding:11px 14px;margin-top:12px;font-size:13.5px;color:var(--dim)}
+.note strong{color:var(--warn)}
+.note.ok{border-left-color:var(--ok);background:rgba(31,122,84,.07)}
+.note.ok strong{color:var(--ok)}
+.note.stop{border-left-color:var(--danger);background:rgba(180,74,65,.07)}
+.note.stop strong{color:var(--danger)}
+h3.sec{font-size:19px;font-weight:800;margin:34px 0 12px;letter-spacing:-.01em}
+.chk{background:var(--green-950);color:#fff;border-radius:14px;padding:22px 24px;margin-top:6px}
+.chk h3{font-size:17px;font-weight:800;color:var(--accent-l);margin-bottom:10px}
+.chk ul{list-style:none}
+.chk li{padding:6px 0 6px 26px;position:relative;color:rgba(255,255,255,.88);font-size:14px}
+.chk li::before{content:'☐';position:absolute;left:0;color:var(--accent-l);font-size:15px}
+.chk .after{margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.18);
+  font-size:13px;color:rgba(255,255,255,.7)}
+.cost{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.cost div{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:10px 14px;flex:1;min-width:130px}
+.cost .k{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--faint);font-weight:800}
+.cost .v{font-size:17px;font-weight:800;color:var(--brand)}
+.cost .v.free{color:var(--ok)}
+a{color:var(--brand);font-weight:700}
+footer{margin-top:36px;text-align:center;color:var(--faint);font-size:12.5px}
+</style>
+
+<div class="hero"><div class="hero-in">
+  <div class="logo">numan</div>
+  <div class="sub">estudio 3D · activación</div>
+  <h1>Encender el sistema y hacer la prueba real</h1>
+  <p>Los pasos exactos para pasar de demo a generar renders, videos y tours de verdad —
+     y producir el material de muestra con un proyecto que ya tienen.</p>
+  <div class="timer">⏱ 25 minutos en total</div>
+</div></div>
+
+<div class="wrap">
+
+  <h3 class="sec">Parte 1 — Encender el sistema</h3>
+
+  <div class="step">
+    <div class="step-head"><div class="num">1</div><h2>Cuenta en fal.ai</h2><span class="mins">10 min</span></div>
+    <ol class="acts">
+      <li>Entra a <strong>fal.ai</strong> y haz <strong>Sign up</strong> (sirve tu cuenta de Google).</li>
+      <li>Ve a <strong>Billing</strong> → agrega la tarjeta → recarga <strong>$20 de saldo</strong>
+          (alcanza de sobra para toda la prueba y los primeros clientes).</li>
+      <li>Ve a <strong>Dashboard → Keys</strong> → <strong>Create key</strong> → cópiala.</li>
+    </ol>
+    <div class="note stop"><strong>Importante:</strong> esa clave es como la tarjeta de crédito del sistema.
+      No la pegues en WhatsApp ni en ningún chat — en el paso 2 la escribes tú directo en Vercel y ahí queda
+      guardada de forma segura.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">2</div><h2>Publicar la app en Vercel</h2><span class="mins">10 min · gratis</span></div>
+    <ol class="acts">
+      <li>Entra a <strong>vercel.com</strong> → <strong>Sign up</strong> → <strong>Continue with GitHub</strong>
+          (con tu cuenta jejg19-wq).</li>
+      <li><strong>Add New → Project</strong> → busca el repositorio <strong>brief</strong> → <strong>Import</strong>.</li>
+      <li>Antes de darle Deploy, llena estos campos:</li>
+    </ol>
+    <table class="field-tbl">
+      <tr><td>Root Directory</td><td>clic en <em>Edit</em> y elige la carpeta <code>arqviz</code></td></tr>
+      <tr><td>Environment Variables → Key</td><td><code>FAL_KEY</code></td></tr>
+      <tr><td>Environment Variables → Value</td><td>tu clave de fal.ai</td></tr>
+    </table>
+    <ol class="acts" start="4">
+      <li>Presiona <strong>Deploy</strong> y espera 1–2 minutos.</li>
+      <li>Al terminar, ve a <strong>Settings → Git → Production Branch</strong>, escribe
+          <code>claude/architect-blueprint-3d-app-ik0ka2</code> y guarda. Luego <strong>Deployments → Redeploy</strong>.</li>
+    </ol>
+    <div class="note"><strong>Ese último paso importa:</strong> ahí es donde vive el código de la app.
+      Si lo saltas, Vercel publica el sitio viejo del brief en vez del estudio 3D.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">3</div><h2>Comprobar que quedó viva</h2><span class="mins">5 min</span></div>
+    <ol class="acts">
+      <li>Abre la URL que te dio Vercel (algo como <code>brief-xxxx.vercel.app</code>).</li>
+      <li>Si <strong>ya no aparece la barra de "Modo demo"</strong>, está en modo real. ✅</li>
+      <li>Crea un proyecto, sube cualquier plano y genera <strong>1 solo render</strong>.</li>
+      <li>Ese primer render de $0.15 es la prueba de fuego de todo el sistema.</li>
+    </ol>
+    <div class="note ok"><strong>Cuando salga:</strong> pásame la URL de Vercel y verifico que todo
+      esté fino antes de arrancar la producción del cliente.</div>
+  </div>
+
+  <h3 class="sec">Parte 2 — La prueba con el cliente viejo</h3>
+
+  <div class="step">
+    <div class="step-head"><div class="num">4</div><h2>Qué necesito del proyecto</h2></div>
+    <p style="color:var(--dim);margin-bottom:10px">Elijan un proyecto ya terminado y bonito —
+      mientras mejor se vea, mejor vende. De ese proyecto suban a la carpeta de Drive:</p>
+    <ol class="acts">
+      <li><strong>El plano</strong> en imagen (JPG o PNG; si está en PDF, una captura sirve).</li>
+      <li><strong>Vistas del modelo SketchUp</strong>: 1–2 por ambiente + una aérea sin techo.
+          Si no las tienen a mano, con el plano solo también arrancamos.</li>
+      <li><strong>Fotos reales del sitio</strong> (si la obra existe): fachada, calle y la vista
+          desde el balcón o ventanas. Esto es lo que hace el efecto "esa es mi casa".</li>
+      <li><strong>El estilo</strong> que quieren mostrar: moderno, minimalista, clásico… con una nota de voz basta.</li>
+    </ol>
+    <div class="note ok"><strong>Con eso produzco:</strong> renders de cada ambiente + video recorrido
+      Seedance 2.5 + tour 360° + el enlace privado con marca — o sea, exactamente lo que promete
+      la cotización, pero hecho de verdad.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="num">5</div><h2>El paquete de venta</h2></div>
+    <p style="color:var(--dim)">Al cliente nuevo le llegan dos cosas juntas: la
+      <strong>cotización Decostone</strong> (los 3 servicios + el Paquete Completo a $2.700) y el
+      <strong>enlace del trabajo real</strong> que hicimos con el proyecto viejo. Ve la cotización
+      y de inmediato puede tocar el link y caminar por una casa terminada. Eso es lo que cierra la venta.</p>
+    <div class="cost">
+      <div><div class="k">Costo de la prueba</div><div class="v">$12–20</div></div>
+      <div><div class="k">Hosting Vercel</div><div class="v free">Gratis</div></div>
+      <div><div class="k">GitHub</div><div class="v free">Gratis</div></div>
+    </div>
+  </div>
+
+  <div class="chk">
+    <h3>Tu checklist de hoy</h3>
+    <ul>
+      <li>Crear cuenta fal.ai + tarjeta + $20 de saldo</li>
+      <li>Copiar la API key (sin compartirla por chat)</li>
+      <li>Deploy en Vercel con Root Directory <code style="background:rgba(255,255,255,.15);color:#fff">arqviz</code> y la variable <code style="background:rgba(255,255,255,.15);color:#fff">FAL_KEY</code></li>
+      <li>Cambiar Production Branch y hacer Redeploy</li>
+      <li>Generar 1 render de prueba y pasarme la URL</li>
+      <li>Subir el material del proyecto viejo a Drive</li>
+    </ul>
+    <div class="after">Cuando termines los primeros cinco, yo arranco la producción del material de muestra.</div>
+  </div>
+
+  <footer>numan estudio 3D · guía interna de activación</footer>
+</div>
