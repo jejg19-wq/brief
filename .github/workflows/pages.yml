@@ -17,15 +17,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Push site files to gh-pages
+      - name: Update brief files on gh-pages (preserving numan/)
         run: |
-          mkdir -p /tmp/site
+          git clone --depth 1 --branch gh-pages \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" /tmp/site \
+            || { mkdir -p /tmp/site && cd /tmp/site && git init -b gh-pages; }
           cp index.html og.png /tmp/site/
           touch /tmp/site/.nojekyll
           cd /tmp/site
-          git init -b gh-pages
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit -m "Publicar brief en GitHub Pages"
-          git push --force "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
+          git diff --cached --quiet && { echo "Sin cambios"; exit 0; }
+          git commit -m "Actualizar brief en GitHub Pages"
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages
