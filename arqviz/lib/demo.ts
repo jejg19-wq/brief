@@ -35,6 +35,26 @@ export function demoRenderImage(label: string): string {
   return svgToDataUri(svg);
 }
 
+/** Placeholder de panorámica 360° (formato ancho) con la marca numan */
+export function demoPanoImage(label: string): string {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="720" viewBox="0 0 1680 720">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#0E5644"/><stop offset="0.55" stop-color="${BRAND}"/><stop offset="1" stop-color="${BRAND_DEEP}"/>
+  </linearGradient></defs>
+  <rect width="1680" height="720" fill="url(#g)"/>
+  <g stroke="rgba(255,255,255,0.12)" stroke-width="2" fill="none">
+    <path d="M0 500 L420 430 L840 500 L1260 430 L1680 500"/>
+    <rect x="330" y="330" width="120" height="160" rx="4"/>
+    <rect x="1180" y="340" width="150" height="120" rx="4"/>
+  </g>
+  <text x="840" y="300" text-anchor="middle" fill="#fff" font-family="Nunito, sans-serif" font-size="64" font-weight="800">numan</text>
+  <text x="840" y="348" text-anchor="middle" fill="rgba(255,255,255,0.75)" font-family="Nunito, sans-serif" font-size="24">${label}</text>
+  <rect x="732" y="380" width="216" height="40" rx="20" fill="rgba(255,255,255,0.14)"/>
+  <text x="840" y="407" text-anchor="middle" fill="#fff" font-family="Nunito, sans-serif" font-size="17" font-weight="700">360° DE MUESTRA</text>
+</svg>`;
+  return svgToDataUri(svg);
+}
+
 /** Placeholder de video con la marca numan */
 export function demoVideoImage(label: string): string {
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600">

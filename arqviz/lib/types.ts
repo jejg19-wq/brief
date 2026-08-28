@@ -10,6 +10,7 @@ export interface Generation {
   createdAt: number;
   costUsd: number;         // costo estimado registrado al encolar
   resultUrls?: string[];   // urls de imagenes o video al terminar
+  pano?: boolean;          // true si es panorámica 360° (equirectangular)
   sourceImageUrl?: string; // render base (para videos) o plano (para renders)
   error?: string;
 }

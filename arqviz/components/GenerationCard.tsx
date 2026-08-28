@@ -6,10 +6,11 @@ import { isDemoGen } from '@/lib/demo';
 const usd = (n: number) => `$${n.toFixed(2)}`;
 
 export default function GenerationCard({
-  gen, onMakeVideo, onOpen,
+  gen, onMakeVideo, onMakePano, onOpen,
 }: {
   gen: Generation;
   onMakeVideo?: (g: Generation) => void;
+  onMakePano?: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const url = gen.resultUrls?.[0];
@@ -36,7 +37,7 @@ export default function GenerationCard({
         )}
       </div>
       <div className="meta">
-        <span className="g-label">{gen.kind === 'video' ? '🎬 ' : ''}{gen.label}</span>
+        <span className="g-label">{gen.kind === 'video' ? '🎬 ' : gen.pano ? '🌐 ' : ''}{gen.label}</span>
         <span className="g-sub">
           <span className={`status-pill status-${gen.status}`}>{statusLabel[gen.status]}</span>
           <span>{isDemoGen(gen.id) ? `${usd(gen.costUsd)} en real` : usd(gen.costUsd)}</span>
@@ -44,8 +45,11 @@ export default function GenerationCard({
       </div>
       {gen.status === 'done' && url && (
         <div className="actions">
-          {gen.kind === 'image' && onMakeVideo && (
+          {gen.kind === 'image' && !gen.pano && onMakeVideo && (
             <button className="btn-ghost" onClick={() => onMakeVideo(gen)}>🎬 Crear video</button>
+          )}
+          {gen.kind === 'image' && !gen.pano && onMakePano && (
+            <button className="btn-ghost" onClick={() => onMakePano(gen)}>🌐 360°</button>
           )}
           <a className="btn-ghost" href={url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none' }}>
             Descargar

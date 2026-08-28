@@ -12,7 +12,7 @@ import type { Project } from './types';
 /** Visor público del portal (GitHub Pages, abre en cualquier teléfono) */
 export const PORTAL_URL = 'https://jejg19-wq.github.io/brief/numan/p/';
 
-interface PortalItem { k: 'image' | 'video'; l: string; u: string }
+interface PortalItem { k: 'image' | 'video' | 'pano'; l: string; u: string }
 interface PortalData { v: 1; n: string; c?: string; plan?: string; items: PortalItem[] }
 
 /** URLs aptas para el enlace: https (fal CDN) o SVG de demo (livianos) */
@@ -52,7 +52,8 @@ export function buildClientLink(project: Project): ClientLinkResult | null {
     if (u!.startsWith('data:')) isDemo = true;
     // los videos demo son SVG estáticos: van como imagen para que el visor no
     // intente reproducirlos
-    const kind: 'image' | 'video' = g.kind === 'video' && u!.startsWith('data:') ? 'image' : g.kind;
+    let kind: 'image' | 'video' | 'pano' = g.kind === 'video' && u!.startsWith('data:') ? 'image' : g.kind;
+    if (g.pano) kind = 'pano';
     items.push({ k: kind, l: g.label, u: u! });
   }
   if (items.length === 0) return null;
@@ -63,7 +64,7 @@ export function buildClientLink(project: Project): ClientLinkResult | null {
 
   return {
     url: PORTAL_URL + '#' + toBase64Url(JSON.stringify(data)),
-    images: items.filter((i) => i.k === 'image').length,
+    images: items.filter((i) => i.k !== 'video').length,
     videos: items.filter((i) => i.k === 'video').length,
     isDemo,
   };

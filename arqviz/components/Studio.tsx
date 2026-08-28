@@ -9,10 +9,10 @@ import {
 } from '@/lib/models';
 import {
   SPACES, STYLES, LIGHTING, CAMERAS,
-  buildRenderPrompt, buildVideoPrompt,
+  buildRenderPrompt, buildVideoPrompt, buildPanoPrompt,
 } from '@/lib/prompts';
 import {
-  DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, fileToDataUrl,
+  DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, demoPanoImage, fileToDataUrl,
 } from '@/lib/demo';
 import GenerationCard from './GenerationCard';
 import { buildClientLink, type ClientLinkResult } from '@/lib/portal';
@@ -98,7 +98,8 @@ export default function Studio() {
       for (const { projectId, gen } of pending) {
         // Modo demo: completar localmente con placeholder de marca
         if (isDemoGen(gen.id)) {
-          const url = gen.kind === 'video' ? demoVideoImage(gen.label) : demoRenderImage(gen.label);
+          const url = gen.kind === 'video' ? demoVideoImage(gen.label)
+            : gen.pano ? demoPanoImage(gen.label) : demoRenderImage(gen.label);
           updateProject(projectId, (p) => ({
             ...p,
             generations: p.generations.map((g) =>
@@ -162,6 +163,53 @@ export default function Studio() {
 
   const addGeneration = (projectId: string, gen: Generation) => {
     updateProject(projectId, (p) => ({ ...p, generations: [gen, ...p.generations] }));
+  };
+
+  const makePano = async (projectId: string, source: Generation) => {
+    const sourceUrl = source.resultUrls?.[0];
+    if (!sourceUrl) return;
+    const label = `360° — ${source.label}`;
+    const prompt = buildPanoPrompt(source.label);
+    let requestId: string;
+    if (demo) {
+      requestId = DEMO_PREFIX + uid();
+    } else {
+      try {
+        const res = await fetch('/api/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            endpoint: IMAGE_MODEL.id,
+            input: {
+              prompt,
+              image_urls: [sourceUrl],
+              num_images: 1,
+              output_format: 'png',
+              resolution: '2K',
+              aspect_ratio: '21:9',
+            },
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) { window.alert(data.error || 'Error al generar la panorámica'); return; }
+        requestId = data.requestId;
+      } catch {
+        window.alert('Error de red al generar la panorámica');
+        return;
+      }
+    }
+    addGeneration(projectId, {
+      id: requestId,
+      endpoint: IMAGE_MODEL.id,
+      kind: 'image',
+      pano: true,
+      label,
+      prompt,
+      status: 'queued',
+      createdAt: Date.now(),
+      costUsd: estimateImageCost('2K', 1),
+      sourceImageUrl: sourceUrl,
+    });
   };
 
   // ── costos ──
@@ -256,6 +304,7 @@ export default function Studio() {
             onAddGeneration={(g) => addGeneration(active.id, g)}
             onDelete={() => deleteProject(active.id)}
             onMakeVideo={(g) => setVideoSource(g)}
+            onMakePano={(g) => makePano(active.id, g)}
             onOpen={(url, kind) => setLightboxUrl({ url, kind })}
           />
         )}
@@ -360,7 +409,7 @@ function NewProjectModal({
 // ── vista de proyecto ────────────────────────────────────────────────────────
 
 function ProjectView({
-  project, demo, onUpdate, onAddGeneration, onDelete, onMakeVideo, onOpen,
+  project, demo, onUpdate, onAddGeneration, onDelete, onMakeVideo, onMakePano, onOpen,
 }: {
   project: Project;
   demo: boolean;
@@ -368,6 +417,7 @@ function ProjectView({
   onAddGeneration: (g: Generation) => void;
   onDelete: () => void;
   onMakeVideo: (g: Generation) => void;
+  onMakePano: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const [showLink, setShowLink] = useState(false);
@@ -387,7 +437,7 @@ function ProjectView({
 
       <PlanSection project={project} demo={demo} onUpdate={onUpdate} />
       <RenderSection project={project} demo={demo} onAddGeneration={onAddGeneration} />
-      <GallerySection project={project} onMakeVideo={onMakeVideo} onOpen={onOpen} />
+      <GallerySection project={project} onMakeVideo={onMakeVideo} onMakePano={onMakePano} onOpen={onOpen} />
     </>
   );
 }
@@ -609,10 +659,11 @@ function RenderSection({
 // ── paso 3: galería ──────────────────────────────────────────────────────────
 
 function GallerySection({
-  project, onMakeVideo, onOpen,
+  project, onMakeVideo, onMakePano, onOpen,
 }: {
   project: Project;
   onMakeVideo: (g: Generation) => void;
+  onMakePano: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const gens = project.generations;
@@ -628,7 +679,7 @@ function GallerySection({
       ) : (
         <div className="grid">
           {gens.map((g) => (
-            <GenerationCard key={g.id} gen={g} onMakeVideo={onMakeVideo} onOpen={onOpen} />
+            <GenerationCard key={g.id} gen={g} onMakeVideo={onMakeVideo} onMakePano={onMakePano} onOpen={onOpen} />
           ))}
         </div>
       )}

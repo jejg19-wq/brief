@@ -132,3 +132,18 @@ export function buildVideoPrompt(opts: {
   if (extra?.trim()) parts.push(`Additional notes: ${extra.trim()}.`);
   return parts.join(' ');
 }
+
+/** Prompt para nano-banana-pro/edit: render → panorámica 360° del mismo ambiente */
+export function buildPanoPrompt(sourceLabel: string): string {
+  return (
+    `The reference image is a photorealistic interior render. ` +
+    `Generate a full 360-degree equirectangular panorama of this exact same room (${sourceLabel}), ` +
+    `as seen from a camera standing at eye level in the center of the room. ` +
+    `Keep the same furniture, materials, colors and lighting as the reference. ` +
+    `Equirectangular projection covering the full horizontal circle: the left and right edges ` +
+    `of the image must match seamlessly so the panorama wraps around without a visible seam. ` +
+    `Show the complete room: all four walls, floor and ceiling, with natural perspective ` +
+    `distortion typical of equirectangular photos. ` +
+    `Photorealistic, high-end architectural visualization, no people, no text, no watermarks.`
+  );
+}
