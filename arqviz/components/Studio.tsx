@@ -15,6 +15,7 @@ import {
   DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, fileToDataUrl,
 } from '@/lib/demo';
 import GenerationCard from './GenerationCard';
+import { buildClientLink, type ClientLinkResult } from '@/lib/portal';
 import Decostone from './Decostone';
 
 const DECO_PROJECT_ID = 'decostone';
@@ -369,6 +370,7 @@ function ProjectView({
   onMakeVideo: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
+  const [showLink, setShowLink] = useState(false);
   return (
     <>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 26, gap: 12, flexWrap: 'wrap' }}>
@@ -376,8 +378,12 @@ function ProjectView({
           <h1 style={{ fontSize: 23, fontWeight: 800 }}>{project.name}</h1>
           {project.clientName && <div className="empty-note">Cliente: {project.clientName}</div>}
         </div>
-        <button className="btn-ghost" onClick={onDelete}>Eliminar proyecto</button>
+        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+          <button className="btn" onClick={() => setShowLink(true)}>🔗 Enlace para el cliente</button>
+          <button className="btn-ghost" onClick={onDelete}>Eliminar proyecto</button>
+        </div>
       </div>
+      {showLink && <ClientLinkModal project={project} onClose={() => setShowLink(false)} />}
 
       <PlanSection project={project} demo={demo} onUpdate={onUpdate} />
       <RenderSection project={project} demo={demo} onAddGeneration={onAddGeneration} />
@@ -755,6 +761,78 @@ function VideoModal({
             {submitting ? 'Encolando…' : 'Generar video'}
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ── modal: enlace para el cliente ────────────────────────────────────────────
+
+function ClientLinkModal({ project, onClose }: { project: Project; onClose: () => void }) {
+  const [copied, setCopied] = useState(false);
+  const result: ClientLinkResult | null = buildClientLink(project);
+
+  const copy = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result.url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // navegadores sin permiso de portapapeles: seleccionar manualmente
+      const box = document.getElementById('client-link-box') as HTMLTextAreaElement | null;
+      box?.select();
+    }
+  };
+
+  return (
+    <div className="modal-back" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <h3>🔗 Enlace para el cliente</h3>
+        {!result ? (
+          <>
+            <p className="empty-note" style={{ padding: 0 }}>
+              Este proyecto aún no tiene renders ni videos listos. Genera al menos una pieza
+              y vuelve aquí para crear el enlace.
+            </p>
+            <div className="modal-actions">
+              <button className="btn-ghost" onClick={onClose}>Entendido</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="empty-note" style={{ padding: 0, marginBottom: 12 }}>
+              El cliente abre este enlace en su teléfono y ve su proyecto completo con la marca
+              del estudio: {result.videos > 0 && <strong>{result.videos} video{result.videos === 1 ? '' : 's'} · </strong>}
+              <strong>{result.images} imagen{result.images === 1 ? '' : 'es'}</strong>
+              {project.planUrl?.startsWith('https://') ? ' · el plano original' : ''}.
+            </p>
+            {result.isDemo && (
+              <p className="error-note" style={{ marginTop: 0, marginBottom: 12 }}>
+                ⚠ Incluye piezas de muestra del modo demo. Para el cliente real, genera las
+                piezas con la app activada.
+              </p>
+            )}
+            <textarea
+              id="client-link-box"
+              readOnly
+              value={result.url}
+              onFocus={(e) => e.currentTarget.select()}
+              style={{
+                width: '100%', minHeight: 74, fontSize: 12, color: 'var(--text-dim)',
+                background: '#FBFAF7', border: '1px solid var(--border)', borderRadius: 8,
+                padding: 10, resize: 'none', wordBreak: 'break-all',
+              }}
+            />
+            <div className="modal-actions">
+              <a className="btn-ghost" href={result.url} target="_blank" rel="noreferrer" style={{ textDecoration: 'none', marginRight: 'auto' }}>
+                Ver como cliente
+              </a>
+              <button className="btn-ghost" onClick={onClose}>Cerrar</button>
+              <button className="btn" onClick={copy}>{copied ? '✓ Copiado' : 'Copiar enlace'}</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
