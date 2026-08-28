@@ -116,14 +116,18 @@ export function buildVideoPrompt(opts: {
       `(curtains breathing slightly, soft light shifts). Real-time speed, single continuous take.`,
   ];
   if (durationSec >= 10) {
+    const a = Math.round(durationSec * 0.4);
+    const b = Math.round(durationSec * 0.8);
     parts.push(
-      `Timeline: 0-${Math.round(durationSec / 2)}s the camera movement described above develops smoothly; ` +
-        `${Math.round(durationSec / 2)}-${durationSec}s the camera decelerates and settles on a final composed frame.`,
+      `Timeline: 0-${a}s the camera movement described above begins smoothly and steadily; ` +
+        `${a}-${b}s the movement continues at the same pace, revealing more of the space; ` +
+        `${b}-${durationSec}s the camera decelerates and settles on a final composed frame with no new action.`,
     );
   }
   parts.push(
+    `Audio: quiet interior room tone, very soft distant ambience. No music. No dialogue.`,
     `Constraints: no cuts, no morphing, no people, no on-screen text, no logos, ` +
-      `no furniture changes, no zoom, no music.`,
+      `no furniture changes, no zoom, no repeated action.`,
   );
   if (extra?.trim()) parts.push(`Additional notes: ${extra.trim()}.`);
   return parts.join(' ');

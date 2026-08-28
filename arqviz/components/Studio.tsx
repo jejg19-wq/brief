@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Generation, Project } from '@/lib/types';
 import { loadProjects, saveProjects, uid, useMargin } from '@/lib/store';
 import {
-  IMAGE_MODEL, VIDEO_MODELS, VIDEO_RESOLUTIONS, VIDEO_DURATIONS,
+  IMAGE_MODEL, VIDEO_MODELS,
   estimateImageCost, estimateVideoCost,
 } from '@/lib/models';
 import {
@@ -641,8 +641,8 @@ function VideoModal({
   onQueued: (g: Generation) => void;
 }) {
   const [cameraId, setCameraId] = useState('recorrido');
-  const [modelKey, setModelKey] = useState('seedance');
-  const [resolution, setResolution] = useState('1080p');
+  const [modelKey, setModelKey] = useState('seedance25');
+  const [resolution, setResolution] = useState('720p');
   const [duration, setDuration] = useState<number>(5);
   const [extra, setExtra] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -712,7 +712,16 @@ function VideoModal({
           <div className="field-row">
             <div className="field">
               <label>Calidad</label>
-              <select value={modelKey} onChange={(e) => setModelKey(e.target.value)}>
+              <select
+                value={modelKey}
+                onChange={(e) => {
+                  const key = e.target.value;
+                  setModelKey(key);
+                  const m = VIDEO_MODELS[key];
+                  if (!m.resolutions.includes(resolution)) setResolution(m.resolutions[m.resolutions.length - 1]);
+                  if (!m.durations.includes(duration)) setDuration(m.durations[0]);
+                }}
+              >
                 {Object.entries(VIDEO_MODELS).map(([key, m]) => (
                   <option key={key} value={key}>{m.label} — {m.description}</option>
                 ))}
@@ -721,13 +730,13 @@ function VideoModal({
             <div className="field" style={{ maxWidth: 130 }}>
               <label>Resolución</label>
               <select value={resolution} onChange={(e) => setResolution(e.target.value)}>
-                {VIDEO_RESOLUTIONS.map((r) => <option key={r} value={r}>{r}</option>)}
+                {model.resolutions.map((r) => <option key={r} value={r}>{r}</option>)}
               </select>
             </div>
-            <div className="field" style={{ maxWidth: 130 }}>
+            <div className="field" style={{ maxWidth: 140 }}>
               <label>Duración</label>
               <select value={duration} onChange={(e) => setDuration(Number(e.target.value))}>
-                {VIDEO_DURATIONS.map((d) => <option key={d} value={d}>{d} segundos</option>)}
+                {model.durations.map((d) => <option key={d} value={d}>{d} segundos</option>)}
               </select>
             </div>
           </div>

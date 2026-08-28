@@ -24,22 +24,36 @@ export const IMAGE_MODEL: ModelDef = {
   cost: { perImage: 0.15, perImage4K: 0.3 },
 };
 
-export const VIDEO_MODELS: Record<string, ModelDef> = {
-  seedance: {
-    id: 'fal-ai/bytedance/seedance/v1/pro/image-to-video',
+export const VIDEO_MODELS: Record<string, ModelDef & { resolutions: string[]; durations: number[] }> = {
+  seedance25: {
+    id: 'bytedance/seedance-2.5/image-to-video',
     kind: 'video',
-    label: 'Seedance Pro',
-    description: 'Video recorrido desde un render (1080p, máxima calidad)',
-    // ≈ $0.74 por video 1080p de 5 s → $0.148/s; 720p prorrateado por tokens
-    cost: { perSecond: { '1080p': 0.148, '720p': 0.066, '480p': 0.03 } },
+    label: 'Seedance 2.5',
+    description: 'El más reciente: mejor movimiento, hasta 30 s, sonido ambiente (máx. 720p)',
+    // pricing fal: $0.0214 / 1000 tokens → ≈ $0.473/s en 720p, $0.2205/s en 480p
+    cost: { perSecond: { '720p': 0.473, '480p': 0.2205 } },
+    resolutions: ['480p', '720p'],
+    durations: [5, 10, 15, 30],
+  },
+  seedance20hd: {
+    id: 'bytedance/seedance-2.0/image-to-video',
+    kind: 'video',
+    label: 'Seedance 2.0 HD',
+    description: 'Máxima resolución 1080p',
+    // pricing fal: $0.014 / 1000 tokens → ≈ $0.682/s en 1080p, $0.3034/s en 720p
+    cost: { perSecond: { '1080p': 0.682, '720p': 0.3034 } },
+    resolutions: ['720p', '1080p'],
+    durations: [5, 10],
   },
   seedance_fast: {
     id: 'fal-ai/bytedance/seedance/v1/pro/fast/image-to-video',
     kind: 'video',
-    label: 'Seedance Pro Fast',
-    description: 'Más rápido y barato, ideal para borradores',
+    label: 'Seedance Fast (borrador)',
+    description: 'Rápido y barato para probar encuadres antes del video final',
     // ≈ $0.243 por video 1080p de 5 s
     cost: { perSecond: { '1080p': 0.049, '720p': 0.022, '480p': 0.01 } },
+    resolutions: ['480p', '720p', '1080p'],
+    durations: [5, 10],
   },
 };
 
@@ -52,8 +66,8 @@ export function estimateImageCost(resolution: '1K' | '2K' | '4K', numImages: num
 }
 
 export function estimateVideoCost(modelKey: string, resolution: string, durationSec: number): number {
-  const model = VIDEO_MODELS[modelKey] ?? VIDEO_MODELS.seedance;
-  const perSec = model.cost.perSecond?.[resolution] ?? 0.148;
+  const model = VIDEO_MODELS[modelKey] ?? VIDEO_MODELS.seedance25;
+  const perSec = model.cost.perSecond?.[resolution] ?? 0.473;
   return perSec * durationSec;
 }
 

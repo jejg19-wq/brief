@@ -351,7 +351,7 @@ const STYLES = ['Moderno cálido','Minimalista','Industrial','Clásico contempor
 const LIGHTS = ['Día','Atardecer','Noche'];
 const CAMERAS = ['Recorrido hacia adelante','Órbita suave','Paneo lateral','Revelación (pull-out)'];
 const RES_IMG = [['1K — borrador',0.15],['2K — presentación',0.15],['4K — impresión (2x costo)',0.30]];
-const VIDEO_COST = { '480p':0.03, '720p':0.066, '1080p':0.148 };
+const VIDEO_COST = { '480p':0.2205, '720p':0.473, '1080p':0.682 };
 const PIECES = [
   ['vermont','Vermont','Piedra apilada en tiras irregulares'],
   ['laja','Laja','Lajas planas de formas orgánicas'],
@@ -638,16 +638,18 @@ function newProjectModal() {
   };
 }
 function videoModal(srcGen) {
-  let cam = CAMERAS[0], res = '1080p', dur = 5;
+  let cam = CAMERAS[0], res = '720p', dur = 5;
   const o = overlay(`<div class="modal"><h3>🎬 Video recorrido — ${esc(srcGen.label)}</h3>
     <img src="${srcGen.url}" style="border-radius:8px;margin-bottom:14px;max-height:180px;object-fit:cover;width:100%">
     <div style="display:flex;flex-direction:column;gap:14px">
       <div class="field"><label>Movimiento de cámara</label><div id="vm-cams"></div></div>
       <div class="field-row">
-        <div class="field" style="max-width:150px"><label>Resolución</label>
-          <select id="vm-res"><option>480p</option><option>720p</option><option selected>1080p</option></select></div>
-        <div class="field" style="max-width:150px"><label>Duración</label>
-          <select id="vm-dur"><option value="5">5 segundos</option><option value="10">10 segundos</option></select></div>
+        <div class="field" style="max-width:170px"><label>Modelo</label>
+          <select id="vm-model"><option selected>Seedance 2.5</option><option>Seedance 2.0 HD</option></select></div>
+        <div class="field" style="max-width:130px"><label>Resolución</label>
+          <select id="vm-res"><option>480p</option><option selected>720p</option></select></div>
+        <div class="field" style="max-width:140px"><label>Duración</label>
+          <select id="vm-dur"><option value="5">5 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option><option value="30">30 segundos</option></select></div>
       </div></div>
     <div class="modal-actions">
       <span class="empty-note" style="margin-right:auto">Costo que tendría en real: <strong id="vm-cost"></strong></span>
@@ -660,6 +662,17 @@ function videoModal(srcGen) {
     camWrap.appendChild(chipRow(CAMERAS, c => c === cam, c => { cam = c; drawCams(); }));
   };
   drawCams(); updateCost();
+  o.querySelector('#vm-model').onchange = e => {
+    const hd = e.target.value.includes('2.0');
+    const resSel = o.querySelector('#vm-res');
+    resSel.innerHTML = hd ? '<option>720p</option><option selected>1080p</option>' : '<option>480p</option><option selected>720p</option>';
+    res = hd ? '1080p' : '720p';
+    const durSel = o.querySelector('#vm-dur');
+    durSel.innerHTML = hd
+      ? '<option value="5">5 segundos</option><option value="10">10 segundos</option>'
+      : '<option value="5">5 segundos</option><option value="10">10 segundos</option><option value="15">15 segundos</option><option value="30">30 segundos</option>';
+    dur = 5; updateCost();
+  };
   o.querySelector('#vm-res').onchange = e => { res = e.target.value; updateCost(); };
   o.querySelector('#vm-dur').onchange = e => { dur = Number(e.target.value); updateCost(); };
   o.querySelector('#vm-cancel').onclick = () => o.remove();
