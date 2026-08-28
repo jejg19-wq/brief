@@ -1,0 +1,170 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8">
+<title>Su proyecto — numan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green-950:#052E24; --green-900:#06382C; --brand:#0B4A3A;
+  --bg:#F4F3EE; --panel:#fff; --border:#E3E1D8; --border-soft:#EAE8E0;
+  --text:#14271F; --dim:#56675E; --faint:#8A968F; --accent-l:#8FD8B8;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Nunito','Segoe UI',sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img,video{max-width:100%;display:block}
+
+.hero{background:linear-gradient(150deg,var(--brand) 0%,var(--green-950) 100%);
+  color:#fff;padding:44px 22px 40px;text-align:center}
+.logo{font-size:34px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.hero .tag{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:4px}
+.hero .pre{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-l);margin-top:30px;font-weight:800}
+.hero h1{font-size:27px;font-weight:800;margin-top:6px;text-wrap:balance}
+.hero .cli{color:rgba(255,255,255,.78);margin-top:8px;font-size:15px}
+.hero .hint{margin-top:22px;font-size:12.5px;color:rgba(255,255,255,.55)}
+
+.wrap{max-width:720px;margin:0 auto;padding:26px 16px 70px}
+h2.sec{font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--brand);margin:30px 4px 12px;display:flex;align-items:center;gap:10px}
+h2.sec::after{content:'';flex:1;height:1.5px;background:var(--border)}
+
+.vcard{background:#000;border-radius:16px;overflow:hidden;margin-bottom:14px;
+  box-shadow:0 8px 30px rgba(5,46,36,.18)}
+.vcard video{width:100%;max-height:70vh}
+.vlabel{background:var(--green-950);color:rgba(255,255,255,.85);font-size:13px;
+  font-weight:700;padding:10px 16px}
+
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(min-width:560px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.gcard{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;
+  overflow:hidden;cursor:zoom-in;box-shadow:0 1px 3px rgba(9,45,35,.06),0 6px 18px rgba(9,45,35,.05)}
+.gcard img{width:100%;aspect-ratio:4/3;object-fit:cover}
+.gcard .gl{font-size:12px;font-weight:700;padding:8px 11px;color:var(--dim)}
+
+.plan-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;
+  overflow:hidden;box-shadow:0 1px 3px rgba(9,45,35,.06)}
+.plan-card img{width:100%;background:#fff}
+.plan-card .gl{font-size:12.5px;color:var(--dim);padding:10px 14px}
+
+.lightbox{position:fixed;inset:0;background:rgba(5,46,36,.94);z-index:50;display:none;
+  place-items:center;padding:14px;cursor:zoom-out}
+.lightbox.on{display:grid}
+.lightbox img{max-width:96vw;max-height:82vh;object-fit:contain;border-radius:10px}
+.lightbox .cap{position:fixed;bottom:22px;left:0;right:0;text-align:center;
+  color:rgba(255,255,255,.85);font-size:14px;font-weight:700}
+
+.foot{background:var(--green-950);color:rgba(255,255,255,.6);text-align:center;
+  padding:30px 20px;font-size:12.5px;margin-top:40px}
+.foot .flogo{font-size:22px;font-weight:800;color:#fff;letter-spacing:-.02em}
+.foot .fsub{font-size:10px;letter-spacing:.18em;text-transform:uppercase;margin-top:2px}
+.foot p{margin-top:12px}
+
+.err{max-width:520px;margin:60px auto;padding:0 22px;text-align:center}
+.err .ico{font-size:44px}
+.err h1{font-size:20px;font-weight:800;margin:12px 0 8px}
+.err p{color:var(--dim);font-size:14px}
+[hidden]{display:none!important}
+</style></head><body>
+
+<div id="app"></div>
+
+<script>
+'use strict';
+(function(){
+  var root = document.getElementById('app');
+
+  function fail(){
+    root.innerHTML = '<div class="err"><div class="ico">📐</div>' +
+      '<h1>Enlace no válido</h1>' +
+      '<p>Este enlace está incompleto o dañado. Pídale a su arquitecto que se lo envíe de nuevo.</p></div>';
+  }
+
+  function decode(hash){
+    try{
+      var b64 = hash.replace(/-/g,'+').replace(/_/g,'/');
+      var bin = atob(b64);
+      var bytes = new Uint8Array(bin.length);
+      for (var i=0;i<bin.length;i++) bytes[i] = bin.charCodeAt(i);
+      return JSON.parse(new TextDecoder().decode(bytes));
+    }catch(e){ return null; }
+  }
+
+  function okUrl(u){
+    return typeof u === 'string' && (
+      /^https:\/\//.test(u) || /^data:image\/svg\+xml/.test(u)
+    );
+  }
+
+  var raw = location.hash.slice(1);
+  if(!raw) return fail();
+  var d = decode(raw);
+  if(!d || !d.n || !Array.isArray(d.items)) return fail();
+
+  var vids = d.items.filter(function(it){ return it.k==='video' && okUrl(it.u); });
+  var imgs = d.items.filter(function(it){ return it.k==='image' && okUrl(it.u); });
+  if(!vids.length && !imgs.length) return fail();
+
+  // ── construir la página (solo textContent para textos) ──
+  function el(tag, cls, parent){
+    var e = document.createElement(tag);
+    if(cls) e.className = cls;
+    if(parent) parent.appendChild(e);
+    return e;
+  }
+
+  var hero = el('div','hero',root);
+  el('div','logo',hero).textContent = 'numan';
+  el('div','tag',hero).textContent = 'estudio de arquitectura';
+  el('div','pre',hero).textContent = 'Así quedará su proyecto';
+  el('h1','',hero).textContent = d.n;
+  if(d.c) el('div','cli',hero).textContent = 'Preparado para ' + d.c;
+  el('div','hint',hero).textContent = (vids.length ? '▶ Reproduzca el recorrido y ' : '') + 'toque cada imagen para verla en grande';
+
+  var wrap = el('div','wrap',root);
+
+  if(vids.length){
+    el('h2','sec',wrap).textContent = vids.length>1 ? 'Recorridos en video' : 'Recorrido en video';
+    vids.forEach(function(it){
+      var c = el('div','vcard',wrap);
+      var v = el('video','',c);
+      v.src = it.u; v.controls = true; v.playsInline = true; v.preload = 'metadata';
+      if(it.l) el('div','vlabel',c).textContent = it.l;
+    });
+  }
+
+  if(imgs.length){
+    el('h2','sec',wrap).textContent = 'Sus ambientes';
+    var g = el('div','grid',wrap);
+    imgs.forEach(function(it){
+      var c = el('div','gcard',g);
+      var im = el('img','',c);
+      im.src = it.u; im.alt = it.l || 'Render'; im.loading = 'lazy';
+      if(it.l) el('div','gl',c).textContent = it.l;
+      c.addEventListener('click',function(){ openLb(it.u, it.l||''); });
+    });
+  }
+
+  if(okUrl(d.plan)){
+    el('h2','sec',wrap).textContent = 'El plano original';
+    var pc = el('div','plan-card',wrap);
+    var pi = el('img','',pc);
+    pi.src = d.plan; pi.alt = 'Plano'; pi.loading = 'lazy';
+    el('div','gl',pc).textContent = 'De este plano nació todo lo que acaba de ver.';
+  }
+
+  var foot = el('div','foot',root);
+  el('div','flogo',foot).textContent = 'numan';
+  el('div','fsub',foot).textContent = 'estudio de arquitectura';
+  el('p','',foot).textContent = 'Visualización desarrollada a la medida de su proyecto.';
+
+  // ── lightbox ──
+  var lb = el('div','lightbox',document.body);
+  var lbImg = el('img','',lb);
+  var lbCap = el('div','cap',lb);
+  lb.addEventListener('click',function(){ lb.classList.remove('on'); lbImg.src=''; });
+  function openLb(u,cap){ lbImg.src=u; lbCap.textContent=cap; lb.classList.add('on'); }
+})();
+</script>
+</body></html>
