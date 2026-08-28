@@ -17,6 +17,7 @@ import {
 import GenerationCard from './GenerationCard';
 import { buildClientLink, type ClientLinkResult } from '@/lib/portal';
 import Decostone from './Decostone';
+import SketchupSection from './SketchupSection';
 
 const DECO_PROJECT_ID = 'decostone';
 
@@ -437,6 +438,7 @@ function ProjectView({
 
       <PlanSection project={project} demo={demo} onUpdate={onUpdate} />
       <RenderSection project={project} demo={demo} onAddGeneration={onAddGeneration} />
+      <SketchupSection project={project} demo={demo} onUpdate={onUpdate} onAddGeneration={onAddGeneration} />
       <GallerySection project={project} onMakeVideo={onMakeVideo} onMakePano={onMakePano} onOpen={onOpen} />
     </>
   );
@@ -480,7 +482,7 @@ function PlanSection({
       <div className="section-head">
         <div className="step-num">1</div>
         <h2>El plano</h2>
-        <span className="hint">PNG, JPG o WebP · exporta el PDF como imagen</span>
+        <span className="hint">PNG, JPG o WebP · opcional si vas a trabajar desde vistas de SketchUp</span>
       </div>
       <div className="panel">
         {project.planUrl ? (
@@ -670,7 +672,7 @@ function GallerySection({
   return (
     <section className="section">
       <div className="section-head">
-        <div className="step-num">3</div>
+        <div className="step-num">4</div>
         <h2>Galería del proyecto</h2>
         <span className="hint">renders y videos listos para mostrar al cliente</span>
       </div>

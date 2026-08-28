@@ -147,3 +147,29 @@ export function buildPanoPrompt(sourceLabel: string): string {
     `Photorealistic, high-end architectural visualization, no people, no text, no watermarks.`
   );
 }
+
+/** Prompt para nano-banana-pro/edit: vista de SketchUp → render fotorrealista fiel */
+export function buildSkpPrompt(opts: {
+  label: string;
+  style: StylePreset;
+  lighting: LightPreset;
+  extra?: string;
+}): string {
+  const { label, style, lighting, extra } = opts;
+  const parts = [
+    `The reference image is a screenshot of an untextured SketchUp 3D model (${label}).`,
+    `Render this EXACT same view as a photorealistic photograph. Critical: keep the camera ` +
+      `angle, framing, geometry, proportions, furniture and cabinetry placement, window and ` +
+      `door positions IDENTICAL to the reference — this is the architect's real design and ` +
+      `nothing may move or change shape.`,
+    `Replace the plain gray/white surfaces with realistic materials and finishes. ` +
+      `Interior design direction: ${style.en}.`,
+    `Lighting: ${lighting.en}.`,
+    `Add tasteful real-life details consistent with the design (decor, plants, textiles) ` +
+      `without altering the architecture or furniture layout.`,
+    `Photorealistic, high-end architectural photography, accurate global illumination, ` +
+      `realistic textures, no people, no text, no watermarks.`,
+  ];
+  if (extra?.trim()) parts.push(`Additional notes: ${extra.trim()}.`);
+  return parts.join(' ');
+}

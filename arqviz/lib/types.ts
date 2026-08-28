@@ -15,11 +15,18 @@ export interface Generation {
   error?: string;
 }
 
+export interface SkpView {
+  id: string;
+  url: string;    // fal storage (real) o dataURL (demo)
+  label: string;  // nombre del ambiente que escribe el arquitecto
+}
+
 export interface Project {
   id: string;
   name: string;
   clientName: string;
   createdAt: number;
   planUrl?: string;        // plano subido a fal storage
+  skpViews?: SkpView[];    // vistas del modelo SketchUp subidas
   generations: Generation[];
 }
