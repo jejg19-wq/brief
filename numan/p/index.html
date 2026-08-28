@@ -43,6 +43,15 @@ h2.sec::after{content:'';flex:1;height:1.5px;background:var(--border)}
 .gcard img{width:100%;aspect-ratio:4/3;object-fit:cover}
 .gcard .gl{font-size:12px;font-weight:700;padding:8px 11px;color:var(--dim)}
 
+.pano-card{background:#000;border-radius:16px;overflow:hidden;margin-bottom:14px;
+  box-shadow:0 8px 30px rgba(5,46,36,.18);position:relative}
+.pano-view{width:100%;height:340px}
+@media(min-width:560px){.pano-view{height:420px}}
+.pano-fallback{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pano-fallback img{height:340px;max-width:none}
+.pano-hint{position:absolute;top:12px;left:0;right:0;text-align:center;pointer-events:none;z-index:5}
+.pano-hint span{background:rgba(5,46,36,.75);color:#fff;font-size:12px;font-weight:700;
+  border-radius:999px;padding:6px 14px}
 .plan-card{background:var(--panel);border:1px solid var(--border-soft);border-radius:14px;
   overflow:hidden;box-shadow:0 1px 3px rgba(9,45,35,.06)}
 .plan-card img{width:100%;background:#fff}
@@ -97,14 +106,16 @@ h2.sec::after{content:'';flex:1;height:1.5px;background:var(--border)}
     );
   }
 
+  var panoQueue = [];
   var raw = location.hash.slice(1);
   if(!raw) return fail();
   var d = decode(raw);
   if(!d || !d.n || !Array.isArray(d.items)) return fail();
 
   var vids = d.items.filter(function(it){ return it.k==='video' && okUrl(it.u); });
+  var panos = d.items.filter(function(it){ return it.k==='pano' && okUrl(it.u); });
   var imgs = d.items.filter(function(it){ return it.k==='image' && okUrl(it.u); });
-  if(!vids.length && !imgs.length) return fail();
+  if(!vids.length && !imgs.length && !panos.length) return fail();
 
   // ── construir la página (solo textContent para textos) ──
   function el(tag, cls, parent){
@@ -134,6 +145,20 @@ h2.sec::after{content:'';flex:1;height:1.5px;background:var(--border)}
     });
   }
 
+  if(panos.length){
+    el('h2','sec',wrap).textContent = panos.length>1 ? 'Entre a sus espacios · 360°' : 'Entre a su espacio · 360°';
+    panos.forEach(function(it, idx){
+      var c = el('div','pano-card',wrap);
+      var hint = el('div','pano-hint',c);
+      el('span','',hint).textContent = '↔ Arrastre para mirar alrededor';
+      var view = el('div','pano-view',c);
+      view.id = 'pano-' + idx;
+      if(it.l) el('div','vlabel',c).textContent = it.l;
+      panoQueue.push({ id: view.id, url: it.u, card: c, view: view });
+    });
+    loadPannellum();
+  }
+
   if(imgs.length){
     el('h2','sec',wrap).textContent = 'Sus ambientes';
     var g = el('div','grid',wrap);
@@ -158,6 +183,41 @@ h2.sec::after{content:'';flex:1;height:1.5px;background:var(--border)}
   el('div','flogo',foot).textContent = 'numan';
   el('div','fsub',foot).textContent = 'estudio de arquitectura';
   el('p','',foot).textContent = 'Visualización desarrollada a la medida de su proyecto.';
+
+  // ── visor 360 (Pannellum desde CDN, con respaldo) ──
+  function panoFallback(item){
+    item.view.remove();
+    var fb = document.createElement('div');
+    fb.className = 'pano-fallback';
+    var im = document.createElement('img');
+    im.src = item.url; im.alt = '';
+    fb.appendChild(im);
+    item.card.insertBefore(fb, item.card.firstChild.nextSibling);
+  }
+  function initPanos(){
+    panoQueue.forEach(function(item){
+      try{
+        window.pannellum.viewer(item.id, {
+          type: 'equirectangular', panorama: item.url,
+          haov: 360, vaov: 150, autoLoad: true, autoRotate: -2,
+          showFullscreenCtrl: true, showZoomCtrl: false, compass: false,
+          friction: 0.12,
+        });
+      }catch(e){ panoFallback(item); }
+    });
+  }
+  function loadPannellum(){
+    if(window.pannellum) return initPanos();
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css';
+    document.head.appendChild(css);
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js';
+    s.onload = initPanos;
+    s.onerror = function(){ panoQueue.forEach(panoFallback); };
+    document.head.appendChild(s);
+  }
 
   // ── lightbox ──
   var lb = el('div','lightbox',document.body);
