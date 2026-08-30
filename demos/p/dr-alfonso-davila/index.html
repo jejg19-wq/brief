@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr. Alfonso Dávila — Dermatología — Propuesta de página web</title>
+<meta name="description" content="Propuesta de página con agenda en línea para Dr. Alfonso Dávila — Dermatología.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eef4f8; --bg-2:#e2edf4; --glass:rgba(255,255,255,.62); --glass-2:rgba(255,255,255,.85);
+  --ink:#12242e; --ink-2:#2c4451; --mute:#6d8695;
+  --a1:#3fa7c4;  /* aqua */
+  --a2:#7fd6b8;  /* mint */
+  --a3:#f2a3a3;  /* blush */
+  --line:rgba(18,36,46,.10);
+  --r:20px; --max:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Outfit,system-ui,sans-serif;font-weight:300;line-height:1.6;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;position:relative}
+body::before{content:'';position:fixed;inset:-30%;z-index:-1;pointer-events:none;
+  background:
+    radial-gradient(38% 38% at 18% 20%, rgba(63,167,196,.30), transparent 68%),
+    radial-gradient(34% 34% at 84% 34%, rgba(127,214,184,.30), transparent 68%),
+    radial-gradient(40% 40% at 52% 88%, rgba(242,163,163,.22), transparent 68%);
+  filter:blur(40px);animation:float 22s ease-in-out infinite alternate}
+@keyframes float{to{transform:translate3d(-4%,3%,0) scale(1.1)}}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+h1,h2,h3{font-weight:500;line-height:1.08;letter-spacing:-.025em}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-style:italic;font-weight:400}
+.glass{background:var(--glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  border:1px solid rgba(255,255,255,.75);border-radius:var(--r);box-shadow:0 6px 30px rgba(18,36,46,.07)}
+
+.demo-bar{background:rgba(18,36,46,.92);color:#eef4f8;font-size:12px;padding:8px 16px;text-align:center;position:relative;z-index:95}
+.demo-bar strong{color:var(--a2)}
+.demo-bar a{color:#fff;text-decoration:underline;text-underline-offset:3px}
+
+nav{position:sticky;top:0;z-index:80;padding:12px 0}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  background:var(--glass-2);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.8);
+  border-radius:100px;padding:10px 12px 10px 22px;box-shadow:0 4px 22px rgba(18,36,46,.08)}
+.logo{font-size:17px;font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:9px}
+.logo i{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,var(--a1),var(--a2));display:grid;place-items:center;
+  font-style:normal;font-size:14px;color:#fff}
+.nav-links{display:flex;gap:22px;font-size:14.5px}
+.nav-links a{color:var(--mute);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:820px){.nav-links{display:none}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;cursor:pointer;font-family:inherit;
+  font-size:15px;font-weight:500;padding:14px 26px;border-radius:100px;text-decoration:none;
+  transition:transform .2s,box-shadow .2s,opacity .2s}
+.btn-p{background:linear-gradient(135deg,var(--a1),#2f8ba6);color:#fff;box-shadow:0 8px 24px rgba(63,167,196,.34)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(63,167,196,.44)}
+.btn-g{background:var(--glass-2);color:var(--ink);border:1px solid var(--line)}
+.btn-g:hover{transform:translateY(-2px)}
+.btn-sm{padding:10px 20px;font-size:14px}
+
+/* HERO */
+.hero{padding:56px 0 70px}
+.hero-in{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:center}
+@media(max-width:880px){.hero-in{grid-template-columns:1fr;gap:28px}}
+.pill{display:inline-flex;align-items:center;gap:8px;background:var(--glass-2);border:1px solid rgba(255,255,255,.8);
+  border-radius:100px;padding:7px 16px;font-size:13px;color:var(--ink-2);margin-bottom:22px}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--a2);font-style:normal;box-shadow:0 0 0 3px rgba(127,214,184,.3)}
+.hero h1{font-size:clamp(38px,7.6vw,62px);margin-bottom:18px}
+.hero h1 .serif{color:var(--a1)}
+.hero>.wrap>.hero-in>div>p{font-size:17px;color:var(--ink-2);max-width:44ch;margin-bottom:28px}
+.hero-cta{display:flex;gap:11px;flex-wrap:wrap}
+.trust{display:flex;gap:26px;flex-wrap:wrap;margin-top:34px;padding-top:24px;border-top:1px solid var(--line)}
+.trust b{display:block;font-size:26px;font-weight:600;letter-spacing:-.03em}
+.trust span{font-size:12.5px;color:var(--mute)}
+.hero-card{padding:26px}
+.hero-card h3{font-size:16px;margin-bottom:16px;color:var(--ink-2)}
+.mini{display:flex;align-items:center;gap:13px;padding:12px 0;border-bottom:1px solid var(--line)}
+.mini:last-child{border:0}
+.mini i{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-style:normal;font-size:16px;flex:0 0 auto}
+.mini div{flex:1}
+.mini b{display:block;font-size:14.5px;font-weight:500}
+.mini small{color:var(--mute);font-size:12.5px}
+
+section{padding:64px 0}
+.sec-head{text-align:center;margin-bottom:38px}
+.sec-head h2{font-size:clamp(29px,5.4vw,44px);margin-bottom:10px}
+.sec-head p{color:var(--mute);max-width:50ch;margin:0 auto}
+
+/* TRATAMIENTOS */
+.tr-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(258px,1fr))}
+.tr{padding:22px;cursor:pointer;transition:transform .22s,box-shadow .22s}
+.tr:hover{transform:translateY(-4px);box-shadow:0 14px 38px rgba(18,36,46,.13)}
+.tr i{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;font-style:normal;font-size:19px;margin-bottom:14px}
+.tr h3{font-size:18px;margin-bottom:7px}
+.tr p{font-size:13.5px;color:var(--mute);margin-bottom:16px;min-height:40px}
+.tr-foot{display:flex;justify-content:space-between;align-items:baseline;padding-top:13px;border-top:1px solid var(--line)}
+.tr-p{font-size:20px;font-weight:600;color:var(--a1);letter-spacing:-.02em}
+.tr-p small{font-size:11.5px;color:var(--mute);font-weight:300}
+.tr-d{font-size:12px;color:var(--mute)}
+
+/* AGENDA */
+.book{padding:30px}
+@media(min-width:820px){.book{padding:38px}}
+.fgroup{margin-bottom:24px}
+.flabel{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.fnum{width:26px;height:26px;border-radius:9px;background:linear-gradient(135deg,var(--a1),var(--a2));color:#fff;
+  display:grid;place-items:center;font-size:13px;font-weight:600;flex:0 0 auto}
+.flabel h3{font-size:15.5px;font-weight:500}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.7);border:1px solid var(--line);color:var(--ink-2);padding:11px 17px;border-radius:14px;
+  cursor:pointer;font-family:inherit;font-size:14px;transition:all .18s;text-align:center}
+.chip:hover{border-color:var(--a1);background:#fff}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,var(--a1),#2f8ba6);border-color:transparent;color:#fff;
+  font-weight:500;box-shadow:0 5px 16px rgba(63,167,196,.3)}
+.chip:disabled{opacity:.32;cursor:not-allowed;text-decoration:line-through}
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(72px,1fr));gap:8px}
+.days .chip{padding:11px 6px}
+.chip .d1{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;opacity:.72}
+.chip .d2{display:block;font-size:19px;font-weight:600;line-height:1.25}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(82px,1fr));gap:8px}
+.finp{width:100%;background:rgba(255,255,255,.75);border:1px solid var(--line);color:var(--ink);border-radius:14px;
+  padding:14px 15px;font-family:inherit;font-size:15px;margin-bottom:10px}
+.finp::placeholder{color:var(--mute)}
+.finp:focus{outline:0;border-color:var(--a1);background:#fff}
+.resume{background:linear-gradient(135deg,rgba(63,167,196,.10),rgba(127,214,184,.10));border:1px solid rgba(63,167,196,.24);
+  border-radius:var(--r);padding:22px;margin:26px 0 16px}
+.resume h4{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--a1);font-weight:600;margin-bottom:14px}
+.rline{display:flex;justify-content:space-between;gap:14px;padding:8px 0;font-size:14.5px;border-bottom:1px solid rgba(18,36,46,.08)}
+.rline:last-of-type{border:0}
+.rline span{color:var(--mute)}
+.rline b{font-weight:500;text-align:right}
+.rtotal{display:flex;justify-content:space-between;align-items:baseline;margin-top:14px;padding-top:14px;border-top:1px solid rgba(63,167,196,.28)}
+.rtotal b{font-size:28px;font-weight:600;color:var(--a1);letter-spacing:-.03em}
+.rtotal small{display:block;font-size:11.5px;color:var(--mute);font-weight:300;text-align:right}
+.wa{width:100%;background:#25D366;color:#06280e;box-shadow:0 8px 24px rgba(37,211,102,.34);font-size:16px}
+.wa:hover{box-shadow:0 12px 30px rgba(37,211,102,.44)}
+.hint{font-size:12.5px;color:var(--mute);text-align:center;margin-top:12px}
+.warn{color:#c0392b;font-size:13.5px;margin-top:10px;text-align:center;display:none}
+.warn.on{display:block}
+
+/* CONFIANZA */
+.grid3{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.card{padding:24px}
+.card h3{font-size:16.5px;margin-bottom:9px;color:var(--a1)}
+.card p{font-size:14px;color:var(--ink-2)}
+.row{display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border:0}
+.row span:last-child{color:var(--mute)}
+
+footer{padding:44px 0;text-align:center;color:var(--mute);font-size:13.5px}
+footer a{color:var(--a1);text-decoration:none;font-weight:500}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .7s,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}body::before{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <strong>PROPUESTA</strong> · Ejemplo hecho para Dr. Alfonso Dávila — Dermatología. Productos y precios de muestra. <a href="https://jejg19-wq.github.io/brief/demos/">¿Quién hizo esto?</a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="logo"><i>✚</i> Dr. Alfonso Dávila — Dermatología</div>
+    <div class="nav-links">
+      <a href="#tratamientos">Tratamientos</a><a href="#agenda">Agendar</a><a href="#info">Información</a>
+    </div>
+    <button class="btn btn-p btn-sm" onclick="document.getElementById('agenda').scrollIntoView()">Pedir cita</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-in">
+      <div>
+        <span class="pill"><i></i> Agenda abierta esta semana</span>
+        <h1>Tu consulta al día,<br><span class="serif">sin llamar a nadie.</span></h1>
+        <p>Dermatología clínica y estética en San Cristóbal. Elige el motivo de consulta, tu día y tu hora — y recibe la confirmación por WhatsApp.</p>
+        <div class="hero-cta">
+          <button class="btn btn-p" onclick="document.getElementById('agenda').scrollIntoView()">Agendar mi consulta</button>
+          <a class="btn btn-g" href="#tratamientos">Ver precios</a>
+        </div>
+        <div class="trust">
+          <div><b>12 años</b><span>Atendiendo el Táchira</span></div>
+          <div><b>4</b><span>Especialistas</span></div>
+          <div><b>0</b><span>Llamadas para agendar</span></div>
+        </div>
+      </div>
+      <aside class="glass hero-card rv">
+        <h3>Por qué agendar aquí</h3>
+        <div class="mini"><i style="background:rgba(63,167,196,.18);color:var(--a1)">⏱</i>
+          <div><b>30 segundos</b><small>Lo que toma reservar</small></div></div>
+        <div class="mini"><i style="background:rgba(127,214,184,.22);color:#2f9d7c">🔔</i>
+          <div><b>Recordatorio automático</b><small>Te escribimos el día antes</small></div></div>
+        <div class="mini"><i style="background:rgba(242,163,163,.24);color:#c96b6b">💵</i>
+          <div><b>Precio antes de venir</b><small>Sin sorpresas en caja</small></div></div>
+        <div class="mini"><i style="background:rgba(63,167,196,.18);color:var(--a1)">📅</i>
+          <div><b>Reprograma sin costo</b><small>Avisando con 4 horas</small></div></div>
+      </aside>
+    </div>
+  </div>
+</header>
+
+<section id="tratamientos">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>Consultas y procedimientos</h2>
+      <p>Precios de referencia en dólares. Toca uno para agendarlo directamente.</p>
+    </div>
+    <div class="tr-grid" id="trGrid"></div>
+    <p class="hint" style="margin-top:20px">Los procedimientos mayores se cotizan en la consulta inicial.</p>
+  </div>
+</section>
+
+<section id="agenda">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>Agenda tu cita</h2>
+      <p>Cuatro pasos. Al final se abre tu WhatsApp con todo escrito.</p>
+    </div>
+    <div class="glass book rv">
+
+      <div class="fgroup">
+        <div class="flabel"><div class="fnum">1</div><h3>¿Qué necesitas?</h3></div>
+        <div class="chips" id="pickSvc"></div>
+      </div>
+
+      <div class="fgroup">
+        <div class="flabel"><div class="fnum">2</div><h3>¿Con quién?</h3></div>
+        <div class="chips" id="pickDoc"></div>
+      </div>
+
+      <div class="fgroup">
+        <div class="flabel"><div class="fnum">3</div><h3>¿Qué día?</h3></div>
+        <div class="days" id="pickDay"></div>
+      </div>
+
+      <div class="fgroup">
+        <div class="flabel"><div class="fnum">4</div><h3>¿A qué hora?</h3></div>
+        <div class="slots" id="pickTime"></div>
+        <p class="hint" style="text-align:left;margin-top:10px">Las horas tachadas ya están ocupadas.</p>
+      </div>
+
+      <div class="fgroup">
+        <div class="flabel"><div class="fnum">5</div><h3>Tus datos</h3></div>
+        <input class="finp" id="f-name" placeholder="Nombre y apellido">
+        <input class="finp" id="f-phone" placeholder="Teléfono de contacto" inputmode="tel">
+        <input class="finp" id="f-note" placeholder="¿Algo que debamos saber? (opcional)">
+      </div>
+
+      <div class="resume">
+        <h4>Resumen de tu cita</h4>
+        <div class="rline"><span>Tratamiento</span><b id="rSvc">—</b></div>
+        <div class="rline"><span>Profesional</span><b id="rDoc">—</b></div>
+        <div class="rline"><span>Día</span><b id="rDay">—</b></div>
+        <div class="rline"><span>Hora</span><b id="rTime">—</b></div>
+        <div class="rline"><span>Duración estimada</span><b id="rDur">—</b></div>
+        <div class="rtotal"><span style="color:var(--mute);font-size:13px;text-transform:uppercase;letter-spacing:.1em">Estimado</span>
+          <div><b id="rTotal">—</b><small>Precio de referencia</small></div></div>
+      </div>
+
+      <button class="btn wa" onclick="sendWA()">Confirmar cita por WhatsApp</button>
+      <p class="warn" id="warn">Falta completar algún paso. Revisa arriba.</p>
+      <p class="hint">Se abre tu WhatsApp con la cita ya escrita. Solo tocas enviar.</p>
+    </div>
+  </div>
+</section>
+
+<section id="info">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>Información</h2></div>
+    <div class="grid3">
+      <div class="glass card rv">
+        <h3>Horario de atención</h3>
+        <div class="row"><span>Lunes a viernes</span><span>8:00 — 17:00</span></div>
+        <div class="row"><span>Sábado</span><span>8:00 — 13:00</span></div>
+        <div class="row"><span>Domingo</span><span>Cerrado</span></div>
+      </div>
+      <div class="glass card rv">
+        <h3>Dónde estamos</h3>
+        <p>San Cristóbal. San Cristóbal, Táchira.</p>
+        <p style="margin-top:10px;color:var(--mute);font-size:13px">Estacionamiento propio para pacientes.</p>
+      </div>
+      <div class="glass card rv">
+        <h3>Formas de pago</h3>
+        <p>Efectivo (USD y Bs), pago móvil, Zelle, transferencia y punto de venta. Tratamientos largos se pueden pagar por partes.</p>
+      </div>
+      <div class="glass card rv">
+        <h3>Urgencias</h3>
+        <p>Dolor agudo, fractura o inflamación: escríbenos por WhatsApp y te damos el primer cupo libre del día.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Dr. Alfonso Dávila — Dermatología · San Cristóbal, Táchira — <em>propuesta de ejemplo</em></p>
+    <p style="margin-top:8px">Propuesta hecha por <a href="https://jejg19-wq.github.io/brief/demos/">Jackson · Webs y citas por WhatsApp</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ==========================================================
+     CONFIG — Jackson: edita SOLO este bloque por cliente
+     ========================================================== */
+  var CONFIG = {
+    negocio: 'Dr. Alfonso Dávila — Dermatología',
+    whatsapp: '584121234567',
+    moneda: '$',
+    abre: 8, cierra: 17, paso: 30,
+    dias: 7
+  };
+
+  var TRATAMIENTOS = [{"n": "Consulta dermatológica", "p": 25, "min": 30, "ic": "🔍", "c": "a1", "d": "Evaluación completa de piel, diagnóstico y tratamiento."}, {"n": "Revisión de lunares", "p": 30, "min": 30, "ic": "🔬", "c": "a2", "d": "Dermatoscopia y control de lesiones pigmentadas."}, {"n": "Tratamiento de acné", "p": 35, "min": 40, "ic": "✨", "c": "a1", "d": "Plan personalizado con seguimiento mensual."}, {"n": "Peeling químico", "p": 45, "min": 45, "ic": "💧", "c": "a2", "d": "Renovación de la piel, manchas y textura."}, {"n": "Crioterapia", "p": 30, "min": 20, "ic": "❄️", "c": "a3", "d": "Eliminación de verrugas y queratosis."}, {"n": "Biopsia de piel", "p": 60, "min": 40, "ic": "⚕️", "c": "a3", "d": "Toma de muestra con estudio anatomopatológico."}, {"n": "Consulta capilar", "p": 30, "min": 30, "ic": "💇", "c": "a1", "d": "Evaluación de caída de cabello y cuero cabelludo."}, {"n": "Control post-tratamiento", "p": 0, "min": 15, "ic": "📋", "c": "a2", "d": "Seguimiento incluido tras el procedimiento."}];
+
+  var DOCTORES = [{"n": "Consulta clínica", "esp": ""}, {"n": "Consulta estética", "esp": ""}, {"n": "El primero disponible", "esp": ""}];
+
+  var OCUPADO = ['09:00','11:30','15:00'];
+
+  /* ========== A partir de aquí NO hace falta tocar nada ========== */
+
+  var COLOR = {a1:['rgba(63,167,196,.18)','#3fa7c4'], a2:['rgba(127,214,184,.22)','#2f9d7c'], a3:['rgba(242,163,163,.24)','#c96b6b']};
+  var sel = {svc:null, doc:null, day:null, time:null};
+  var $ = function(id){ return document.getElementById(id); };
+  function safe(fn){ try{ fn(); }catch(e){} }
+  function money(v){ return v === 0 ? 'Gratis' : CONFIG.moneda + (Math.round(v*100)/100).toFixed(2).replace(/\.00$/,''); }
+
+  var DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  var MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+  function renderTrGrid(){
+    var h = '';
+    for(var i=0;i<TRATAMIENTOS.length;i++){
+      var t = TRATAMIENTOS[i], c = COLOR[t.c];
+      h += '<article class="glass tr" data-i="'+i+'">'
+        +   '<i style="background:'+c[0]+';color:'+c[1]+'">'+t.ic+'</i>'
+        +   '<h3>'+t.n+'</h3><p>'+t.d+'</p>'
+        +   '<div class="tr-foot"><span class="tr-p">'+money(t.p)+(t.p?' <small>desde</small>':'')+'</span>'
+        +   '<span class="tr-d">'+t.min+' min</span></div>'
+        + '</article>';
+    }
+    $('trGrid').innerHTML = h;
+    var cards = $('trGrid').querySelectorAll('.tr');
+    for(var j=0;j<cards.length;j++){
+      cards[j].addEventListener('click', function(){
+        sel.svc = +this.dataset.i; renderPickers(); updateResume();
+        $('agenda').scrollIntoView({behavior:'smooth'});
+      });
+    }
+  }
+
+  function renderPickers(){
+    var h = '', i;
+    for(i=0;i<TRATAMIENTOS.length;i++){
+      h += '<button class="chip" aria-pressed="'+(sel.svc===i)+'" data-i="'+i+'">'+TRATAMIENTOS[i].n+'</button>';
+    }
+    $('pickSvc').innerHTML = h; bind('pickSvc', function(el){ sel.svc = +el.dataset.i; });
+
+    h = '';
+    for(i=0;i<DOCTORES.length;i++){
+      h += '<button class="chip" aria-pressed="'+(sel.doc===i)+'" data-i="'+i+'">'+DOCTORES[i].n+'</button>';
+    }
+    $('pickDoc').innerHTML = h; bind('pickDoc', function(el){ sel.doc = +el.dataset.i; });
+
+    h = '';
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    for(i=0;i<CONFIG.dias;i++){
+      var d = new Date(hoy.getTime() + i*86400000);
+      var cerrado = d.getDay() === 0;
+      h += '<button class="chip" aria-pressed="'+(sel.day===i)+'" data-i="'+i+'"'+(cerrado?' disabled':'')+'>'
+        +  '<span class="d1">'+(i===0?'Hoy':DIAS[d.getDay()])+'</span>'
+        +  '<span class="d2">'+d.getDate()+'</span>'
+        +  '<span class="d1">'+MESES[d.getMonth()]+'</span></button>';
+    }
+    $('pickDay').innerHTML = h; bind('pickDay', function(el){ sel.day = +el.dataset.i; });
+
+    h = '';
+    for(var m=CONFIG.abre*60; m<CONFIG.cierra*60; m+=CONFIG.paso){
+      var hh = String(Math.floor(m/60)).padStart(2,'0'), mm = String(m%60).padStart(2,'0'), t = hh+':'+mm;
+      var taken = OCUPADO.indexOf(t) > -1;
+      h += '<button class="chip" aria-pressed="'+(sel.time===t)+'" data-t="'+t+'"'+(taken?' disabled':'')+'>'+t+'</button>';
+    }
+    $('pickTime').innerHTML = h; bind('pickTime', function(el){ sel.time = el.dataset.t; });
+  }
+
+  function bind(id, fn){
+    var els = $(id).querySelectorAll('.chip');
+    for(var i=0;i<els.length;i++){
+      els[i].addEventListener('click', function(){
+        if(this.disabled) return;
+        fn(this); renderPickers(); updateResume(); $('warn').classList.remove('on');
+      });
+    }
+  }
+
+  function dayLabel(){
+    if(sel.day === null) return null;
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    var d = new Date(hoy.getTime() + sel.day*86400000);
+    var pre = sel.day===0 ? 'Hoy, ' : (sel.day===1 ? 'Mañana, ' : '');
+    return pre + DIAS[d.getDay()] + ' ' + d.getDate() + ' ' + MESES[d.getMonth()];
+  }
+
+  function updateResume(){
+    var t = sel.svc !== null ? TRATAMIENTOS[sel.svc] : null;
+    $('rSvc').textContent  = t ? t.n : '—';
+    $('rDoc').textContent  = sel.doc !== null ? DOCTORES[sel.doc].n : '—';
+    $('rDay').textContent  = dayLabel() || '—';
+    $('rTime').textContent = sel.time || '—';
+    $('rDur').textContent  = t ? t.min + ' min' : '—';
+    $('rTotal').textContent = t ? money(t.p) : '—';
+  }
+
+  function sendWA(){
+    if(sel.svc === null || sel.doc === null || sel.day === null || !sel.time){
+      $('warn').classList.add('on'); return;
+    }
+    var name = ($('f-name').value || '').trim();
+    if(!name){ $('f-name').focus(); $('f-name').style.borderColor = '#c0392b'; return; }
+    var phone = ($('f-phone').value || '').trim();
+    if(!phone){ $('f-phone').focus(); $('f-phone').style.borderColor = '#c0392b'; return; }
+
+    var t = TRATAMIENTOS[sel.svc], L = [];
+    L.push('*NUEVA CITA — ' + CONFIG.negocio + '*');
+    L.push('--------------------------------');
+    L.push('*Paciente:* ' + name);
+    L.push('*Teléfono:* ' + phone);
+    L.push('');
+    L.push('*Tratamiento:* ' + t.n);
+    L.push('*Profesional:* ' + DOCTORES[sel.doc].n);
+    L.push('*Día:* ' + dayLabel());
+    L.push('*Hora:* ' + sel.time);
+    L.push('*Duración estimada:* ' + t.min + ' min');
+    L.push('*Estimado:* ' + money(t.p));
+    var note = ($('f-note').value || '').trim();
+    if(note){ L.push(''); L.push('*Nota del paciente:* ' + note); }
+    L.push('--------------------------------');
+    L.push('_Cita solicitada desde la web_');
+
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(L.join('\n')), '_blank');
+  }
+  window.sendWA = function(){ safe(sendWA); };
+
+  safe(renderTrGrid);
+  safe(function(){ renderPickers(); updateResume(); });
+  safe(function(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<els.length;i++) els[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<els.length;j++) io.observe(els[j]);
+    setTimeout(function(){ for(var k=0;k<els.length;k++) els[k].classList.add('in'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

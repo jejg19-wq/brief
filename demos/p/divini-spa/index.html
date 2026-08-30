@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Divini Spa — Propuesta de página web</title>
+<meta name="description" content="Propuesta de página con reservas por WhatsApp para Divini Spa.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Mono:wght@400;700&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bone:#f2efe9; --ink:#0c0c0c; --ink-2:#1a1a1a; --mute:#6e6a63;
+  --red:#d9321f; --line:#0c0c0c;
+  --max:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bone);color:var(--ink);font-family:Archivo,system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 18px}
+h1,h2,h3{font-family:'Archivo Black',Impact,sans-serif;font-weight:400;line-height:.94;letter-spacing:-.03em;text-transform:uppercase}
+.mono{font-family:'Space Mono',monospace;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase}
+
+.demo-bar{background:var(--ink);color:var(--bone);font-size:12px;padding:8px 16px;text-align:center;position:relative;z-index:95}
+.demo-bar strong{color:var(--red)}
+.demo-bar a{color:var(--bone);text-decoration:underline;text-underline-offset:3px}
+
+nav{border-bottom:3px solid var(--line);background:var(--bone);position:sticky;top:0;z-index:80}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:14px;padding-bottom:14px;gap:14px}
+.logo{font-family:'Archivo Black',sans-serif;font-size:19px;letter-spacing:-.03em;text-transform:uppercase}
+.logo em{font-style:normal;color:var(--red)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:3px solid var(--line);background:var(--ink);color:var(--bone);
+  font-family:Archivo,sans-serif;font-weight:700;font-size:14px;padding:12px 22px;cursor:pointer;text-decoration:none;
+  text-transform:uppercase;letter-spacing:.04em;transition:transform .12s,box-shadow .12s,background .15s;box-shadow:4px 4px 0 var(--red)}
+.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--red)}
+.btn:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--red)}
+.btn-o{background:var(--bone);color:var(--ink);box-shadow:4px 4px 0 var(--ink)}
+.btn-o:hover{box-shadow:6px 6px 0 var(--ink)}
+.btn-sm{padding:9px 16px;font-size:12.5px;box-shadow:3px 3px 0 var(--red)}
+
+/* HERO */
+.hero{border-bottom:3px solid var(--line);padding:56px 0 0;position:relative;overflow:hidden}
+.hero h1{font-size:clamp(52px,15vw,140px);margin-bottom:18px}
+.hero h1 .out{-webkit-text-stroke:2px var(--ink);color:transparent;display:block}
+.hero-sub{max-width:44ch;font-size:17px;color:var(--ink-2);margin-bottom:28px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:44px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:3px solid var(--line)}
+.stat{padding:20px 16px;border-right:3px solid var(--line)}
+.stat:last-child{border-right:0}
+.stat b{font-family:'Archivo Black',sans-serif;font-size:clamp(24px,5vw,38px);display:block;line-height:1}
+.stat .mono{color:var(--mute);margin-top:6px;display:block}
+.ticker{background:var(--ink);color:var(--bone);overflow:hidden;white-space:nowrap;border-bottom:3px solid var(--line)}
+.ticker div{display:inline-block;padding:11px 0;animation:slide 24s linear infinite}
+.ticker span{padding:0 22px;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase}
+.ticker span::after{content:'✦';margin-left:22px;color:var(--red)}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+section{padding:66px 0;border-bottom:3px solid var(--line)}
+.sec-head{margin-bottom:34px}
+.sec-head h2{font-size:clamp(30px,7vw,58px);margin-bottom:10px}
+.sec-head p{color:var(--mute);max-width:50ch;font-size:15.5px}
+
+/* SERVICIOS */
+.svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));border-top:3px solid var(--line);border-left:3px solid var(--line)}
+.svc{border-right:3px solid var(--line);border-bottom:3px solid var(--line);padding:22px;cursor:pointer;background:var(--bone);
+  transition:background .15s,color .15s;position:relative}
+.svc:hover{background:var(--ink);color:var(--bone)}
+.svc:hover .svc-p{color:var(--red)}
+.svc:hover .svc-dur{color:rgba(242,239,233,.6)}
+.svc .num{font-family:'Space Mono',monospace;font-size:11px;color:var(--red);display:block;margin-bottom:12px}
+.svc h3{font-size:22px;margin-bottom:8px}
+.svc-d{font-size:13.5px;color:inherit;opacity:.75;margin-bottom:16px;min-height:38px}
+.svc-foot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid currentColor;padding-top:12px}
+.svc-p{font-family:'Archivo Black',sans-serif;font-size:24px}
+.svc-dur{font-family:'Space Mono',monospace;font-size:11.5px;color:var(--mute)}
+
+/* EQUIPO */
+.team{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0;border-left:3px solid var(--line);border-top:3px solid var(--line)}
+.member{border-right:3px solid var(--line);border-bottom:3px solid var(--line);padding:22px}
+.member .av{width:64px;height:64px;background:var(--ink);color:var(--bone);display:grid;place-items:center;
+  font-family:'Archivo Black',sans-serif;font-size:24px;margin-bottom:14px}
+.member h3{font-size:18px;margin-bottom:4px}
+.member .mono{color:var(--red);display:block;margin-bottom:8px}
+.member p{font-size:13.5px;color:var(--mute)}
+
+/* RESERVA */
+.book{background:var(--ink);color:var(--bone)}
+.book h2{color:var(--bone)}
+.book .sec-head p{color:rgba(242,239,233,.6)}
+.step{margin-bottom:30px}
+.step-t{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.step-n{width:30px;height:30px;background:var(--red);color:var(--bone);display:grid;place-items:center;
+  font-family:'Archivo Black',sans-serif;font-size:14px;flex:0 0 auto}
+.step-t h3{font-size:17px;color:var(--bone)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:transparent;border:2px solid rgba(242,239,233,.28);color:var(--bone);padding:11px 17px;cursor:pointer;
+  font-family:Archivo,sans-serif;font-size:14px;font-weight:500;transition:all .15s;text-align:center}
+.chip:hover{border-color:var(--bone)}
+.chip[aria-pressed="true"]{background:var(--red);border-color:var(--red);font-weight:700}
+.chip:disabled{opacity:.26;cursor:not-allowed;text-decoration:line-through}
+.chip .d1{display:block;font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:.12em;opacity:.7;text-transform:uppercase}
+.chip .d2{display:block;font-family:'Archivo Black',sans-serif;font-size:19px;line-height:1.2}
+.days{display:grid;grid-template-columns:repeat(auto-fit,minmax(74px,1fr));gap:8px}
+.slots{display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:8px}
+.finp{width:100%;background:transparent;border:2px solid rgba(242,239,233,.28);color:var(--bone);padding:13px 14px;
+  font-family:Archivo,sans-serif;font-size:15px}
+.finp::placeholder{color:rgba(242,239,233,.4)}
+.finp:focus{outline:0;border-color:var(--red)}
+.resume{border:3px solid var(--red);padding:20px;margin-bottom:18px}
+.resume .mono{color:var(--red);display:block;margin-bottom:12px}
+.rline{display:flex;justify-content:space-between;gap:14px;padding:7px 0;font-size:14.5px;border-bottom:1px solid rgba(242,239,233,.14)}
+.rline:last-of-type{border:0}
+.rline span:first-child{color:rgba(242,239,233,.55)}
+.rline b{text-align:right}
+.rtotal{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;padding-top:12px;border-top:2px solid rgba(242,239,233,.28)}
+.rtotal b{font-family:'Archivo Black',sans-serif;font-size:30px;color:var(--red)}
+.wa{width:100%;background:#25D366;color:#06280e;border-color:#25D366;box-shadow:4px 4px 0 var(--bone);font-size:15px;padding:16px}
+.wa:hover{box-shadow:6px 6px 0 var(--bone)}
+.hint{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:.08em;color:rgba(242,239,233,.45);text-align:center;margin-top:12px}
+.warn{color:var(--red);font-size:13px;margin-top:8px;font-weight:600;display:none}
+.warn.on{display:block}
+
+/* INFO */
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));border-left:3px solid var(--line);border-top:3px solid var(--line)}
+.icard{border-right:3px solid var(--line);border-bottom:3px solid var(--line);padding:22px}
+.icard h3{font-size:16px;margin-bottom:10px;color:var(--red)}
+.icard p,.icard .row{font-size:14px;color:var(--ink-2)}
+.row{display:flex;justify-content:space-between;padding:5px 0}
+.row span:last-child{color:var(--mute);font-family:'Space Mono',monospace;font-size:12.5px}
+
+footer{padding:36px 0;text-align:center;font-size:13px;color:var(--mute)}
+footer a{color:var(--ink);font-weight:600}
+
+.rv{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.ticker div{animation:none}}
+@media(max-width:620px){.stats{grid-template-columns:1fr;border-top:0}.stat{border-right:0;border-top:3px solid var(--line)}}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <strong>PROPUESTA</strong> · Ejemplo hecho para Divini Spa. Productos y precios de muestra. <a href="https://jejg19-wq.github.io/brief/demos/">¿Quién hizo esto?</a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Divini<em>/</em>Spa</div>
+    <button class="btn btn-sm" onclick="document.getElementById('reservar').scrollIntoView()">Reservar</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="mono" style="color:var(--red);margin-bottom:18px">Spa · Cejas · Uñas · San Cristóbal</p>
+    <h1>Tu cita<span class="out">sin</span>llamadas</h1>
+    <p class="hero-sub">Reserva tu tratamiento en 20 segundos. Eliges servicio, día y hora — y llegas a que te atiendan.</p>
+    <div class="hero-cta">
+      <button class="btn" onclick="document.getElementById('reservar').scrollIntoView()">Reservar mi cita</button>
+      <a class="btn btn-o" href="#servicios">Ver servicios</a>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>20s</b><span class="mono">En reservar</span></div>
+    <div class="stat"><b>4</b><span class="mono">Barberos</span></div>
+    <div class="stat"><b>7 días</b><span class="mono">Abiertos</span></div>
+  </div>
+</header>
+
+<div class="ticker"><div id="tk"></div></div>
+
+<section id="servicios">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <h2>Servicios</h2>
+      <p>Precios claros, sin sorpresas. Toca uno para reservarlo directo.</p>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<section id="equipo">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>El equipo</h2><p>Elige con quién quieres atenderte, o déjanos asignarte a la primera disponible.</p></div>
+    <div class="team" id="teamGrid"></div>
+  </div>
+</section>
+
+<section id="reservar" class="book">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>Reserva tu cita</h2><p>Cuatro toques y listo. Te llega la confirmación por WhatsApp.</p></div>
+
+    <div class="step">
+      <div class="step-t"><div class="step-n">1</div><h3>¿Qué te vas a hacer?</h3></div>
+      <div class="chips" id="pickSvc"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-t"><div class="step-n">2</div><h3>¿Con quién?</h3></div>
+      <div class="chips" id="pickBarber"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-t"><div class="step-n">3</div><h3>¿Qué día?</h3></div>
+      <div class="days" id="pickDay"></div>
+    </div>
+
+    <div class="step">
+      <div class="step-t"><div class="step-n">4</div><h3>¿A qué hora?</h3></div>
+      <div class="slots" id="pickTime"></div>
+      <p class="hint" style="text-align:left;margin-top:10px">Las horas tachadas ya están tomadas.</p>
+    </div>
+
+    <div class="step">
+      <div class="step-t"><div class="step-n">5</div><h3>Tus datos</h3></div>
+      <input class="finp" id="f-name" placeholder="Tu nombre y apellido" style="margin-bottom:10px">
+      <input class="finp" id="f-phone" placeholder="Tu teléfono (opcional)" inputmode="tel">
+    </div>
+
+    <div class="resume">
+      <span class="mono">Resumen de tu cita</span>
+      <div class="rline"><span>Servicio</span><b id="rSvc">—</b></div>
+      <div class="rline"><span>Barbero</span><b id="rBarber">—</b></div>
+      <div class="rline"><span>Día</span><b id="rDay">—</b></div>
+      <div class="rline"><span>Hora</span><b id="rTime">—</b></div>
+      <div class="rline"><span>Duración</span><b id="rDur">—</b></div>
+      <div class="rtotal"><span class="mono">Total</span><b id="rTotal">—</b></div>
+    </div>
+
+    <button class="btn wa" onclick="sendWA()">Confirmar por WhatsApp</button>
+    <p class="warn" id="warn">Falta seleccionar algo. Revisa los pasos de arriba.</p>
+    <p class="hint">Se abre tu WhatsApp con la cita ya escrita. Solo tocas enviar.</p>
+  </div>
+</section>
+
+<section id="info" style="border-bottom:0">
+  <div class="wrap">
+    <div class="sec-head rv"><h2>Info</h2></div>
+    <div class="info">
+      <div class="icard rv">
+        <h3>Horario</h3>
+        <div class="row"><span>Lun — Vie</span><span>9:00 — 19:00</span></div>
+        <div class="row"><span>Sábado</span><span>9:00 — 20:00</span></div>
+        <div class="row"><span>Domingo</span><span>10:00 — 15:00</span></div>
+      </div>
+      <div class="icard rv">
+        <h3>Dónde estamos</h3>
+        <p>Barrio Obrero / Capacho.<br>San Cristóbal, Táchira.</p>
+      </div>
+      <div class="icard rv">
+        <h3>Pagos</h3>
+        <p>Efectivo (USD y Bs), pago móvil, Zelle y punto de venta.</p>
+      </div>
+      <div class="icard rv">
+        <h3>Política</h3>
+        <p>Si no puedes venir, avísanos con 2 horas de anticipación y te reprogramamos sin problema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Divini Spa · San Cristóbal, Táchira — <em>propuesta de ejemplo</em></p>
+    <p style="margin-top:6px">Propuesta hecha por <a href="https://jejg19-wq.github.io/brief/demos/">Jackson · Webs y citas por WhatsApp</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ==========================================================
+     CONFIG — Jackson: edita SOLO este bloque por cliente
+     ========================================================== */
+  var CONFIG = {
+    negocio: 'Divini Spa',
+    whatsapp: '584121234567',
+    moneda: '$',
+    abre: 9, cierra: 19, paso: 30,   // horario y minutos entre citas
+    dias: 7                           // cuántos días adelante mostrar
+  };
+
+  var SERVICIOS = [{"n": "Limpieza facial profunda", "p": 20, "min": 60, "d": "Extracción, exfoliación y mascarilla."}, {"n": "Diseño de cejas", "p": 5, "min": 25, "d": "Depilación, perfilado y tinte."}, {"n": "Pestañas pelo a pelo", "p": 25, "min": 90, "d": "Extensiones con acabado natural."}, {"n": "Manicure semipermanente", "p": 12, "min": 60, "d": "Esmaltado que dura tres semanas."}, {"n": "Masaje relajante", "p": 18, "min": 60, "d": "Cuerpo completo con aceites tibios."}, {"n": "Tratamiento reductor", "p": 22, "min": 60, "d": "Sesión con aparatología."}];
+
+  var BARBEROS = [{"n": "Especialista 1", "esp": "Faciales y masajes", "ini": "1"}, {"n": "Especialista 2", "esp": "Uñas y pestañas", "ini": "2"}, {"n": "Cualquiera", "esp": "La primera libre", "ini": "*"}];
+
+  // Horas ocupadas de ejemplo (en el sistema real esto lo lleva el barbero)
+  var OCUPADO = ['10:00','10:30','14:00','16:30'];
+
+  /* ========== A partir de aquí NO hace falta tocar nada ========== */
+
+  var sel = {svc:null, barber:null, day:null, time:null};
+  var $ = function(id){ return document.getElementById(id); };
+  var money = function(v){ return CONFIG.moneda + (Math.round(v*100)/100).toFixed(2).replace(/\.00$/,''); };
+  function safe(fn){ try{ fn(); }catch(e){} }
+
+  var DIAS = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+  var MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+  /* ---- Servicios (grid visual) ---- */
+  function renderSvcGrid(){
+    var h = '';
+    for(var i=0;i<SERVICIOS.length;i++){
+      var s = SERVICIOS[i];
+      h += '<article class="svc" data-i="'+i+'">'
+        +   '<span class="num">0'+(i+1)+'</span>'
+        +   '<h3>'+s.n+'</h3>'
+        +   '<p class="svc-d">'+s.d+'</p>'
+        +   '<div class="svc-foot"><span class="svc-p">'+money(s.p)+'</span><span class="svc-dur">'+s.min+' min</span></div>'
+        + '</article>';
+    }
+    $('svcGrid').innerHTML = h;
+    var cards = $('svcGrid').querySelectorAll('.svc');
+    for(var j=0;j<cards.length;j++){
+      cards[j].addEventListener('click', function(){
+        sel.svc = +this.dataset.i;
+        renderPickers(); updateResume();
+        $('reservar').scrollIntoView({behavior:'smooth'});
+      });
+    }
+  }
+
+  function renderTeam(){
+    var h = '';
+    for(var i=0;i<BARBEROS.length-1;i++){
+      var b = BARBEROS[i];
+      h += '<div class="member"><div class="av">'+b.ini+'</div><h3>'+b.n+'</h3>'
+        +  '<span class="mono">'+b.esp+'</span>'
+        +  '<p>Reserva directo con '+b.n+' desde el formulario de abajo.</p></div>';
+    }
+    $('teamGrid').innerHTML = h;
+  }
+
+  /* ---- Pickers ---- */
+  function chip(label, on, attrs){
+    return '<button class="chip" aria-pressed="'+(on?'true':'false')+'" '+(attrs||'')+'>'+label+'</button>';
+  }
+
+  function renderPickers(){
+    // Servicio
+    var h = '';
+    for(var i=0;i<SERVICIOS.length;i++){
+      h += chip(SERVICIOS[i].n + ' · ' + money(SERVICIOS[i].p), sel.svc===i, 'data-i="'+i+'"');
+    }
+    $('pickSvc').innerHTML = h;
+    bind('pickSvc', function(el){ sel.svc = +el.dataset.i; });
+
+    // Barbero
+    h = '';
+    for(var j=0;j<BARBEROS.length;j++){
+      h += chip(BARBEROS[j].n, sel.barber===j, 'data-i="'+j+'"');
+    }
+    $('pickBarber').innerHTML = h;
+    bind('pickBarber', function(el){ sel.barber = +el.dataset.i; });
+
+    // Días
+    h = '';
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    for(var k=0;k<CONFIG.dias;k++){
+      var d = new Date(hoy.getTime() + k*86400000);
+      var lbl = '<span class="d1">'+(k===0?'Hoy':DIAS[d.getDay()])+'</span><span class="d2">'+d.getDate()+'</span><span class="d1">'+MESES[d.getMonth()]+'</span>';
+      h += chip(lbl, sel.day===k, 'data-i="'+k+'"');
+    }
+    $('pickDay').innerHTML = h;
+    bind('pickDay', function(el){ sel.day = +el.dataset.i; });
+
+    // Horas
+    h = '';
+    for(var m=CONFIG.abre*60; m<CONFIG.cierra*60; m+=CONFIG.paso){
+      var hh = String(Math.floor(m/60)).padStart(2,'0'), mm = String(m%60).padStart(2,'0');
+      var t = hh+':'+mm;
+      var taken = OCUPADO.indexOf(t) > -1;
+      h += '<button class="chip" aria-pressed="'+(sel.time===t?'true':'false')+'" data-t="'+t+'"'+(taken?' disabled':'')+'>'+t+'</button>';
+    }
+    $('pickTime').innerHTML = h;
+    bind('pickTime', function(el){ sel.time = el.dataset.t; });
+  }
+
+  function bind(id, fn){
+    var els = $(id).querySelectorAll('.chip');
+    for(var i=0;i<els.length;i++){
+      els[i].addEventListener('click', function(){
+        if(this.disabled) return;
+        fn(this); renderPickers(); updateResume(); $('warn').classList.remove('on');
+      });
+    }
+  }
+
+  function dayLabel(){
+    if(sel.day === null) return null;
+    var hoy = new Date(); hoy.setHours(0,0,0,0);
+    var d = new Date(hoy.getTime() + sel.day*86400000);
+    var pre = sel.day===0 ? 'Hoy, ' : (sel.day===1 ? 'Mañana, ' : '');
+    return pre + DIAS[d.getDay()] + ' ' + d.getDate() + ' ' + MESES[d.getMonth()];
+  }
+
+  function updateResume(){
+    var s = sel.svc !== null ? SERVICIOS[sel.svc] : null;
+    $('rSvc').textContent    = s ? s.n : '—';
+    $('rBarber').textContent = sel.barber !== null ? BARBEROS[sel.barber].n : '—';
+    $('rDay').textContent    = dayLabel() || '—';
+    $('rTime').textContent   = sel.time || '—';
+    $('rDur').textContent    = s ? s.min + ' min' : '—';
+    $('rTotal').textContent  = s ? money(s.p) : '—';
+  }
+
+  /* ---- WhatsApp ---- */
+  function sendWA(){
+    if(sel.svc === null || sel.barber === null || sel.day === null || !sel.time){
+      $('warn').classList.add('on');
+      $('reservar').scrollIntoView({behavior:'smooth'});
+      return;
+    }
+    var name = ($('f-name').value || '').trim();
+    if(!name){ $('f-name').focus(); $('f-name').style.borderColor = 'var(--red)'; return; }
+
+    var s = SERVICIOS[sel.svc];
+    var L = [];
+    L.push('*NUEVA CITA — ' + CONFIG.negocio + '*');
+    L.push('--------------------------------');
+    L.push('*Cliente:* ' + name);
+    var ph = ($('f-phone').value || '').trim();
+    if(ph) L.push('*Teléfono:* ' + ph);
+    L.push('');
+    L.push('*Servicio:* ' + s.n);
+    L.push('*Barbero:* ' + BARBEROS[sel.barber].n);
+    L.push('*Día:* ' + dayLabel());
+    L.push('*Hora:* ' + sel.time);
+    L.push('*Duración:* ' + s.min + ' min');
+    L.push('--------------------------------');
+    L.push('*TOTAL: ' + money(s.p) + '*');
+    L.push('');
+    L.push('_Cita reservada desde la web_');
+
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(L.join('\n')), '_blank');
+  }
+  window.sendWA = function(){ safe(sendWA); };
+
+  /* ---- Init ---- */
+  safe(function(){
+    var words = ["Faciales", "Uñas", "Cejas", "Masajes", "Sin espera", "Reserva online"];
+    var row = words.concat(words).map(function(w){ return '<span>'+w+'</span>'; }).join('');
+    $('tk').innerHTML = row;
+  });
+  safe(renderSvcGrid);
+  safe(renderTeam);
+  safe(function(){ renderPickers(); updateResume(); });
+
+  safe(function(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){
+      for(var i=0;i<els.length;i++) els[i].classList.add('in'); return;
+    }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<els.length;j++) io.observe(els[j]);
+    setTimeout(function(){ for(var k=0;k<els.length;k++) els[k].classList.add('in'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>
