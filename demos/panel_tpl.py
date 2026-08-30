@@ -46,6 +46,10 @@ h1 span{color:var(--n)}
 .p1{background:var(--n);color:#0b1400}
 .p2{background:rgba(196,245,66,.16);color:var(--n)}
 .p3{background:var(--card2);color:var(--mute)}
+.tanda{flex:0 0 auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  padding:4px 9px;border-radius:100px;white-space:nowrap;border:1px solid var(--line);color:var(--mute)}
+.t1{border-color:var(--n);color:var(--n)}
+.badges{display:flex;gap:6px;flex-direction:column;align-items:flex-end}
 .warn{font-size:12px;color:var(--warn);background:rgba(240,161,60,.10);border:1px solid rgba(240,161,60,.28);
   border-radius:8px;padding:8px 11px;margin:9px 0}
 .msg{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:12px;font-size:13px;
@@ -72,8 +76,8 @@ h1 span{color:var(--n)}
 .vacio{text-align:center;color:var(--mute);padding:44px 0;font-size:14px}
 .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120%);background:var(--n);color:#0b1400;
   padding:12px 24px;border-radius:100px;font-weight:600;font-size:14px;z-index:60;transition:transform .3s cubic-bezier(.2,.9,.3,1.2);
-  box-shadow:0 10px 30px rgba(0,0,0,.5)}
-.toast.show{transform:translateX(-50%) translateY(0)}
+  box-shadow:0 10px 30px rgba(0,0,0,.5);opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .aviso{background:rgba(240,161,60,.09);border:1px solid rgba(240,161,60,.26);border-radius:var(--r);
   padding:14px 16px;font-size:13px;color:#e8d5b8;margin-bottom:16px;line-height:1.65}
 .aviso b{color:var(--warn)}
@@ -87,6 +91,7 @@ h1 span{color:var(--n)}
     <p class="sub">San Cristóbal · cada uno con su página personalizada y su mensaje</p>
     <div class="stats">
       <span><b id="sTotal">0</b> en total</span>
+      <span><b id="sT1">0</b> en tanda 1</span>
       <span><b id="sPend">0</b> por enviar</span>
       <span><b id="sEnv">0</b> enviados</span>
       <span><b id="sResp">0</b> respondieron</span>
@@ -95,6 +100,12 @@ h1 span{color:var(--n)}
     <div class="tools">
       <input id="q" placeholder="Buscar negocio…" autocomplete="off">
       <select id="fNicho"><option value="">Todos los rubros</option></select>
+      <select id="fTanda">
+        <option value="">Todas las tandas</option>
+        <option value="1">Tanda 1 · empezar por aquí</option>
+        <option value="2">Tanda 2 · después</option>
+        <option value="3">Tanda 3 · cuando tengas casos</option>
+      </select>
       <select id="fEstado">
         <option value="">Todos los estados</option>
         <option value="pendiente">Por enviar</option>
@@ -146,14 +157,15 @@ h1 span{color:var(--n)}
 
   function pintar(){
     var q = ($('q').value || '').toLowerCase().trim();
-    var fn = $('fNicho').value, fe = $('fEstado').value;
+    var fn = $('fNicho').value, fe = $('fEstado').value, ft = $('fTanda').value;
     var h = '', n = 0;
-    var orden = P.slice().sort(function(a,b){ return (a.prio - b.prio) || a.nombre.localeCompare(b.nombre); });
+    var orden = P.slice().sort(function(a,b){ return (a.tanda - b.tanda) || (a.prio - b.prio) || a.nombre.localeCompare(b.nombre); });
 
     for(var i=0;i<orden.length;i++){
       var p = orden[i], e = est(p);
       if(q && p.nombre.toLowerCase().indexOf(q) < 0 && (p.ig||'').toLowerCase().indexOf(q) < 0) continue;
       if(fn && p.base !== fn) continue;
+      if(ft && String(p.tanda) !== ft) continue;
       if(fe && e !== fe) continue;
       n++;
 
@@ -167,7 +179,10 @@ h1 span{color:var(--n)}
         +     '<div class="meta">'+esc(p.tipo)+' · '+esc(p.zona)
         +       (p.ig ? ' · <a href="https://instagram.com/'+esc(p.ig)+'" target="_blank" rel="noopener">@'+esc(p.ig)+'</a>' : '')
         +     '</div>'
-        +   '</div><span class="prio p'+p.prio+'">'+(p.prio===1?'Caliente':(p.prio===2?'Medio':'Frío'))+'</span></div>';
+        +   '</div><div class="badges">'
+        +     '<span class="prio p'+p.prio+'">'+(p.prio===1?'Caliente':(p.prio===2?'Medio':'Frío'))+'</span>'
+        +     '<span class="tanda t'+p.tanda+'">Tanda '+p.tanda+'</span>'
+        +   '</div></div>';
 
       if(!tel){
         h += '<div class="warn">Sin número publicado. Ábrele el Instagram, copia el WhatsApp de la bio y escríbele desde ahí.</div>';
@@ -181,6 +196,7 @@ h1 span{color:var(--n)}
         +    '<button class="b bg" data-copiar="'+i+'">Copiar mensaje</button>'
         +    (waUrl ? '<a class="b bw" href="'+waUrl+'" target="_blank" rel="noopener" data-wa="'+i+'">Abrir WhatsApp</a>'
                     : '<button class="b bw" disabled>Abrir WhatsApp</button>')
+        +    '<a class="b bg" href="'+p.brief+'" target="_blank" rel="noopener">Brief</a>'
         +    '<button class="b bg" data-seg="'+i+'">Copiar seguimiento</button>'
         +  '</div>'
         +  '<div class="estado">';
@@ -245,6 +261,9 @@ h1 span{color:var(--n)}
     var c = {pendiente:0, enviado:0, respondio:0, cerrado:0, descartado:0};
     for(var i=0;i<P.length;i++) c[est(P[i])]++;
     $('sTotal').textContent = P.length;
+    var t1 = 0;
+    for(var k=0;k<P.length;k++) if(P[k].tanda === 1) t1++;
+    $('sT1').textContent = t1;
     $('sPend').textContent  = c.pendiente;
     $('sEnv').textContent   = c.enviado;
     $('sResp').textContent  = c.respondio;
@@ -253,6 +272,7 @@ h1 span{color:var(--n)}
 
   $('q').addEventListener('input', pintar);
   $('fNicho').addEventListener('change', pintar);
+  $('fTanda').addEventListener('change', pintar);
   $('fEstado').addEventListener('change', pintar);
   safe(pintar);
 })();
