@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>María Silva — Maquilladora profesional</title>
+<meta name="description" content="Maquillaje social, novias, graduaciones y quinceañeras en Cúcuta y Táchira. Reserva la fecha de tu evento.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F6; --sand:#F2E9E4; --paper:#FFFFFF;
+  --ink:#2B2225; --soft:#55474B; --mute:#806E72;
+  --acc:#7A3A4A;            /* vino — WCAG AA (7.84:1) */
+  --acc-soft:#E7D2D7;
+  --gold:#B08D57;
+  --line:rgba(43,34,37,.12);
+  --wa:#25D366;
+  --max:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;
+  line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;line-height:1.1;letter-spacing:-.01em}
+.script{font-family:Parisienne,cursive}
+.caps{font-size:11px;letter-spacing:.32em;text-transform:uppercase;font-weight:400}
+
+.prop{background:var(--ink);color:var(--cream);font-size:11.5px;padding:9px 16px;text-align:center;line-height:1.5}
+.prop b{color:#E7B9C4;font-weight:500}
+.prop a{color:var(--cream);text-decoration:underline;text-underline-offset:3px}
+
+nav{position:sticky;top:0;z-index:70;background:rgba(251,248,246,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.mono{width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;
+  font-family:Parisienne,cursive;font-size:25px;color:var(--acc);line-height:1;padding-bottom:3px;flex:0 0 auto}
+.wordmark{line-height:1.05}
+.wordmark .n{font-family:'Cormorant Garamond',serif;font-size:19px;display:block}
+.wordmark .s{font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mute);display:block;margin-top:2px}
+.nav-links{display:flex;gap:26px;font-size:13px;letter-spacing:.05em}
+.nav-links a{color:var(--soft);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--acc)}
+@media(max-width:880px){.nav-links{display:none}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--acc);
+  background:var(--acc);color:#fff;font-family:Jost,sans-serif;font-size:12.5px;letter-spacing:.16em;
+  text-transform:uppercase;padding:15px 30px;cursor:pointer;text-decoration:none;border-radius:100px;
+  transition:all .28s cubic-bezier(.2,.7,.3,1)}
+.btn:hover{background:transparent;color:var(--acc)}
+.btn-o{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-o:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+.btn-sm{padding:11px 20px;font-size:11px}
+
+.hero{padding:64px 0 56px;position:relative;overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
+@media(max-width:880px){.hero-in{grid-template-columns:1fr;gap:34px}}
+.hero .caps{color:var(--acc);display:block;margin-bottom:22px}
+.hero h1{font-size:clamp(42px,9vw,76px);margin-bottom:20px}
+.hero h1 .script{color:var(--acc);font-size:1.05em}
+.hero p{font-size:17px;color:var(--soft);max-width:42ch;margin-bottom:32px}
+.hero-cta{display:flex;gap:11px;flex-wrap:wrap}
+.retrato{aspect-ratio:4/5;background:linear-gradient(150deg,#C9A0A8,#7A3A4A 70%);position:relative;overflow:hidden}
+.retrato::after{content:'María Silva';position:absolute;inset:auto 0 26px 0;text-align:center;
+  font-family:Parisienne,cursive;font-size:34px;color:rgba(255,255,255,.82)}
+.retrato .tag{position:absolute;top:16px;left:16px;background:rgba(251,248,246,.92);color:var(--acc);
+  font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;padding:6px 12px;border-radius:100px}
+.marks{display:flex;gap:32px;flex-wrap:wrap;margin-top:44px;padding-top:26px;border-top:1px solid var(--line)}
+.marks b{font-family:'Cormorant Garamond',serif;font-size:26px;display:block;line-height:1;color:var(--acc)}
+.marks span{font-size:12px;color:var(--mute)}
+
+section{padding:70px 0}
+.sec-head{margin-bottom:38px}
+.sec-head .caps{color:var(--acc);display:block;margin-bottom:14px}
+.sec-head h2{font-size:clamp(30px,6vw,50px);margin-bottom:12px}
+.sec-head h2 em{font-style:italic;color:var(--acc)}
+.sec-head p{color:var(--mute);max-width:50ch;font-size:15.5px}
+
+.svc-grid{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  grid-template-columns:repeat(auto-fill,minmax(266px,1fr))}
+.svc{background:var(--cream);padding:26px 24px;cursor:pointer;transition:background .3s;display:flex;flex-direction:column;gap:8px}
+.svc:hover{background:var(--paper)}
+.svc .n{font-size:10px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.svc h3{font-size:23px}
+.svc p{font-size:13.5px;color:var(--mute);flex:1;min-height:44px}
+.svc-foot{display:flex;justify-content:space-between;align-items:baseline;padding-top:14px;border-top:1px solid var(--line);margin-top:6px}
+.svc .p{font-family:'Cormorant Garamond',serif;font-size:26px;color:var(--acc)}
+.svc .t{font-size:11.5px;color:var(--mute)}
+
+.folio{display:grid;gap:10px;grid-template-columns:repeat(auto-fill,minmax(178px,1fr))}
+.fo{aspect-ratio:4/5;position:relative;display:grid;place-items:end start;padding:16px;overflow:hidden;
+  transition:transform .35s cubic-bezier(.2,.7,.3,1)}
+.fo:hover{transform:scale(1.03)}
+.fo span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.92);position:relative;z-index:1}
+.fo::before{content:'';position:absolute;inset:0;background:linear-gradient(transparent 45%,rgba(43,34,37,.55))}
+
+.book{background:var(--sand)}
+.panel{background:var(--paper);border:1px solid var(--line);padding:30px 24px}
+@media(min-width:820px){.panel{padding:42px 40px}}
+.grp{margin-bottom:28px}
+.glabel{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.gn{width:27px;height:27px;border-radius:50%;border:1px solid var(--acc);color:var(--acc);
+  display:grid;place-items:center;font-size:12px;flex:0 0 auto;font-family:'Cormorant Garamond',serif}
+.glabel h3{font-size:17px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:transparent;border:1px solid var(--line);color:var(--soft);padding:12px 18px;cursor:pointer;
+  font-family:Jost,sans-serif;font-size:13.5px;transition:all .2s;border-radius:100px}
+.chip:hover{border-color:var(--acc);color:var(--acc)}
+.chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+.dual{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:560px){.dual{grid-template-columns:1fr}}
+.finp{width:100%;background:var(--cream);border:1px solid var(--line);color:var(--ink);
+  padding:14px 15px;font-family:Jost,sans-serif;font-size:15px;margin-bottom:10px;border-radius:2px}
+.finp::placeholder{color:var(--mute)}
+.finp:focus{outline:0;border-color:var(--acc);background:var(--paper)}
+.flab{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:7px}
+.resume{background:var(--cream);border:1px solid var(--acc-soft);padding:24px;margin:26px 0 16px}
+.resume .caps{color:var(--acc);display:block;margin-bottom:16px}
+.rl{display:flex;justify-content:space-between;gap:16px;padding:9px 0;font-size:14.5px;border-bottom:1px solid var(--line)}
+.rl:last-of-type{border:0}
+.rl span{color:var(--mute)}
+.rl b{font-weight:400;text-align:right}
+.rt{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px;padding-top:16px;border-top:1px solid var(--acc-soft)}
+.rt b{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--acc)}
+.rt small{display:block;font-size:11px;color:var(--mute);text-align:right}
+.wa{width:100%;background:var(--wa);border-color:var(--wa);color:#06280E;font-size:13px;padding:17px}
+.wa:hover{background:transparent;color:#0d6b2c;border-color:var(--wa)}
+.hint{font-size:12.5px;color:var(--mute);text-align:center;margin-top:14px}
+.warn{color:#A8342F;font-size:13.5px;margin-top:12px;text-align:center;display:none}
+.warn.on{display:block}
+
+.info{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
+.card{background:var(--cream);padding:26px 24px}
+.card h3{font-size:19px;margin-bottom:10px;color:var(--acc)}
+.card p{font-size:14px;color:var(--soft)}
+
+footer{padding:52px 0;border-top:1px solid var(--line);text-align:center;color:var(--mute);font-size:13px}
+footer .logo{justify-content:center;margin-bottom:18px}
+footer a{color:var(--acc);text-decoration:none}
+.hermanas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0 18px}
+.hermanas a{border:1px solid var(--line);padding:9px 18px;border-radius:100px;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);transition:all .2s}
+.hermanas a:hover{border-color:var(--acc);color:var(--acc)}
+
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="prop">
+  <b>PROPUESTA</b> para María Silva · Servicios, precios e imágenes de muestra.
+  <a href="../">Ver las tres marcas</a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../">
+      <span class="mono">M</span>
+      <span class="wordmark"><span class="n">María <em class="script" style="color:var(--acc)">Silva</em></span><span class="s">Makeup Artist</span></span>
+    </a>
+    <div class="nav-links"><a href="#servicios">Servicios</a><a href="#trabajos">Trabajos</a><a href="#reservar">Reservar</a></div>
+    <button class="btn btn-sm" onclick="document.getElementById('reservar').scrollIntoView()">Reservar fecha</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-in">
+      <div>
+        <span class="caps">Maquilladora · Cúcuta y Táchira</span>
+        <h1>Tu día,<br><span class="script">como te lo imaginaste.</span></h1>
+        <p>Novias, graduaciones, quinceañeras y sesiones. Reserva la fecha de tu evento aquí — sin ir y venir por el chat para saber si estoy libre.</p>
+        <div class="hero-cta">
+          <button class="btn" onclick="document.getElementById('reservar').scrollIntoView()">Reservar mi fecha</button>
+          <a class="btn btn-o" href="#servicios">Ver servicios</a>
+        </div>
+        <div class="marks">
+          <div><b>2 países</b><span>Cúcuta y Táchira</span></div>
+          <div><b>A domicilio</b><span>Voy a donde estés</span></div>
+          <div><b>Prueba</b><span>Incluida para novias</span></div>
+        </div>
+      </div>
+      <div class="retrato rv"><span class="tag">Foto de muestra</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="servicios">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">Lo que hago</span>
+      <h2>Servicios y <em>precios</em></h2>
+      <p>Toca el que necesitas y te lleva a reservar con ese servicio ya elegido.</p>
+    </div>
+    <div class="svc-grid" id="svcGrid"></div>
+  </div>
+</section>
+
+<section id="trabajos" style="background:var(--sand)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">Portafolio</span>
+      <h2>Algunos <em>trabajos</em></h2>
+      <p>Aquí van tus fotos reales. Estas son de muestra para que veas cómo se acomodan.</p>
+    </div>
+    <div class="folio" id="folio"></div>
+  </div>
+</section>
+
+<section id="reservar" class="book" style="background:var(--cream)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">Agenda</span>
+      <h2>Reserva tu <em>fecha</em></h2>
+      <p>Los eventos se apartan con anticipación. Dime la fecha y te confirmo disponibilidad al momento.</p>
+    </div>
+    <div class="panel rv">
+
+      <div class="grp">
+        <div class="glabel"><span class="gn">1</span><h3>¿Para qué es?</h3></div>
+        <div class="chips" id="pickSvc"></div>
+      </div>
+
+      <div class="grp">
+        <div class="glabel"><span class="gn">2</span><h3>¿Cuándo y dónde?</h3></div>
+        <div class="dual">
+          <div><label class="flab" for="f-fecha">Fecha del evento</label><input class="finp" type="date" id="f-fecha"></div>
+          <div><label class="flab" for="f-hora">Hora a la que debes estar lista</label><input class="finp" type="time" id="f-hora"></div>
+        </div>
+        <label class="flab" style="margin-top:6px">Ciudad</label>
+        <div class="chips" id="pickCiudad"></div>
+        <label class="flab" style="margin-top:18px">Lugar</label>
+        <div class="chips" id="pickLugar"></div>
+      </div>
+
+      <div class="grp">
+        <div class="glabel"><span class="gn">3</span><h3>¿Cuántas personas?</h3></div>
+        <div class="chips" id="pickPax"></div>
+        <p class="hint" style="text-align:left;margin-top:10px">Si son varias, cada persona adicional se cotiza aparte.</p>
+      </div>
+
+      <div class="grp">
+        <div class="glabel"><span class="gn">4</span><h3>Tus datos</h3></div>
+        <input class="finp" id="f-name" placeholder="Nombre y apellido">
+        <input class="finp" id="f-phone" placeholder="Tu teléfono" inputmode="tel">
+        <input class="finp" id="f-note" placeholder="Cuéntame del evento: estilo, vestido, referencias… (opcional)">
+      </div>
+
+      <div class="resume">
+        <span class="caps">Tu reserva</span>
+        <div class="rl"><span>Servicio</span><b id="rSvc">—</b></div>
+        <div class="rl"><span>Fecha</span><b id="rFecha">—</b></div>
+        <div class="rl"><span>Hora</span><b id="rHora">—</b></div>
+        <div class="rl"><span>Ciudad</span><b id="rCiudad">—</b></div>
+        <div class="rl"><span>Lugar</span><b id="rLugar">—</b></div>
+        <div class="rl"><span>Personas</span><b id="rPax">—</b></div>
+        <div class="rt"><span class="caps" style="color:var(--mute)">Estimado</span>
+          <div><b id="rTotal">—</b><small>Se confirma al conversar</small></div></div>
+      </div>
+
+      <button class="btn wa" onclick="sendWA()">Reservar por WhatsApp</button>
+      <p class="warn" id="warn">Falta el servicio, la fecha o la ciudad.</p>
+      <p class="hint">Se abre tu WhatsApp con la reserva ya escrita.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="caps">Cómo trabajo</span><h2>Lo que <em>debes</em> saber</h2></div>
+    <div class="info">
+      <div class="card rv"><h3>Para apartar la fecha</h3>
+        <p>Se aparta con el 50%. Las fechas de temporada (grados y diciembre) se llenan con semanas de anticipación.</p></div>
+      <div class="card rv"><h3>Novias</h3>
+        <p>El paquete incluye una prueba previa para definir el look, y el maquillaje del día con retoque hasta la ceremonia.</p></div>
+      <div class="card rv"><h3>A domicilio</h3>
+        <p>Voy a tu casa, al salón o al hotel. En Cúcuta y en el Táchira. Fuera de la ciudad se suma el traslado.</p></div>
+      <div class="card rv"><h3>Cambios y cancelaciones</h3>
+        <p>Puedes mover la fecha avisando con 72 horas. Cancelando después de apartar, el abono no se devuelve.</p></div>
+      <div class="card rv"><h3>Colaboraciones y PR</h3>
+        <p>Para marcas que quieran enviar producto o trabajar contenido, escríbeme y coordinamos.</p></div>
+      <div class="card rv"><h3>Formas de pago</h3>
+        <p>Efectivo (USD y Bs), pago móvil, Zelle, transferencia y Nequi para Cúcuta.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="../">
+      <span class="mono">M</span>
+      <span class="wordmark"><span class="n">María <em class="script" style="color:var(--acc)">Silva</em></span><span class="s">Makeup Artist</span></span>
+    </a>
+    <div class="hermanas">
+      <a href="../studio/">MaríBeauty Studio</a>
+      <a href="../shop/">MaríBeauty Shop</a>
+    </div>
+    <p>Cúcuta · Táchira — <em>propuesta de ejemplo</em></p>
+    <p style="margin-top:8px">Hecha por <a href="../../">Jackson Jaimes · Webs y reservas por WhatsApp</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  var CONFIG = {
+    negocio: 'María Silva · Makeup Artist',
+    whatsapp: '584247481963',     // demo: llega a Jackson
+    moneda: '$'
+  };
+
+  var SERVICIOS = [
+    {n:'Maquillaje social',     p:25, d:'Para una fiesta, una cena o una sesión de fotos. Incluye pestañas postizas.'},
+    {n:'Graduación',            p:30, d:'Maquillaje de larga duración pensado para aguantar toda la noche.'},
+    {n:'Quinceañera',           p:45, d:'Look de la festejada, con prueba corta el mismo día.'},
+    {n:'Novia',                 p:80, d:'Prueba previa para definir el look + maquillaje del día con retoque.', t:'Incluye prueba'},
+    {n:'Maquillaje y peinado',  p:45, d:'El servicio completo, listo para salir.'},
+    {n:'Asesoría uno a uno',    p:35, d:'Te enseño a maquillarte tú misma con tus propios productos.'},
+    {n:'Curso grupal',          p:60, d:'Clase para grupos pequeños. Precio por persona, mínimo tres.'},
+    {n:'Colaboración PR',       p:0,  d:'Para marcas: contenido, reseña o trabajo de campaña. A convenir.'}
+  ];
+
+  var CIUDADES = ['San Cristóbal','San Juan de Colón','Cúcuta','Otra'];
+  var LUGARES  = ['A domicilio','En mi estudio','Salón o local del evento'];
+  var PAX      = ['Solo yo','2 personas','3 personas','4 o más'];
+
+  var sel = {svc:null, ciudad:null, lugar:null, pax:0};
+  var $ = function(id){ return document.getElementById(id); };
+  function safe(f){ try{ f(); }catch(e){} }
+  function money(v){ return v === 0 ? 'A convenir' : CONFIG.moneda + (Math.round(v*100)/100).toFixed(2).replace(/\.00$/,''); }
+
+  function renderGrid(){
+    var h = '';
+    for(var i=0;i<SERVICIOS.length;i++){
+      var s = SERVICIOS[i];
+      h += '<article class="svc" data-i="'+i+'">'
+        +   '<span class="n">'+(s.t ? s.t : '0'+(i+1))+'</span><h3>'+s.n+'</h3><p>'+s.d+'</p>'
+        +   '<div class="svc-foot"><span class="p">'+money(s.p)+'</span>'
+        +   '<span class="t">'+(s.p?'desde':'escríbeme')+'</span></div>'
+        + '</article>';
+    }
+    $('svcGrid').innerHTML = h;
+    var c = $('svcGrid').querySelectorAll('.svc');
+    for(var j=0;j<c.length;j++) c[j].addEventListener('click', function(){
+      sel.svc = +this.dataset.i; render(); resume();
+      $('reservar').scrollIntoView({behavior:'smooth'});
+    });
+  }
+
+  function renderFolio(){
+    var t = [['Novia','linear-gradient(150deg,#D9BEC4,#7A3A4A)'],
+             ['Graduación','linear-gradient(150deg,#C9A0A8,#6E3040)'],
+             ['Social','linear-gradient(150deg,#E0C3B4,#8A5560)'],
+             ['Quinceañera','linear-gradient(150deg,#D6B2BE,#5F2B3A)'],
+             ['Editorial','linear-gradient(150deg,#BFA6A6,#4E2530)'],
+             ['Piel madura','linear-gradient(150deg,#E2CBB8,#7A4A4A)'],
+             ['Ojo ahumado','linear-gradient(150deg,#B9A3AB,#3F2028)'],
+             ['Natural','linear-gradient(150deg,#EBD9CE,#9A6C6C)']];
+    var h = '';
+    for(var i=0;i<t.length;i++) h += '<div class="fo" style="background:'+t[i][1]+'"><span>'+t[i][0]+'</span></div>';
+    $('folio').innerHTML = h;
+  }
+
+  function chips(id, arr, key){
+    var h = '';
+    for(var i=0;i<arr.length;i++)
+      h += '<button class="chip" aria-pressed="'+(sel[key]===i)+'" data-i="'+i+'">'+arr[i]+'</button>';
+    $(id).innerHTML = h;
+    var e = $(id).querySelectorAll('.chip');
+    for(var j=0;j<e.length;j++) e[j].addEventListener('click', function(){
+      sel[key] = +this.dataset.i; render(); resume(); $('warn').classList.remove('on');
+    });
+  }
+
+  function render(){
+    var h = '';
+    for(var i=0;i<SERVICIOS.length;i++)
+      h += '<button class="chip" aria-pressed="'+(sel.svc===i)+'" data-i="'+i+'">'+SERVICIOS[i].n+'</button>';
+    $('pickSvc').innerHTML = h;
+    var e = $('pickSvc').querySelectorAll('.chip');
+    for(var j=0;j<e.length;j++) e[j].addEventListener('click', function(){
+      sel.svc = +this.dataset.i; render(); resume(); $('warn').classList.remove('on');
+    });
+    chips('pickCiudad', CIUDADES, 'ciudad');
+    chips('pickLugar', LUGARES, 'lugar');
+    chips('pickPax', PAX, 'pax');
+  }
+
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  function fechaLarga(){
+    var v = $('f-fecha').value;
+    if(!v) return null;
+    var p = v.split('-');
+    var d = new Date(+p[0], +p[1]-1, +p[2]);
+    return DIAS[d.getDay()] + ' ' + d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear();
+  }
+
+  function resume(){
+    var s = sel.svc !== null ? SERVICIOS[sel.svc] : null;
+    $('rSvc').textContent    = s ? s.n : '—';
+    $('rFecha').textContent  = fechaLarga() || '—';
+    $('rHora').textContent   = $('f-hora').value || '—';
+    $('rCiudad').textContent = sel.ciudad !== null ? CIUDADES[sel.ciudad] : '—';
+    $('rLugar').textContent  = sel.lugar !== null ? LUGARES[sel.lugar] : '—';
+    $('rPax').textContent    = PAX[sel.pax];
+    $('rTotal').textContent  = s ? money(s.p) : '—';
+  }
+
+  function sendWA(){
+    if(sel.svc === null || !$('f-fecha').value || sel.ciudad === null){ $('warn').classList.add('on'); return; }
+    var name = ($('f-name').value||'').trim();
+    if(!name){ $('f-name').focus(); $('f-name').style.borderColor='#A8342F'; return; }
+    var tel = ($('f-phone').value||'').trim();
+    if(!tel){ $('f-phone').focus(); $('f-phone').style.borderColor='#A8342F'; return; }
+
+    var s = SERVICIOS[sel.svc], L = [];
+    L.push('*NUEVA RESERVA — ' + CONFIG.negocio + '*');
+    L.push('--------------------------------');
+    L.push('*Clienta:* ' + name);
+    L.push('*Teléfono:* ' + tel);
+    L.push('');
+    L.push('*Servicio:* ' + s.n);
+    L.push('*Fecha del evento:* ' + fechaLarga());
+    if($('f-hora').value) L.push('*Lista a las:* ' + $('f-hora').value);
+    L.push('*Ciudad:* ' + CIUDADES[sel.ciudad]);
+    if(sel.lugar !== null) L.push('*Lugar:* ' + LUGARES[sel.lugar]);
+    L.push('*Personas:* ' + PAX[sel.pax]);
+    L.push('--------------------------------');
+    L.push('*ESTIMADO: ' + money(s.p) + '*');
+    var nota = ($('f-note').value||'').trim();
+    if(nota){ L.push(''); L.push('*Sobre el evento:* ' + nota); }
+    L.push('');
+    L.push('_Reserva enviada desde la web_');
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(L.join('\n')), '_blank');
+  }
+  window.sendWA = function(){ safe(sendWA); };
+
+  safe(renderGrid);
+  safe(renderFolio);
+  safe(function(){ render(); resume(); });
+  safe(function(){
+    var hoy = new Date();
+    $('f-fecha').min = hoy.getFullYear() + '-' + String(hoy.getMonth()+1).padStart(2,'0') + '-' + String(hoy.getDate()).padStart(2,'0');
+    $('f-fecha').addEventListener('change', resume);
+    $('f-hora').addEventListener('change', resume);
+  });
+  safe(function(){
+    var e = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<e.length;i++) e[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<e.length;j++) io.observe(e[j]);
+    setTimeout(function(){ for(var k=0;k<e.length;k++) e[k].classList.add('in'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

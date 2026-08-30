@@ -14,14 +14,14 @@
 
 ## Lo primero que tienes que hacer
 
-Abre `prospectos.json` y cambia tu número:
+Tu número ya está puesto. Si algún día lo cambias, se edita aquí:
 
 ```json
-"jackson": { "whatsapp": "584121234567", "nombre": "Jackson" }
+"jackson": { "whatsapp": "584247481963", "nombre": "Jackson Jaimes" }
 ```
 
 Ese número es a donde llegan los pedidos de prueba que hagan los prospectos.
-Luego corre:
+Después de cambiarlo, corre:
 
 ```bash
 python3 demos/generar.py

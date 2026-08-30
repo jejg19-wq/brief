@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Brief · María Silva — 3 marcas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf9f6;--card:#fff;--ink:#16181c;--ink2:#3d434c;--mute:#767d88;
+  --line:#e2e0da;--n:#1f7a4d;--n2:#e8f3ec;--warn:#a8640f;--warn2:#fdf3e3;
+  --studio:#A35E68;--shop:#9F6346;--artist:#7A3A4A;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.62;
+  -webkit-font-smoothing:antialiased;padding-bottom:60px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px}
+a{color:var(--n)}
+header{background:var(--ink);color:#fff;padding:22px 0 20px;margin-bottom:20px}
+header .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8fd6b0;margin-bottom:7px}
+header h1{font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1.14}
+header .meta{font-size:13.5px;color:#a9b0ba;margin-top:6px}
+header .meta a{color:#8fd6b0}
+.back{display:inline-block;font-size:12.5px;color:#a9b0ba;text-decoration:none;margin-bottom:12px}
+
+.bar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;
+  margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.bar .pct{font-size:24px;font-weight:700;color:var(--n);letter-spacing:-.03em;min-width:52px}
+.bar .track{flex:1;height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar .fill{height:100%;background:var(--n);width:0;transition:width .35s cubic-bezier(.2,.8,.3,1)}
+.bar small{font-size:12px;color:var(--mute);white-space:nowrap}
+
+section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:13px}
+section.studio{border-left:4px solid var(--studio)}
+section.shop{border-left:4px solid var(--shop)}
+section.artist{border-left:4px solid var(--artist)}
+h2{font-size:16.5px;font-weight:600;letter-spacing:-.015em;margin-bottom:4px;display:flex;gap:9px;align-items:center}
+h2 .num{width:23px;height:23px;border-radius:7px;background:var(--n);color:#fff;font-size:12px;
+  display:grid;place-items:center;flex:0 0 auto;font-weight:600}
+.studio h2 .num{background:var(--studio)} .shop h2 .num{background:var(--shop)} .artist h2 .num{background:var(--artist)}
+.lead{font-size:13.5px;color:var(--mute);margin-bottom:14px;margin-left:32px}
+.chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:14.5px}
+.chk:last-child{border:0}
+.chk input{width:19px;height:19px;margin-top:2px;flex:0 0 auto;accent-color:var(--n);cursor:pointer}
+.chk input:checked + span{color:var(--mute);text-decoration:line-through}
+.tip{background:var(--warn2);border:1px solid #edd8ae;border-radius:9px;padding:13px 15px;font-size:13.5px;color:#6b430b;margin-top:12px}
+.tip b{color:var(--warn)}
+.box{background:var(--n2);border:1px solid #c3e2d1;border-radius:9px;padding:13px 15px;font-size:13.5px;color:#134d31;margin-top:12px}
+.box b{color:#0d3a24}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);font-weight:600;white-space:nowrap;padding-right:14px}
+.msg{background:#f4f3ef;border:1px solid var(--line);border-radius:9px;padding:15px;font-size:13.5px;
+  white-space:pre-wrap;line-height:1.72;margin-top:12px;color:var(--ink2)}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:600;padding:13px 22px;border-radius:99px;text-decoration:none;
+  transition:filter .15s,transform .12s}
+.b:active{transform:scale(.98)} .b:hover{filter:brightness(1.08)}
+.bn{background:var(--n);color:#fff}
+.bg{background:#eceae4;color:var(--ink);border:1px solid var(--line)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.no{font-size:14px;color:var(--mute);padding:7px 0;border-bottom:1px solid var(--line)}
+.no:last-child{border:0} .no b{color:var(--ink2);font-weight:500}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120%);background:var(--ink);
+  color:#fff;padding:12px 24px;border-radius:99px;font-weight:600;font-size:14px;z-index:60;opacity:0;pointer-events:none;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media print{header{background:#fff;color:#000}body{padding:0}.acts,.toast,.back{display:none}section{break-inside:avoid}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="back" href="../../panel/">← Volver al panel</a>
+    <p class="eyebrow">Brief de recolección · cliente de 3 marcas</p>
+    <h1>María Silva</h1>
+    <p class="meta">MaríBeauty Studio · MaríBeauty Shop · Makeup Artist ·
+      <a href="https://instagram.com/mfsm1101" target="_blank" rel="noopener">@mfsm1101</a></p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="bar">
+    <span class="pct" id="pct">0%</span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <small id="cnt">0 de 0</small>
+  </div>
+
+  <section>
+    <h2><span class="num">0</span> Lo primero que hay que preguntar</h2>
+    <p class="lead">Esto define cómo se configuran las tres páginas. Pregúntalo antes que nada.</p>
+    <label class="chk"><input type="checkbox" data-k="q-0"><span><b>¿Las tres marcas usan el mismo WhatsApp o uno cada una?</b> Si es el mismo, los pedidos del Shop y las citas del Studio le van a llegar mezclados — conviene separar al menos el Shop.</span></label>
+    <label class="chk"><input type="checkbox" data-k="q-1"><span><b>¿Quién contesta cada cuenta?</b> ¿Ella sola o tiene ayuda? Si tiene ayuda, cada persona puede recibir lo de su marca.</span></label>
+    <label class="chk"><input type="checkbox" data-k="q-2"><span><b>¿Cobra en dólares, bolívares o pesos?</b> Está entre Colón, San Cristóbal y Cúcuta. Puede que necesite mostrar dos monedas.</span></label>
+    <label class="chk"><input type="checkbox" data-k="q-3"><span><b>¿Cuál de las tres le duele más ahorita?</b> Si el presupuesto no da para las tres, empiezas por esa y las otras después.</span></label>
+    <div class="box"><b>Ojo con el precio:</b> son tres páginas, no una. Cobra el montaje de las tres (paquete: $250 en vez de $360) y una sola mensualidad de $60 que las cubra. Es tu venta más grande de la lista — no la regales.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">1</span> La marca (para las tres)</h2>
+    <p class="lead">Ya tiene identidad hecha y buena. Solo hay que conseguir los archivos.</p>
+    <label class="chk"><input type="checkbox" data-k="m-0"><span><b>Los logos en archivo.</b> Tiene dos: el de <b>Shop</b> y el de <b>Studio</b> (la M con la ramita). Pídelos en PNG con fondo transparente. Si solo los tiene en JPG, sirve.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-1"><span><b>¿Tiene logo para su marca personal</b> (@mariartistt)? Si no, se lo armas con la misma M.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-2"><span><b>¿Quién le hizo el logo?</b> Si tiene el archivo editable o la fuente que usaron, mejor todavía.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-3"><span><b>Una frase de cada marca.</b> El Shop ya tiene una: «La tienda de maquillaje que estabas buscando». Falta la del Studio y la suya personal.</span></label>
+    <div class="tip"><b>Los colores ya los saqué</b> del rosé de su logo y los ajusté para que el texto encima se lea bien: rosé <b>#A35E68</b> para Studio, caramelo <b>#9F6346</b> para Shop y vino <b>#7A3A4A</b> para su marca personal. Si tiene colores oficiales distintos, se cambian en un minuto.</div>
+  </section>
+
+  <section class="studio">
+    <h2><span class="num">2</span> MaríBeauty Studio · pestañas y cejas</h2>
+    <p class="lead">Es la de más seguidores (11,2 mil) y la que más rápido le va a dar resultado.</p>
+    <table>
+      <tr><th>Servicios</th><td>Los <b>8 o 9</b> que hace, con: nombre · precio · cuántos minutos toma · qué incluye en una línea.</td></tr>
+      <tr><th>Ya puestos</th><td>Clásicas, híbridas, volumen ruso, efecto rímel, retoque, lash lifting, diseño de cejas, laminado y retiro. <b>Confirma cuáles hace de verdad y a qué precio.</b></td></tr>
+      <tr><th>Agenda</th><td>Horario real de cada día, y cuánto tiempo deja entre clienta y clienta.</td></tr>
+      <tr><th>Dirección</th><td>La exacta en San Juan de Colón. Pregúntale si quiere que aparezca o si prefiere darla solo al confirmar.</td></tr>
+    </table>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" data-k="s-0"><span>Lista de servicios con precio y duración</span></label>
+    <label class="chk"><input type="checkbox" data-k="s-1"><span>Horario de atención por día</span></label>
+    <label class="chk"><input type="checkbox" data-k="s-2"><span>Dirección (o decisión de no mostrarla)</span></label>
+    <label class="chk"><input type="checkbox" data-k="s-3"><span>4 fotos: un trabajo terminado de cerca · la camilla o cabina · el espacio · la fachada</span></label>
+    <label class="chk"><input type="checkbox" data-k="s-4"><span>Sus indicaciones reales de cuidado (las que ya le da a sus clientas)</span></label>
+    <label class="chk"><input type="checkbox" data-k="s-5"><span><b>Su número real:</b> ¿cuántas citas se le caen a la semana? Ese dato te sirve para venderle y para el caso de éxito después.</span></label>
+    <div class="tip"><b>Sus destacadas te dan el contenido gratis:</b> tiene BROWS Diseño, LashLifting, Efectos y Clásicas. Ahí están las fotos y los nombres reales de sus servicios — pídele permiso para usarlas y te ahorras la sesión.</div>
+  </section>
+
+  <section class="shop">
+    <h2><span class="num">3</span> MaríBeauty Shop · maquillaje y skincare</h2>
+    <p class="lead">La de menos seguidores pero la que más trabajo manual le quita de encima.</p>
+    <table>
+      <tr><th>Productos</th><td><b>25 a 40</b> para arrancar, con: nombre · marca · precio · cuántos le quedan · categoría.</td></tr>
+      <tr><th>Categorías</th><td>Sus destacadas ya las tienen: Bases, Correctores, Labios, Rubores, Brochas, Corporal. Faltaría confirmar skincare y cabello.</td></tr>
+      <tr><th>Existencias</th><td>Cuántas unidades de cada uno. <b>Es lo que hace que la página valga</b>: si no hay stock real, la clienta pide algo agotado.</td></tr>
+      <tr><th>Envíos</th><td>Qué cobra por delivery en San Cristóbal, desde cuánto es gratis, y con qué empresa manda al resto del Táchira.</td></tr>
+    </table>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" data-k="h-0"><span>Lista de productos con marca, precio y existencia</span></label>
+    <label class="chk"><input type="checkbox" data-k="h-1"><span>Categorías confirmadas</span></label>
+    <label class="chk"><input type="checkbox" data-k="h-2"><span>Política de delivery y envíos, con costos</span></label>
+    <label class="chk"><input type="checkbox" data-k="h-3"><span>¿Hace apartado? ¿Con cuánto y por cuántos días?</span></label>
+    <label class="chk"><input type="checkbox" data-k="h-4"><span>4 fotos: producto estrella · el surtido junto · el empaque de envío · ella con los productos</span></label>
+    <div class="tip"><b>Si tiene muchos productos:</b> no le pidas que pase todo en limpio. Que te mande fotos de su lista de precios o una nota de voz. Tú lo transcribes. Pedirle una tarea grande es la forma más rápida de que el proyecto se enfríe.</div>
+  </section>
+
+  <section class="artist">
+    <h2><span class="num">4</span> María Silva · maquilladora</h2>
+    <p class="lead">La de mayor ticket. Una novia paga más que veinte pedidos de la tienda.</p>
+    <table>
+      <tr><th>Servicios</th><td><b>6 a 8</b>: social, graduación, quinceañera, novia, maquillaje y peinado, asesoría, curso. Con precio y qué incluye.</td></tr>
+      <tr><th>Cobertura</th><td>¿Va a Cúcuta? ¿Cobra traslado? ¿Desde dónde sale? Trabaja entre dos países, hay que dejarlo claro.</td></tr>
+      <tr><th>Abono</th><td>Cuánto pide para apartar la fecha y qué pasa si cancelan.</td></tr>
+      <tr><th>Portafolio</th><td><b>8 a 12 fotos</b> de trabajos reales, con permiso de las clientas. Esto es lo que vende su servicio.</td></tr>
+    </table>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" data-k="a-0"><span>Servicios de evento con precio</span></label>
+    <label class="chk"><input type="checkbox" data-k="a-1"><span>Cobertura y costo de traslado</span></label>
+    <label class="chk"><input type="checkbox" data-k="a-2"><span>Política de abono y cancelación</span></label>
+    <label class="chk"><input type="checkbox" data-k="a-3"><span>8–12 fotos de portafolio, con permiso</span></label>
+    <label class="chk"><input type="checkbox" data-k="a-4"><span>¿Trabaja con marcas (PR)? ¿Quiere una sección para eso?</span></label>
+    <label class="chk"><input type="checkbox" data-k="a-5"><span>Una foto suya trabajando o un retrato — va en la portada</span></label>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span> Datos que van en las tres</h2>
+    <label class="chk"><input type="checkbox" data-k="d-0"><span><b>El WhatsApp de cada marca</b> (o el único, si comparte). Confirmado y probado.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-1"><span><b>Formas de pago:</b> efectivo USD y Bs, pago móvil, Zelle, transferencia, Nequi. ¿Cuáles acepta de verdad?</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-2"><span><b>Sus tres Instagram</b> confirmados, para enlazarlos desde cada página.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-3"><span><b>Su correo</b> (mfsm110201@gmail.com) — confirmar si quiere que aparezca.</span></label>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span> Lo que NO le tienes que pedir</h2>
+    <div class="no"><b>Textos redactados.</b> Los escribes tú con lo que te cuente.</div>
+    <div class="no"><b>Fotos profesionales nuevas.</b> Ya tiene material bueno en Instagram — pídele permiso y úsalo.</div>
+    <div class="no"><b>Manual de marca o códigos de color.</b> Ya derivé la paleta de su logo.</div>
+    <div class="no"><b>Que decida el diseño.</b> Ya lo vio hecho. Solo se ajusta lo que no le guste.</div>
+    <div class="no"><b>Que elija entre las tres.</b> Ofrécele el paquete; si no le alcanza, ella misma te dirá por cuál empezar.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">7</span> El mensaje para pedirle todo</h2>
+    <p class="lead">Cuando ya dijo que sí. Mándalo tal cual.</p>
+    <div class="msg" id="msgbox">Perfecto María, me alegra que te gustaran.
+
+Para dejarte las tres listas necesito esto. Mándamelo por aquí, por partes, como te quede cómodo — y si algo es más fácil dictarlo por nota de voz, mejor:
+
+*1. Los logos.* El de Shop y el de Studio, en archivo. Si no los consigues, una captura de tu perfil me sirve.
+
+*2. Del Studio:* tus servicios con precio y cuántos minutos te toma cada uno, tu horario por día, y si quieres que aparezca la dirección exacta.
+
+*3. De la tienda:* la lista de productos con marca, precio y cuántos te quedan. Como la tengas — foto de tu lista, notas del teléfono, lo que sea. Yo la ordeno.
+
+*4. De tu marca personal:* qué cobras por social, graduación, quinceañera y novia; si vas a Cúcuta y si cobras traslado; y cuánto pides de abono para apartar una fecha.
+
+*5. Fotos:* unas 4 del Studio, 4 de productos y entre 8 y 12 de maquillajes tuyos para el portafolio. Con las de tu Instagram me arreglo si me das permiso.
+
+*6. Una cosa importante:* ¿los tres negocios usan el mismo WhatsApp o uno cada uno? De eso depende cómo te configuro a dónde llega cada mensaje.
+
+Con eso arranco. En 72 horas te mando las tres funcionando para que las revises.</div>
+    <div class="acts">
+      <button class="b bn" id="cop">Copiar mensaje</button>
+      <a class="b bg" href="../" target="_blank" rel="noopener">Ver la propuesta</a>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">8</span> Antes de entregar</h2>
+    <label class="chk"><input type="checkbox" data-k="x-0"><span>Cobrado el montaje del paquete <b>completo y por adelantado</b></span></label>
+    <label class="chk"><input type="checkbox" data-k="x-1"><span>Cambiado el WhatsApp de las <b>tres</b> páginas al número que corresponda a cada una</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-2"><span><b>Borrada la barra de PROPUESTA</b> de las cuatro páginas (incluida la portada)</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-3"><span>Cambiado el logotipo provisional por el suyo real</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-4"><span>Precios revisados uno por uno contra lo que te pasó</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-5"><span>Probado en tu teléfono: una cita, un pedido y una reserva, que lleguen al número correcto</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-6"><span>Quitados los textos de ejemplo («Historia de ejemplo», «Texto de ejemplo»)</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-7"><span>Grabado un video corto usándolas, para mandárselo con los enlaces</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-8"><span>Pedido el referido — ella conoce a media industria de belleza del Táchira</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-9"><span>Anotada la fecha de cobro del mes 2</span></label>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+(function(){
+  'use strict';
+  var CLAVE = 'brief_maria_silva';
+  function safe(f){ try{ f(); }catch(e){} }
+  var $ = function(id){ return document.getElementById(id); };
+  var st = {};
+  safe(function(){ st = JSON.parse(localStorage.getItem(CLAVE) || '{}'); });
+
+  var c = document.querySelectorAll('input[type=checkbox]');
+  function pintar(){
+    var n = 0;
+    for(var i=0;i<c.length;i++) if(c[i].checked) n++;
+    var pct = c.length ? Math.round(n*100/c.length) : 0;
+    $('pct').textContent = pct + '%';
+    $('fill').style.width = pct + '%';
+    $('cnt').textContent = n + ' de ' + c.length;
+  }
+  for(var i=0;i<c.length;i++){
+    (function(x){
+      x.checked = !!st[x.dataset.k];
+      x.addEventListener('change', function(){
+        st[x.dataset.k] = x.checked;
+        safe(function(){ localStorage.setItem(CLAVE, JSON.stringify(st)); });
+        pintar();
+      });
+    })(c[i]);
+  }
+  safe(pintar);
+
+  var tid = null;
+  function toast(t){
+    var e = $('toast'); e.textContent = t; e.classList.add('show');
+    clearTimeout(tid); tid = setTimeout(function(){ e.classList.remove('show'); }, 1800);
+  }
+  $('cop').addEventListener('click', function(){
+    var texto = $('msgbox').textContent;
+    var ok = function(){ toast('Mensaje copiado'); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(texto).then(ok, fb);
+    } else fb();
+    function fb(){
+      try{
+        var t = document.createElement('textarea');
+        t.value = texto; t.style.position='fixed'; t.style.opacity='0';
+        document.body.appendChild(t); t.select(); document.execCommand('copy');
+        document.body.removeChild(t); ok();
+      }catch(e){ toast('Selecciona el texto a mano'); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>María Silva — Tres marcas, un solo sistema</title>
+<meta name="description" content="Propuesta de páginas web para MaríBeauty Studio, MaríBeauty Shop y María Silva Makeup Artist.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F6; --sand:#F2E9E4; --paper:#FFFFFF;
+  --ink:#2B2225; --soft:#55474B; --mute:#806E72;
+  --studio:#A35E68; --shop:#9F6346; --artist:#7A3A4A;
+  --gold:#B08D57; --line:rgba(43,34,37,.12); --wa:#25D366;
+  --max:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;
+  line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;line-height:1.08;letter-spacing:-.01em}
+.script{font-family:Parisienne,cursive}
+.caps{font-size:11px;letter-spacing:.32em;text-transform:uppercase;font-weight:400}
+a{color:inherit}
+
+.prop{background:var(--ink);color:var(--cream);font-size:11.5px;padding:10px 16px;text-align:center;line-height:1.55}
+.prop b{color:#E9B8BE;font-weight:500}
+
+.hero{padding:76px 0 64px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-260px;left:50%;transform:translateX(-50%);
+  width:900px;height:900px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(163,94,104,.14),rgba(159,99,70,.07) 45%,transparent 68%)}
+.hero .wrap{position:relative;z-index:1}
+.mono-big{width:76px;height:76px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;
+  font-family:Parisienne,cursive;font-size:44px;color:var(--studio);line-height:1;padding-bottom:6px;margin:0 auto 26px}
+.hero .caps{color:var(--studio);display:block;margin-bottom:20px}
+.hero h1{font-size:clamp(40px,8.6vw,74px);margin-bottom:22px}
+.hero h1 .script{color:var(--studio)}
+.hero p{font-size:17px;color:var(--soft);max-width:50ch;margin:0 auto 34px}
+.hero-note{font-size:12.5px;color:var(--mute);margin-top:22px}
+
+section{padding:66px 0}
+.sec-head{text-align:center;margin-bottom:42px}
+.sec-head .caps{color:var(--studio);display:block;margin-bottom:14px}
+.sec-head h2{font-size:clamp(29px,5.6vw,46px);margin-bottom:12px}
+.sec-head h2 em{font-style:italic;color:var(--studio)}
+.sec-head p{color:var(--mute);max-width:50ch;margin:0 auto;font-size:15.5px}
+
+/* las tres puertas */
+.marcas{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr))}
+.marca{background:var(--paper);border:1px solid var(--line);text-decoration:none;display:flex;flex-direction:column;
+  transition:transform .35s cubic-bezier(.2,.7,.3,1),box-shadow .35s,border-color .35s;overflow:hidden}
+.marca:hover{transform:translateY(-7px);box-shadow:0 26px 54px rgba(43,34,37,.13)}
+.marca .top{height:146px;display:grid;place-items:center;position:relative;overflow:hidden}
+.marca .top .m{font-family:Parisienne,cursive;font-size:62px;color:rgba(255,255,255,.85);line-height:1}
+.marca .badge{position:absolute;top:14px;right:14px;background:rgba(251,248,246,.93);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;padding:5px 12px;border-radius:100px}
+.marca .body{padding:24px;display:flex;flex-direction:column;gap:9px;flex:1}
+.marca .body .caps{font-size:10px;letter-spacing:.24em}
+.marca h3{font-size:26px}
+.marca p{font-size:14px;color:var(--mute);flex:1}
+.marca .qué{font-size:13.5px;padding-top:14px;border-top:1px solid var(--line);margin-top:6px}
+.marca .go{display:flex;align-items:center;gap:8px;font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;margin-top:12px}
+.m-studio .top{background:linear-gradient(145deg,#C99AA2,#A35E68)} .m-studio .caps,.m-studio .go{color:var(--studio)}
+.m-shop   .top{background:linear-gradient(145deg,#C9A088,#9F6346)} .m-shop .caps,.m-shop .go{color:var(--shop)}
+.m-artist .top{background:linear-gradient(145deg,#B07A88,#7A3A4A)} .m-artist .caps,.m-artist .go{color:var(--artist)}
+
+/* problema */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:760px){.split{grid-template-columns:1fr}}
+.chat{background:var(--paper);border:1px solid var(--line);padding:24px;text-align:left}
+.chat .caps{display:block;margin-bottom:16px;font-size:10px}
+.mal .caps{color:#A8342F} .bien .caps{color:#2E7D52}
+.bien{border-color:rgba(46,125,82,.32)}
+.msg{background:var(--sand);border-radius:14px 14px 14px 4px;padding:10px 14px;font-size:13.5px;margin-bottom:7px;max-width:88%;color:var(--soft)}
+.msg.me{background:#E3EFE7;color:#28503C;margin-left:auto;border-radius:14px 14px 4px 14px}
+.msg.ord{background:#F3F7F4;border:1px solid rgba(46,125,82,.24);border-radius:12px;color:#28503C;
+  font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.8;white-space:pre-line;max-width:100%}
+.chat .pie{font-size:12.5px;margin-top:14px;color:var(--mute)}
+.bien .pie{color:#2E7D52}
+
+/* sistema */
+.sys{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.si{background:var(--cream);padding:26px 24px}
+.si h3{font-size:19px;margin-bottom:10px}
+.si p{font-size:14px;color:var(--soft)}
+.si .n{font-family:'Cormorant Garamond',serif;font-size:34px;color:var(--gold);display:block;line-height:1;margin-bottom:12px}
+.swatches{display:flex;gap:8px;margin-top:14px}
+.sw{width:34px;height:34px;border-radius:50%;border:1px solid rgba(43,34,37,.08)}
+
+.final{background:var(--sand);text-align:center}
+.final h2{font-size:clamp(30px,6vw,50px);margin-bottom:16px}
+.final h2 em{font-style:italic;color:var(--studio)}
+.final p{color:var(--soft);max-width:46ch;margin:0 auto 32px;font-size:16px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--wa);
+  background:var(--wa);color:#06280E;font-family:Jost,sans-serif;font-size:12.5px;letter-spacing:.16em;
+  text-transform:uppercase;padding:17px 34px;cursor:pointer;text-decoration:none;border-radius:100px;
+  transition:all .28s cubic-bezier(.2,.7,.3,1)}
+.btn:hover{background:transparent;color:#0d6b2c}
+
+footer{padding:46px 0;text-align:center;color:var(--mute);font-size:13px;border-top:1px solid var(--line)}
+footer a{color:var(--studio);text-decoration:none}
+
+.rv{opacity:0;transform:translateY(24px);transition:opacity .85s,transform .85s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="prop">
+  <b>PROPUESTA</b> hecha para María Silva · Los productos, servicios y precios son de muestra y el logotipo es provisional — se cambian por los tuyos.
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="mono-big">M</div>
+    <span class="caps">San Juan de Colón · San Cristóbal · Cúcuta</span>
+    <h1>Tres marcas,<br><span class="script">un solo sistema.</span></h1>
+    <p>María, te armé las tres páginas: Studio con su agenda, Shop con su catálogo y tu marca personal con reservas de eventos. Las tres se ven de la misma familia y las tres te dejan el mensaje ordenado en el WhatsApp.</p>
+    <p class="hero-note">Ábrelas en tu teléfono y prueba a reservar o a pedir algo.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="marcas">
+
+      <a class="marca m-studio rv" href="studio/">
+        <div class="top"><span class="badge" style="color:var(--studio)">Agenda</span><span class="m">M</span></div>
+        <div class="body">
+          <span class="caps">MaríBeauty Studio</span>
+          <h3>Pestañas y cejas</h3>
+          <p>Tus clientas eligen servicio, día y hora sin escribirte. Ven las horas ocupadas y la agenda se llena sola.</p>
+          <div class="qué"><b>Resuelve:</b> el ir y venir de «¿tienes cupo el jueves?» mientras estás con una clienta en la camilla.</div>
+          <span class="go">Abrir la página →</span>
+        </div>
+      </a>
+
+      <a class="marca m-shop rv" href="shop/">
+        <div class="top"><span class="badge" style="color:var(--shop)">Catálogo</span><span class="m">M</span></div>
+        <div class="body">
+          <span class="caps">MaríBeauty Shop</span>
+          <h3>Maquillaje y skincare</h3>
+          <p>Catálogo con precio y existencia. La clienta arma su pedido y te llega completo, con el total ya calculado.</p>
+          <div class="qué"><b>Resuelve:</b> contestar «¿cuánto vale?» y «¿tienes ese tono?» cincuenta veces al día.</div>
+          <span class="go">Abrir la página →</span>
+        </div>
+      </a>
+
+      <a class="marca m-artist rv" href="artist/">
+        <div class="top"><span class="badge" style="color:var(--artist)">Reservas</span><span class="m">M</span></div>
+        <div class="body">
+          <span class="caps">María Silva · Makeup</span>
+          <h3>Novias y eventos</h3>
+          <p>Reservan la fecha del evento con ciudad, lugar y hora. Con tu portafolio arriba para que vean tu trabajo.</p>
+          <div class="qué"><b>Resuelve:</b> las novias que preguntan por una fecha de diciembre en septiembre y se pierden en el chat.</div>
+          <span class="go">Abrir la página →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--paper)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">El cambio</span>
+      <h2>De un chat enredado<br>a <em>un solo mensaje</em></h2>
+    </div>
+    <div class="split">
+      <div class="chat mal rv">
+        <span class="caps">Como te llegan hoy</span>
+        <div class="msg">hola</div>
+        <div class="msg">tienes cupo el jueves?</div>
+        <div class="msg me">Sí, ¿a qué hora?</div>
+        <div class="msg">en la tarde</div>
+        <div class="msg me">Tengo 3 o 5</div>
+        <div class="msg">para clásicas</div>
+        <div class="msg">cuánto es?</div>
+        <div class="msg">ah y tienes la base 220?</div>
+        <p class="pie">Ocho mensajes, y todavía no sabes si viene. Y mientras, tienes una clienta en la camilla.</p>
+      </div>
+      <div class="chat bien rv">
+        <span class="caps">Como te llegarían</span>
+        <div class="msg ord">*NUEVA CITA — MaríBeauty Studio*
+--------------------------------
+*Clienta:* Andrea Rojas
+*Teléfono:* 0424 000 0000
+
+*Servicio:* Pestañas clásicas
+*Día:* jueves 4 sep
+*Hora:* 15:00
+*Duración:* 120 min
+--------------------------------
+*TOTAL: $25*</div>
+        <p class="pie">Un mensaje. Lo lees, dices «confirmado» y sigues trabajando.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">Por qué las tres juntas</span>
+      <h2>Una <em>familia</em>, no tres páginas sueltas</h2>
+      <p>Tus tres marcas comparten la misma tipografía, el mismo monograma y la misma base de color. Cada una tiene su propio tono para que se distingan.</p>
+    </div>
+    <div class="sys">
+      <div class="si rv">
+        <span class="n">01</span>
+        <h3>Un color por marca</h3>
+        <p>Rosé para Studio, caramelo para Shop, vino para tu marca personal. Los tres salen del rosé de tu logo.</p>
+        <div class="swatches">
+          <span class="sw" style="background:var(--studio)" title="Studio"></span>
+          <span class="sw" style="background:var(--shop)" title="Shop"></span>
+          <span class="sw" style="background:var(--artist)" title="Artist"></span>
+          <span class="sw" style="background:var(--sand)" title="Arena"></span>
+          <span class="sw" style="background:var(--gold)" title="Dorado"></span>
+        </div>
+      </div>
+      <div class="si rv">
+        <span class="n">02</span>
+        <h3>Se leen bien de verdad</h3>
+        <p>Los tres colores están ajustados para que el texto encima se lea sin forzar la vista, también en el sol y en pantallas viejas.</p>
+      </div>
+      <div class="si rv">
+        <span class="n">03</span>
+        <h3>Se cruzan entre ellas</h3>
+        <p>Desde cualquiera de las tres se llega a las otras dos. Una clienta de Studio descubre la tienda sin que se lo digas.</p>
+      </div>
+      <div class="si rv">
+        <span class="n">04</span>
+        <h3>Sin costo mensual a Meta</h3>
+        <p>No usan la API de pago de WhatsApp. Usan el WhatsApp normal de tu teléfono, sin riesgo de que te bloqueen el número.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="final">
+  <div class="wrap">
+    <h2 class="rv">¿Le damos <em>tu</em> cara?</h2>
+    <p class="rv">Esto es una muestra con contenido de ejemplo. Con tu logo, tus precios reales y tus fotos, quedan listas en 72 horas.</p>
+    <a class="btn rv" id="wa" href="#">Hablemos por WhatsApp</a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Propuesta preparada para María Silva · @mfsm1101</p>
+    <p style="margin-top:8px">Por <a href="../">Jackson Jaimes · Páginas web y pedidos por WhatsApp · San Cristóbal</a></p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var MI_WHATSAPP = '584247481963';
+  var MSG = 'Hola Jackson, vi la propuesta de las tres páginas. Quiero información.';
+  function safe(f){ try{ f(); }catch(e){} }
+
+  safe(function(){
+    var a = document.getElementById('wa');
+    a.href = 'https://wa.me/' + MI_WHATSAPP + '?text=' + encodeURIComponent(MSG);
+    a.target = '_blank'; a.rel = 'noopener';
+  });
+  safe(function(){
+    var e = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<e.length;i++) e[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<e.length;j++) io.observe(e[j]);
+    setTimeout(function(){ for(var k=0;k<e.length;k++) e[k].classList.add('in'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>

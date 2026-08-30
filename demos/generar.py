@@ -285,6 +285,13 @@ def sub_array(src, nombre, valor):
         raise SystemExit("No se pudo reemplazar el arreglo " + nombre)
     return out
 
+def set_wa(src, wa):
+    """Pone el WhatsApp de Jackson sea cual sea el que traiga la plantilla."""
+    out, n = re.subn(r"whatsapp: '\d+',", "whatsapp: '" + wa + "',", src, count=1)
+    if n != 1:
+        raise SystemExit("No se encontro el campo whatsapp en la plantilla")
+    return out
+
 def rep(src, viejo, nuevo, obligatorio=True):
     if viejo not in src:
         if obligatorio:
@@ -326,7 +333,7 @@ def gen_restaurante(base, p, wa):
     s = rep(s, '<p style="margin-top:8px">Plantilla creada por <a href="../index.html">Jackson · Webs y pedidos por WhatsApp</a></p>',
                '<p style="margin-top:8px">Propuesta hecha por <a href="' + BASE_URL + '/">Jackson · Webs y pedidos por WhatsApp</a></p>')
     s = rep(s, "negocio: 'Sabor Andino',", "negocio: '" + p["nombre"].replace("'", "\\'") + "',")
-    s = rep(s, "whatsapp: '584121234567',", "whatsapp: '" + wa + "',")
+    s = set_wa(s, wa)
     if p["carta"] in ("ferreteria", "insumos"):
         s = rep(s, '<h2>Nuestro menú</h2>', '<h2>Nuestro catálogo</h2>')
         s = rep(s, 'Toca «Agregar» en lo que quieras. Al final te armamos el pedido completo y lo mandas por WhatsApp con un toque.',
@@ -368,7 +375,7 @@ def gen_barberia(base, p, wa):
     s = rep(s, '<p style="margin-top:6px">Plantilla creada por <a href="../index.html">Jackson · Webs y citas por WhatsApp</a></p>',
                '<p style="margin-top:6px">Propuesta hecha por <a href="' + BASE_URL + '/">Jackson · Webs y citas por WhatsApp</a></p>')
     s = rep(s, "negocio: 'Navaja Barbershop',", "negocio: '" + p["nombre"].replace("'", "\\'") + "',")
-    s = rep(s, "whatsapp: '584121234567',", "whatsapp: '" + wa + "',")
+    s = set_wa(s, wa)
     if p["carta"] == "gym":
         s = rep(s, '<b>4</b><span class="mono">Barberos</span>', '<b>3</b><span class="mono">Entrenadores</span>')
         s = rep(s, '<b>20s</b><span class="mono">En reservar</span>', '<b>20s</b><span class="mono">En reservar</span>')
@@ -398,7 +405,7 @@ def gen_clinica(base, p, wa):
     s = rep(s, '<p style="margin-top:8px">Plantilla creada por <a href="../index.html">Jackson · Webs y citas por WhatsApp</a></p>',
                '<p style="margin-top:8px">Propuesta hecha por <a href="' + BASE_URL + '/">Jackson · Webs y citas por WhatsApp</a></p>')
     s = rep(s, "negocio: 'Clínica Dental Sonrisa',", "negocio: '" + p["nombre"].replace("'", "\\'") + "',")
-    s = rep(s, "whatsapp: '584121234567',", "whatsapp: '" + wa + "',")
+    s = set_wa(s, wa)
     if p["carta"] == "dermatologia":
         s = rep(s, '<h2>Tratamientos y precios</h2>', '<h2>Consultas y procedimientos</h2>')
         s = rep(s, 'Los tratamientos complejos se cotizan en la consulta de valoración, que es gratuita.',
@@ -457,7 +464,7 @@ def seguimiento(p, link):
 # ---------------------------------------------------------------- tandas
 # Orden de ataque. La tanda 1 no es la de mas seguidores: es la de dueños
 # accesibles por movil, con catalogo corto, que se entregan en un dia.
-TANDA1 = ["barberia-gustavo-sc","oral-center","sonrivida","dra-karla-rosales",
+TANDA1 = ["maria-silva","barberia-gustavo-sc","oral-center","sonrivida","dra-karla-rosales",
           "gimnasio-gold","paraiso-de-las-tortas"]
 # Cuentas grandes o poco activas: van cuando ya haya casos que mostrar.
 TANDA3 = ["dulce-y-dulce","la-casa-del-peluquero","plastic-tortas","ferreteria-raca",
@@ -482,6 +489,14 @@ def main():
 
     salida = []
     for p in datos["prospectos"]:
+        if p.get("custom"):
+            # Paginas hechas a mano para ese cliente: no se generan ni se pisan.
+            link = BASE_URL + p["ruta"]
+            brief = BASE_URL + p.get("brief_url", p["ruta"])
+            salida.append(dict(p, link=link, brief=brief, tanda=tanda(p["slug"]),
+                               msg=p["msg_custom"].replace("{LINK}", link),
+                               msg2=seguimiento(p, link)))
+            continue
         pagina = GEN[p["base"]](bases[p["base"]], p, wa_jackson)
         d = os.path.join(RAIZ, "p", p["slug"])
         os.makedirs(d, exist_ok=True)

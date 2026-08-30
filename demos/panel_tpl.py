@@ -49,6 +49,7 @@ h1 span{color:var(--n)}
 .tanda{flex:0 0 auto;font-size:10px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
   padding:4px 9px;border-radius:100px;white-space:nowrap;border:1px solid var(--line);color:var(--mute)}
 .t1{border-color:var(--n);color:var(--n)}
+.top{background:var(--n);color:#0b1400;border-color:var(--n);font-weight:700}
 .badges{display:flex;gap:6px;flex-direction:column;align-items:flex-end}
 .warn{font-size:12px;color:var(--warn);background:rgba(240,161,60,.10);border:1px solid rgba(240,161,60,.28);
   border-radius:8px;padding:8px 11px;margin:9px 0}
@@ -159,7 +160,7 @@ h1 span{color:var(--n)}
     var q = ($('q').value || '').toLowerCase().trim();
     var fn = $('fNicho').value, fe = $('fEstado').value, ft = $('fTanda').value;
     var h = '', n = 0;
-    var orden = P.slice().sort(function(a,b){ return (a.tanda - b.tanda) || (a.prio - b.prio) || a.nombre.localeCompare(b.nombre); });
+    var orden = P.slice().sort(function(a,b){ return ((b.top?1:0)-(a.top?1:0)) || (a.tanda - b.tanda) || (a.prio - b.prio) || a.nombre.localeCompare(b.nombre); });
 
     for(var i=0;i<orden.length;i++){
       var p = orden[i], e = est(p);
@@ -182,6 +183,7 @@ h1 span{color:var(--n)}
         +   '</div><div class="badges">'
         +     '<span class="prio p'+p.prio+'">'+(p.prio===1?'Caliente':(p.prio===2?'Medio':'Frío'))+'</span>'
         +     '<span class="tanda t'+p.tanda+'">Tanda '+p.tanda+'</span>'
+        +     (p.top ? '<span class="tanda top">Prioridad</span>' : '')
         +   '</div></div>';
 
       if(!tel){
