@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tu negocio con página web y pedidos por WhatsApp · San Cristóbal</title>
+<meta name="description" content="Páginas web con pedidos y citas por WhatsApp para negocios de San Cristóbal. Desde $50. Lista en 72 horas.">
+<meta property="og:title" content="Páginas web con pedidos por WhatsApp · San Cristóbal">
+<meta property="og:description" content="Tu negocio recibiendo pedidos ordenados en vez de chats desordenados. Desde $50, listo en 72 horas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08090b; --bg-2:#101317; --card:#14181d;
+  --ink:#f0f2f5; --mute:#8b94a0; --line:rgba(240,242,245,.10);
+  --n:#c4f542;      /* neón lima */
+  --wa:#25D366;
+  --r:16px; --max:1080px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;font-weight:300;line-height:1.62;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 20px}
+h1,h2,h3{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-weight:700;line-height:.98;letter-spacing:-.035em}
+a{color:inherit}
+
+/* fondo reactivo */
+#glow{position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(520px circle at var(--mx,50%) var(--my,30%), rgba(196,245,66,.10), transparent 62%)}
+#grid{position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 78%)}
+
+nav{position:sticky;top:0;z-index:80;background:rgba(8,9,11,.82);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:14px;padding-bottom:14px}
+.logo{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;font-size:18px;letter-spacing:-.04em}
+.logo span{color:var(--n)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:0;cursor:pointer;font-family:inherit;
+  font-size:15px;font-weight:500;padding:15px 28px;border-radius:100px;text-decoration:none;transition:transform .2s,box-shadow .2s,background .2s}
+.btn-n{background:var(--n);color:#0b1400;box-shadow:0 8px 28px rgba(196,245,66,.22);font-weight:600}
+.btn-n:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(196,245,66,.34)}
+.btn-w{background:var(--wa);color:#052b10;box-shadow:0 8px 28px rgba(37,211,102,.24);font-weight:600}
+.btn-w:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(37,211,102,.36)}
+.btn-g{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn-g:hover{background:var(--bg-2);border-color:rgba(240,242,245,.25)}
+.btn-sm{padding:10px 20px;font-size:14px}
+
+/* HERO */
+.hero{padding:76px 0 60px;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--bg-2);border-radius:100px;
+  padding:7px 17px;font-size:13px;color:var(--mute);margin-bottom:26px}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--n);font-style:normal;box-shadow:0 0 0 3px rgba(196,245,66,.2)}
+.hero h1{font-size:clamp(31px,7.2vw,74px);margin-bottom:22px;max-width:17ch;margin-inline:auto}
+.hero h1 span{color:var(--n)}
+.hero-p{font-size:clamp(16px,2.4vw,19px);color:var(--mute);max-width:52ch;margin:0 auto 32px}
+.hero-cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.hero-note{font-size:13px;color:var(--mute);margin-top:18px}
+
+/* PROBLEMA */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:56px}
+@media(max-width:720px){.split{grid-template-columns:1fr}}
+.chat{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:22px;text-align:left}
+.chat h3{font-size:15px;margin-bottom:4px;letter-spacing:-.01em}
+.chat .lbl{font-size:11px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:14px;display:block}
+.bad .lbl{color:#e8674f} .good .lbl{color:var(--n)}
+.good{border-color:rgba(196,245,66,.3)}
+.msg{background:var(--bg-2);border-radius:12px 12px 12px 3px;padding:10px 13px;font-size:13.5px;margin-bottom:7px;max-width:88%;color:var(--mute)}
+.msg.me{background:#1b3b26;color:#cfe9d8;margin-left:auto;border-radius:12px 12px 3px 12px}
+.msg.order{background:#0f2417;color:#dff3e6;font-family:ui-monospace,Menlo,monospace;font-size:12px;line-height:1.75;
+  white-space:pre-line;max-width:100%;border:1px solid rgba(37,211,102,.28);border-radius:12px}
+
+section{padding:74px 0}
+.sec-head{text-align:center;margin-bottom:42px}
+.sec-head .eyebrow{display:block;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--n);margin-bottom:14px}
+.sec-head h2{font-size:clamp(30px,6vw,52px);margin-bottom:12px}
+.sec-head p{color:var(--mute);max-width:52ch;margin:0 auto}
+
+/* DEMOS */
+.demos{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(255px,1fr))}
+.demo{background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;text-decoration:none;
+  display:flex;flex-direction:column;transition:transform .25s cubic-bezier(.2,.7,.3,1),border-color .25s,box-shadow .25s}
+.demo:hover{transform:translateY(-6px);border-color:rgba(196,245,66,.38);box-shadow:0 20px 44px rgba(0,0,0,.45)}
+.demo-top{height:112px;position:relative;display:grid;place-items:center;overflow:hidden}
+.demo-top b{font-family:'Bricolage Grotesque',sans-serif;font-size:30px;letter-spacing:-.04em;position:relative;z-index:1}
+.demo-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:7px}
+.demo-body h3{font-size:19px}
+.demo-body p{font-size:13.5px;color:var(--mute);flex:1}
+.demo-tag{display:inline-block;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--n);
+  border:1px solid rgba(196,245,66,.32);border-radius:100px;padding:3px 10px;align-self:flex-start;margin-top:6px}
+.demo-go{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--n);font-weight:500;margin-top:10px}
+
+/* PRECIOS */
+.plans{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(272px,1fr));align-items:start}
+.plan{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:26px;display:flex;flex-direction:column;position:relative}
+.plan.best{border-color:var(--n);box-shadow:0 0 0 1px rgba(196,245,66,.28),0 20px 50px rgba(196,245,66,.08)}
+.plan-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--n);color:#0b1400;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;font-weight:600;padding:5px 14px;border-radius:100px;white-space:nowrap}
+.plan h3{font-size:21px;margin-bottom:5px}
+.plan .who{font-size:13px;color:var(--mute);margin-bottom:20px;min-height:38px}
+.price{display:flex;align-items:baseline;gap:5px;margin-bottom:3px}
+.price b{font-family:'Bricolage Grotesque',sans-serif;font-size:44px;letter-spacing:-.045em;line-height:1}
+.price small{color:var(--mute);font-size:13px}
+.price-sub{font-size:13.5px;color:var(--n);margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--line)}
+.feat{list-style:none;display:flex;flex-direction:column;gap:10px;flex:1;margin-bottom:22px}
+.feat li{font-size:14px;display:flex;gap:10px;align-items:flex-start;color:var(--ink)}
+.feat li::before{content:'✓';color:var(--n);font-weight:700;flex:0 0 auto;line-height:1.45}
+.feat li.off{color:var(--mute)}
+.feat li.off::before{content:'–';color:var(--mute)}
+.plan .btn{width:100%}
+
+.deal{background:linear-gradient(135deg,rgba(196,245,66,.1),rgba(196,245,66,.03));border:1px solid rgba(196,245,66,.28);
+  border-radius:var(--r);padding:24px;margin-top:20px;text-align:center}
+.deal b{color:var(--n)}
+
+/* PASOS */
+.steps{display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));counter-reset:s}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:24px;counter-increment:s;position:relative}
+.step::before{content:'0' counter(s);font-family:'Bricolage Grotesque',sans-serif;font-size:34px;color:var(--n);opacity:.35;
+  display:block;margin-bottom:12px;letter-spacing:-.04em}
+.step h3{font-size:17px;margin-bottom:7px}
+.step p{font-size:13.5px;color:var(--mute)}
+
+/* FAQ */
+.faq{max-width:720px;margin:0 auto}
+.q{border-bottom:1px solid var(--line)}
+.q summary{padding:20px 0;cursor:pointer;font-size:16.5px;font-weight:500;list-style:none;display:flex;justify-content:space-between;gap:16px;align-items:center}
+.q summary::-webkit-details-marker{display:none}
+.q summary::after{content:'+';color:var(--n);font-size:22px;font-weight:400;flex:0 0 auto;transition:transform .25s}
+.q[open] summary::after{transform:rotate(45deg)}
+.q p{padding:0 0 20px;color:var(--mute);font-size:14.5px;max-width:62ch}
+
+/* CTA */
+.final{text-align:center;background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.final h2{font-size:clamp(30px,6.4vw,54px);margin-bottom:16px}
+.final p{color:var(--mute);max-width:46ch;margin:0 auto 30px}
+
+footer{padding:40px 0;text-align:center;color:var(--mute);font-size:13px}
+.sticky{position:fixed;bottom:0;left:0;right:0;z-index:90;background:rgba(8,9,11,.94);backdrop-filter:blur(14px);
+  border-top:1px solid var(--line);padding:12px 16px calc(12px + env(safe-area-inset-bottom));display:none}
+.sticky .btn{width:100%}
+@media(max-width:720px){.sticky{display:block}body{padding-bottom:76px}}
+
+.rv{opacity:0;transform:translateY(22px);transition:opacity .7s,transform .7s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<div id="grid"></div><div id="glow"></div>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">jackson<span>.</span>web</div>
+    <a class="btn btn-w btn-sm" id="navWA" href="#">Escríbeme</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="pill"><i></i> San Cristóbal, Táchira</span>
+    <h1>Tu negocio recibiendo pedidos <span>ordenados</span>, no un chat hecho un desastre.</h1>
+    <p class="hero-p">Te hago una página donde tu cliente arma solo su pedido o su cita — y te llega a WhatsApp completo, en un solo mensaje, sin errores y sin que tengas que preguntar tres veces.</p>
+    <div class="hero-cta">
+      <a class="btn btn-n" href="#demos">Ver ejemplos reales</a>
+      <a class="btn btn-g" href="#precios">Ver precios</a>
+    </div>
+    <p class="hero-note">Desde $50 · Lista en 72 horas · Sin mensualidad a Meta ni a nadie</p>
+
+    <div class="split">
+      <div class="chat bad rv">
+        <span class="lbl">Como te llegan hoy</span>
+        <div class="msg">hola</div>
+        <div class="msg">tienen pabellon?</div>
+        <div class="msg me">Sí 👍</div>
+        <div class="msg">cuanto es</div>
+        <div class="msg me">8$</div>
+        <div class="msg">ok mandame 2</div>
+        <div class="msg">ah y una cachapa</div>
+        <div class="msg">con queso</div>
+        <div class="msg">cuanto es todo?</div>
+        <p style="color:var(--mute);font-size:12.5px;margin-top:12px">…y todavía falta la dirección, el pago y el total. 9 mensajes, 6 minutos, y a esa hora tienes 4 chats más esperando.</p>
+      </div>
+      <div class="chat good rv">
+        <span class="lbl">Como te llegarían</span>
+        <div class="msg order">*NUEVO PEDIDO — Sabor Andino*
+--------------------------------
+• 2x  Pabellón criollo — $16
+• 1x  Cachapa con queso — $5.50
+• Delivery — $2
+--------------------------------
+*TOTAL: $23.50*
+
+*Cliente:* María Rodríguez
+*Entrega:* Delivery
+*Dirección:* Calle 5, Barrio Obrero
+*Pago:* Pago móvil</div>
+        <p style="color:var(--n);font-size:12.5px;margin-top:12px">Un mensaje. Cero preguntas. Lo lees y lo mandas a la cocina.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="demos">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Ejemplos</span>
+      <h2>Míralas funcionando</h2>
+      <p>Son páginas de verdad, no fotos. Ábrelas en tu teléfono, arma un pedido y verás cómo se te abre el WhatsApp con todo escrito.</p>
+    </div>
+    <div class="demos">
+      <a class="demo rv" href="restaurante/index.html">
+        <div class="demo-top" style="background:linear-gradient(135deg,#3a2415,#17110c)"><b style="color:#e0913c">Sabor Andino</b></div>
+        <div class="demo-body">
+          <h3>Restaurante</h3>
+          <p>Menú por categorías, carrito, delivery o retiro, y el pedido completo listo para la cocina.</p>
+          <span class="demo-tag">También: pizzerías · areperas · licorerías</span>
+          <span class="demo-go">Abrir la demo →</span>
+        </div>
+      </a>
+      <a class="demo rv" href="barberia/index.html">
+        <div class="demo-top" style="background:linear-gradient(135deg,#f2efe9,#d8d4cc)"><b style="color:#0c0c0c">NAVAJA</b></div>
+        <div class="demo-body">
+          <h3>Barbería</h3>
+          <p>El cliente elige servicio, barbero, día y hora. Ve las horas ocupadas y reserva sin llamarte.</p>
+          <span class="demo-tag">También: peluquerías · uñas · spa · gimnasios</span>
+          <span class="demo-go">Abrir la demo →</span>
+        </div>
+      </a>
+      <a class="demo rv" href="clinica/index.html">
+        <div class="demo-top" style="background:linear-gradient(135deg,#3fa7c4,#7fd6b8)"><b style="color:#0c2530">Sonrisa</b></div>
+        <div class="demo-body">
+          <h3>Clínica / consultorio</h3>
+          <p>Tratamientos con precio de referencia, agenda por profesional y solicitud de cita ordenada.</p>
+          <span class="demo-tag">También: odontólogos · veterinarias · laboratorios</span>
+          <span class="demo-go">Abrir la demo →</span>
+        </div>
+      </a>
+      <a class="demo rv" href="boutique/index.html">
+        <div class="demo-top" style="background:linear-gradient(135deg,#c9b8a0,#8a7a63)"><b style="color:#1e1b16">Casa Lino</b></div>
+        <div class="demo-body">
+          <h3>Boutique / tienda</h3>
+          <p>Catálogo con tallas, colores y stock real. Se agota una talla y deja de aparecer disponible.</p>
+          <span class="demo-tag">También: calzado · accesorios · ferreterías</span>
+          <span class="demo-go">Abrir la demo →</span>
+        </div>
+      </a>
+    </div>
+    <p style="text-align:center;color:var(--mute);font-size:13px;margin-top:26px">
+      ¿Tu negocio no está en la lista? Escríbeme igual — el sistema se adapta a casi cualquier rubro.</p>
+  </div>
+</section>
+
+<section id="precios" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Precios claros</span>
+      <h2>Cuánto cuesta</h2>
+      <p>Un pago para montarla y una mensualidad baja para mantenerla viva y actualizada. Sin contratos ni letra chica.</p>
+    </div>
+    <div class="plans">
+
+      <div class="plan rv">
+        <h3>Arranque</h3>
+        <p class="who">Para el negocio chiquito que hoy no tiene nada: manicurista, bodega, servicio a domicilio.</p>
+        <div class="price"><b>$50</b><small>una vez</small></div>
+        <p class="price-sub">+ $15/mes de mantenimiento</p>
+        <ul class="feat">
+          <li>Página de 1 sección con tu marca</li>
+          <li>Botón directo a tu WhatsApp</li>
+          <li>Horarios, dirección y mapa</li>
+          <li>Enlaces a tus redes</li>
+          <li>Se ve bien en teléfono</li>
+          <li class="off">Sin catálogo ni pedidos armados</li>
+        </ul>
+        <a class="btn btn-g" href="#contacto">Lo quiero</a>
+      </div>
+
+      <div class="plan best rv">
+        <span class="plan-tag">El que casi todos eligen</span>
+        <h3>Negocio</h3>
+        <p class="who">Para restaurantes, barberías, tiendas y consultorios que ya venden por WhatsApp.</p>
+        <div class="price"><b>$120</b><small>una vez</small></div>
+        <p class="price-sub">+ $30/mes de mantenimiento</p>
+        <ul class="feat">
+          <li><b>Todo lo del plan Arranque</b></li>
+          <li>Menú, catálogo o agenda con hasta 50 ítems</li>
+          <li>Pedido o cita armado y enviado a tu WhatsApp</li>
+          <li>Carrito con total automático</li>
+          <li>Control de stock o de horas ocupadas</li>
+          <li>Cambios de precio ilimitados</li>
+          <li>Tu enlace propio para el perfil de Instagram</li>
+        </ul>
+        <a class="btn btn-n" href="#contacto">Lo quiero</a>
+      </div>
+
+      <div class="plan rv">
+        <h3>Pro</h3>
+        <p class="who">Para el que ya factura bien y quiere verse mejor que su competencia.</p>
+        <div class="price"><b>$250</b><small>una vez</small></div>
+        <p class="price-sub">+ $60/mes de mantenimiento</p>
+        <ul class="feat">
+          <li><b>Todo lo del plan Negocio</b></li>
+          <li>Catálogo ilimitado con buscador</li>
+          <li>Dominio propio .com incluido el primer año</li>
+          <li>Varias sucursales o varios números</li>
+          <li>Fotos de tus productos editadas</li>
+          <li>4 publicaciones al mes para tus redes</li>
+          <li>Reporte mensual de visitas</li>
+        </ul>
+        <a class="btn btn-g" href="#contacto">Lo quiero</a>
+      </div>
+    </div>
+
+    <div class="deal rv">
+      <p><b>Paga el año completo y son 10 meses en vez de 12.</b> Dos meses gratis, y te olvidas del tema hasta el año que viene.</p>
+    </div>
+    <p style="text-align:center;color:var(--mute);font-size:13px;margin-top:18px">
+      Se paga en efectivo, pago móvil, Zelle, Binance o transferencia. Precios en dólares.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Cómo funciona</span><h2>De la idea a vender: 72 horas</h2></div>
+    <div class="steps">
+      <div class="step rv"><h3>Hablamos 15 minutos</h3><p>Por WhatsApp o en tu local. Me cuentas qué vendes y cómo te llegan hoy los pedidos.</p></div>
+      <div class="step rv"><h3>Me pasas lo que tengas</h3><p>Tu logo, tus fotos, tu lista de precios. Si no tienes logo, te lo armo.</p></div>
+      <div class="step rv"><h3>La monto y te la muestro</h3><p>En 72 horas tienes el enlace funcionando. Ajustamos lo que no te guste, sin costo.</p></div>
+      <div class="step rv"><h3>Empiezas a usarla</h3><p>La pones en tu Instagram, tu estado y tus volantes. Y me escribes cada vez que cambies un precio.</p></div>
+    </div>
+  </div>
+</section>
+
+<section style="background:var(--bg-2);border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head rv"><span class="eyebrow">Dudas</span><h2>Lo que todos preguntan</h2></div>
+    <div class="faq">
+      <details class="q rv"><summary>¿Por qué tengo que pagar mensualidad si la página ya está hecha?</summary>
+        <p>Porque aquí los precios cambian cada semana. La mensualidad cubre que me escribas cuando quieras — «súbeme el pabellón a 9», «se acabó la talla M», «cambié el horario» — y yo lo actualizo el mismo día, las veces que haga falta. También cubre el alojamiento y que la página siga en línea. Si prefieres pagar solo el montaje y no tocarla más, se puede: son $40 extra al inicio y queda tuya, pero cada cambio después se cobra aparte.</p></details>
+      <details class="q rv"><summary>¿Necesito pagarle algo a WhatsApp o a Meta?</summary>
+        <p>No. Nada. Esto no usa la API paga de WhatsApp — usa el WhatsApp normal que ya tienes en tu teléfono. La página solo arma el mensaje y lo abre en el chat de tu cliente. Cero riesgo de que te bloqueen el número, cero costo mensual a Meta.</p></details>
+      <details class="q rv"><summary>Yo ya vendo bien por Instagram. ¿Para qué quiero esto?</summary>
+        <p>Justamente por eso. Instagram te trae el cliente, pero después te toca ordenar el pedido a mano en el chat. Esto te ahorra ese trabajo y evita que pierdas ventas en hora pico cuando no alcanzas a responder. El enlace se pone en tu perfil de Instagram y funciona 24 horas, incluso cuando tienes el local cerrado.</p></details>
+      <details class="q rv"><summary>¿Y si no me gusta cómo queda?</summary>
+        <p>Ajustamos lo que haga falta hasta que te guste, sin cobrarte más. Y si de verdad no te sirve, en los primeros 30 días te devuelvo lo que pagaste por el montaje. No me interesa cobrarle a alguien que no lo va a usar.</p></details>
+      <details class="q rv"><summary>Yo no sé nada de computadoras.</summary>
+        <p>No hace falta. Tú no tocas nada. Me mandas por WhatsApp lo que quieres cambiar, con una foto o una nota de voz, y yo lo hago. Tu única tarea es compartir el enlace.</p></details>
+      <details class="q rv"><summary>¿Cuánto me va a durar?</summary>
+        <p>La página es tuya mientras mantengas el servicio. Si algún día quieres irte, te entrego los archivos para que otro la maneje — sin dramas y sin secuestrarte nada.</p></details>
+    </div>
+  </div>
+</section>
+
+<section class="final" id="contacto">
+  <div class="wrap">
+    <h2 class="rv">Escríbeme y lo hablamos</h2>
+    <p class="rv">Dime qué negocio tienes y te digo en dos minutos si esto te sirve o no. Si no te sirve, te lo digo de una.</p>
+    <a class="btn btn-w rv" id="mainWA" href="#" style="font-size:16px;padding:17px 34px">Escribirme por WhatsApp</a>
+    <p style="color:var(--mute);font-size:13px;margin-top:20px">O llámame — contesto de 8 am a 8 pm, todos los días.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Jackson · Páginas web y pedidos por WhatsApp · San Cristóbal, Táchira</p>
+    <p style="margin-top:8px;font-size:12px">Las páginas de ejemplo usan negocios ficticios. Ningún dato, reseña o cifra pertenece a un negocio real.</p>
+  </div>
+</footer>
+
+<div class="sticky"><a class="btn btn-w" id="stickyWA" href="#">Escríbeme por WhatsApp</a></div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ==========================================================
+     CONFIG — Jackson: pon aquí TU número y tu mensaje
+     ========================================================== */
+  var MI_WHATSAPP = '584121234567';   // ← tu número, sin + ni espacios
+  var MENSAJE = 'Hola Jackson, vi tu página y quiero información sobre una web para mi negocio.';
+
+  /* ========== No hace falta tocar nada más ========== */
+  function safe(fn){ try{ fn(); }catch(e){} }
+
+  safe(function(){
+    var url = 'https://wa.me/' + MI_WHATSAPP + '?text=' + encodeURIComponent(MENSAJE);
+    var ids = ['navWA','mainWA','stickyWA'];
+    for(var i=0;i<ids.length;i++){
+      var el = document.getElementById(ids[i]);
+      if(el){ el.href = url; el.target = '_blank'; el.rel = 'noopener'; }
+    }
+  });
+
+  safe(function(){
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if(window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+    var raf = null;
+    document.addEventListener('mousemove', function(e){
+      if(raf) return;
+      raf = requestAnimationFrame(function(){
+        document.documentElement.style.setProperty('--mx', e.clientX + 'px');
+        document.documentElement.style.setProperty('--my', e.clientY + 'px');
+        raf = null;
+      });
+    }, {passive:true});
+  });
+
+  safe(function(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<els.length;i++) els[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<els.length;j++) io.observe(els[j]);
+    setTimeout(function(){ for(var k=0;k<els.length;k++) els[k].classList.add('in'); }, 2000);
+  });
+})();
+</script>
+</body>
+</html>
