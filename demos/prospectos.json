@@ -1,10 +1,17 @@
 {
   "_nota": "Datos de prospección. Los teléfonos vienen de perfiles y directorios públicos y DEBEN verificarse antes de escribir. tel: formato internacional sin +. verificar:true = abrir el perfil y confirmar el número antes de enviar.",
   "jackson": {
-    "whatsapp": "584121234567",
-    "nombre": "Jackson"
+    "whatsapp": "584247481963",
+    "nombre": "Jackson Jaimes"
   },
   "prospectos": [
+
+    {"slug":"maria-silva","nombre":"María Silva — 3 marcas","ig":"mfsm1101","tel":["573142575183"],
+     "zona":"San Juan de Colón · San Cristóbal · Cúcuta","base":"barberia","carta":"salon",
+     "tipo":"MaríBeauty Studio · Shop · Makeup Artist","prio":1,"verificar":false,
+     "top":true,"custom":true,"ruta":"/marisilva/","brief_url":"/marisilva/brief/",
+     "gancho":"vi que maneja tres marcas — el Studio de pestañas, la tienda de maquillaje y su trabajo como maquilladora — y las tres las atiende por el mismo chat",
+     "msg_custom":"Buenas tardes María. Soy Jackson Jaimes, hago p\u00e1ginas web aqu\u00ed en el T\u00e1chira.\n\nLe escribo porque vi que maneja tres marcas: el Studio de pesta\u00f1as y cejas, la tienda de maquillaje y su trabajo como maquilladora. Las tres las atiende por el mismo chat.\n\nAntes de escribirle le arm\u00e9 las tres p\u00e1ginas, con el nombre de cada marca, para que las vea funcionando:\n{LINK}\n\n\u00c1bralas en el tel\u00e9fono. En la del Studio reserve una cita de prueba y va a ver que sale todo en un solo mensaje: el servicio, el d\u00eda, la hora y el precio, sin ir y venir preguntando.\n\nLos productos y precios son de muestra y el logotipo es provisional. Con los suyos reales quedan listas en 72 horas.\n\n\u00bfLe cuento c\u00f3mo funciona?"},
 
     {"slug":"helus-resto-bar","nombre":"Helus Resto Bar","ig":"helusrestobar","tel":[],"zona":"Av. Libertador, San Cristóbal","base":"restaurante","carta":"parrilla","tipo":"Restaurante · Café · Bar","prio":1,"verificar":true,
      "gancho":"vi que publican el menú y los horarios por Instagram, pero los pedidos y las reservas les entran todos por el chat"},

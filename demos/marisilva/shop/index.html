@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MaríBeauty Shop — Maquillaje, skincare y cabello</title>
+<meta name="description" content="La tienda de maquillaje que estabas buscando. Catálogo con pedido directo por WhatsApp. Delivery en San Cristóbal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Parisienne&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF8F6; --sand:#F2E9E4; --paper:#FFFFFF;
+  --ink:#2B2225; --soft:#55474B; --mute:#806E72;
+  --acc:#9F6346;            /* rosa-caramelo — WCAG AA */
+  --acc-soft:#EFE0D6;
+  --gold:#B08D57;
+  --line:rgba(43,34,37,.12);
+  --wa:#25D366;
+  --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--cream);color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;
+  line-height:1.68;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:400;line-height:1.1;letter-spacing:-.01em}
+.script{font-family:Parisienne,cursive}
+.caps{font-size:11px;letter-spacing:.32em;text-transform:uppercase;font-weight:400}
+
+.prop{background:var(--ink);color:var(--cream);font-size:11.5px;padding:9px 16px;text-align:center;line-height:1.5}
+.prop b{color:#E3BFA8;font-weight:500}
+.prop a{color:var(--cream);text-decoration:underline;text-underline-offset:3px}
+
+nav{position:sticky;top:0;z-index:70;background:rgba(251,248,246,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:14px;padding-bottom:14px}
+.logo{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.mono{width:42px;height:42px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;
+  font-family:Parisienne,cursive;font-size:25px;color:var(--acc);line-height:1;padding-bottom:3px;flex:0 0 auto}
+.wordmark{line-height:1.05}
+.wordmark .n{font-family:'Cormorant Garamond',serif;font-size:19px;display:block}
+.wordmark .s{font-size:9px;letter-spacing:.34em;text-transform:uppercase;color:var(--mute);display:block;margin-top:2px}
+.nav-links{display:flex;gap:26px;font-size:13px;letter-spacing:.05em}
+.nav-links a{color:var(--soft);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--acc)}
+@media(max-width:900px){.nav-links{display:none}}
+.bag{display:flex;align-items:center;gap:9px;background:none;border:1px solid var(--line);border-radius:100px;
+  padding:10px 18px;font-family:Jost,sans-serif;font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  cursor:pointer;color:var(--ink);transition:all .2s}
+.bag:hover{border-color:var(--acc);color:var(--acc)}
+.bag .n{background:var(--acc);color:#fff;border-radius:100px;min-width:20px;height:20px;display:grid;place-items:center;font-size:11px;letter-spacing:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--acc);
+  background:var(--acc);color:#fff;font-family:Jost,sans-serif;font-size:12.5px;letter-spacing:.16em;
+  text-transform:uppercase;padding:15px 30px;cursor:pointer;text-decoration:none;border-radius:100px;
+  transition:all .28s cubic-bezier(.2,.7,.3,1)}
+.btn:hover{background:transparent;color:var(--acc)}
+.btn-o{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn-o:hover{background:var(--ink);color:var(--cream);border-color:var(--ink)}
+
+.hero{padding:70px 0 56px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-190px;right:-170px;width:560px;height:560px;border-radius:50%;
+  background:radial-gradient(circle,rgba(159,99,70,.13),transparent 66%);pointer-events:none}
+.hero .wrap{position:relative;z-index:1}
+.hero .caps{color:var(--acc);display:block;margin-bottom:22px}
+.hero h1{font-size:clamp(42px,9.2vw,78px);margin-bottom:20px;max-width:14ch}
+.hero h1 .script{color:var(--acc);font-size:1.05em}
+.hero p{font-size:17px;color:var(--soft);max-width:46ch;margin-bottom:32px}
+.hero-cta{display:flex;gap:11px;flex-wrap:wrap}
+.marks{display:flex;gap:34px;flex-wrap:wrap;margin-top:50px;padding-top:26px;border-top:1px solid var(--line)}
+.marks b{font-family:'Cormorant Garamond',serif;font-size:26px;display:block;line-height:1;color:var(--acc)}
+.marks span{font-size:12px;color:var(--mute)}
+
+section{padding:70px 0}
+.sec-head{margin-bottom:34px}
+.sec-head .caps{color:var(--acc);display:block;margin-bottom:14px}
+.sec-head h2{font-size:clamp(30px,6vw,50px);margin-bottom:12px}
+.sec-head h2 em{font-style:italic;color:var(--acc)}
+.sec-head p{color:var(--mute);max-width:50ch;font-size:15.5px}
+
+.tabs{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:30px;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);
+  padding:13px 0;margin-right:28px;font-family:Jost,sans-serif;font-size:12px;letter-spacing:.16em;
+  text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--acc);border-bottom-color:var(--acc)}
+
+.grid{display:grid;gap:16px;grid-template-columns:repeat(auto-fill,minmax(232px,1fr))}
+.prod{background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;
+  transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s}
+.prod:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(43,34,37,.09)}
+.pimg{aspect-ratio:1/1;position:relative;display:grid;place-items:center;overflow:hidden}
+.pimg span{font-family:Parisienne,cursive;font-size:56px;color:rgba(255,255,255,.6)}
+.badge{position:absolute;top:11px;left:11px;background:var(--paper);color:var(--acc);font-size:9.5px;
+  letter-spacing:.16em;text-transform:uppercase;padding:5px 11px;border-radius:100px}
+.badge.low{background:var(--acc);color:#fff}
+.pbody{padding:17px;display:flex;flex-direction:column;gap:7px;flex:1}
+.pbody h3{font-size:18px;line-height:1.2}
+.pmarca{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.pdesc{font-size:12.5px;color:var(--mute);flex:1}
+.pprice{font-family:'Cormorant Garamond',serif;font-size:23px;color:var(--acc)}
+.pprice s{font-size:14px;color:var(--mute);margin-right:8px;font-family:Jost,sans-serif}
+.add{margin-top:8px;width:100%;padding:12px;font-size:11px;letter-spacing:.16em}
+.add:disabled{opacity:.4;cursor:not-allowed;background:var(--mute);border-color:var(--mute)}
+
+.sheet{position:fixed;inset:0;z-index:100;display:none}
+.sheet.open{display:block}
+.sheet-bg{position:absolute;inset:0;background:rgba(43,34,37,.45)}
+.sheet-panel{position:absolute;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--paper);
+  overflow-y:auto;padding:26px 22px calc(26px + env(safe-area-inset-bottom));border-left:1px solid var(--line);
+  animation:sl .34s cubic-bezier(.2,.9,.3,1)}
+@keyframes sl{from{transform:translateX(100%)}}
+.sh-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:18px;
+  border-bottom:1px solid var(--line);margin-bottom:8px}
+.sh-head h3{font-size:26px}
+.x{background:none;border:0;color:var(--mute);font-size:30px;cursor:pointer;line-height:1;padding:0 4px}
+.line{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.lth{width:52px;height:52px;flex:0 0 auto}
+.lb{flex:1}
+.lb b{display:block;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:400}
+.lb small{color:var(--mute);font-size:11.5px;display:block;margin-bottom:8px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:100px}
+.qty button{width:27px;height:27px;border:0;background:none;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit}
+.qty span{min-width:22px;text-align:center;font-size:13px}
+.lsub{font-family:'Cormorant Garamond',serif;font-size:16px;text-align:right;min-width:52px}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:20px 0;
+  font-family:'Cormorant Garamond',serif;font-size:19px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.total b{font-size:32px;color:var(--acc)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--mute);margin-bottom:7px}
+.field input,.field select,.field textarea{width:100%;background:var(--cream);border:1px solid var(--line);
+  color:var(--ink);padding:13px 14px;font-family:Jost,sans-serif;font-size:15px;border-radius:2px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--acc);background:var(--paper)}
+.wa{width:100%;background:var(--wa);border-color:var(--wa);color:#06280E;margin-top:6px;padding:16px;font-size:12.5px}
+.wa:hover{background:transparent;color:#0d6b2c;border-color:var(--wa)}
+.note{font-size:12px;color:var(--mute);text-align:center;margin-top:12px;letter-spacing:0;text-transform:none}
+.empty{color:var(--mute);text-align:center;padding:44px 0;font-size:15px}
+
+.strip{background:var(--sand);padding:56px 0}
+.sg{display:grid;gap:28px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))}
+.si h3{font-size:19px;margin-bottom:9px;color:var(--acc)}
+.si p{font-size:14px;color:var(--soft)}
+
+footer{padding:52px 0;border-top:1px solid var(--line);text-align:center;color:var(--mute);font-size:13px}
+footer .logo{justify-content:center;margin-bottom:18px}
+footer a{color:var(--acc);text-decoration:none}
+.hermanas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:22px 0 18px}
+.hermanas a{border:1px solid var(--line);padding:9px 18px;border-radius:100px;font-size:12px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--soft);transition:all .2s}
+.hermanas a:hover{border-color:var(--acc);color:var(--acc)}
+
+.rv{opacity:0;transform:translateY(22px);transition:opacity .8s,transform .8s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="prop">
+  <b>PROPUESTA</b> para María Silva · Productos y precios de muestra, el logotipo es provisional.
+  <a href="../">Ver las tres marcas</a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="../">
+      <span class="mono">M</span>
+      <span class="wordmark"><span class="n">Marí<em class="script" style="color:var(--acc)">Beauty</em></span><span class="s">Shop</span></span>
+    </a>
+    <div class="nav-links"><a href="#catalogo">Catálogo</a><a href="#envios">Envíos</a><a href="#pagos">Pagos</a></div>
+    <button class="bag" onclick="openSheet()">Bolsa <span class="n" id="bagN">0</span></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="caps">Maquillaje · Skincare · Cabello</span>
+    <h1>La tienda que estabas buscando,<br><span class="script">ahora con catálogo.</span></h1>
+    <p>Elige lo que quieras, mira si hay existencia y manda tu pedido armado en un solo mensaje. Sin preguntar precio uno por uno.</p>
+    <div class="hero-cta">
+      <button class="btn" onclick="document.getElementById('catalogo').scrollIntoView()">Ver el catálogo</button>
+      <a class="btn btn-o" href="#envios">Envíos y pagos</a>
+    </div>
+    <div class="marks">
+      <div><b>Delivery</b><span>En San Cristóbal</span></div>
+      <div><b>Envíos</b><span>A todo el Táchira</span></div>
+      <div><b>Original</b><span>Producto sellado</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="catalogo">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="caps">Temporada actual</span>
+      <h2>El <em>catálogo</em></h2>
+      <p>Lo que ves es lo que hay. Si dice «últimas unidades», es en serio.</p>
+    </div>
+    <div class="tabs" id="tabs" role="tablist"></div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<section class="strip" id="envios">
+  <div class="wrap">
+    <div class="sg">
+      <div class="si rv"><h3>Delivery</h3><p>Entregas en San Cristóbal el mismo día ($2). Desde $30 de compra va sin costo.</p></div>
+      <div class="si rv"><h3>Envíos</h3><p>A todo el Táchira por Zoom o MRW en 24–48 h. El flete lo paga quien recibe.</p></div>
+      <div class="si rv" id="pagos"><h3>Formas de pago</h3><p>Efectivo (USD y Bs), pago móvil, Zelle, transferencia y Nequi para Cúcuta.</p></div>
+      <div class="si rv"><h3>Apartado</h3><p>Con el 50% te guardo el producto hasta por 10 días. Se coordina por WhatsApp.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap" style="max-width:640px;text-align:center">
+    <span class="caps" style="color:var(--acc)">Quién está detrás</span>
+    <h2 style="font-size:clamp(28px,5vw,42px);margin:16px 0 18px">Maquillaje que <em style="font-style:italic;color:var(--acc)">sí</em> he probado</h2>
+    <p style="color:var(--soft);font-size:16px">Soy María Silva, maquilladora. Todo lo que vendo aquí lo uso en mis clientas antes de recomendarlo. Si algo no me funciona, no entra al catálogo. <em>(Texto de ejemplo — aquí va el suyo.)</em></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="logo" href="../">
+      <span class="mono">M</span>
+      <span class="wordmark"><span class="n">Marí<em class="script" style="color:var(--acc)">Beauty</em></span><span class="s">Shop</span></span>
+    </a>
+    <div class="hermanas">
+      <a href="../studio/">MaríBeauty Studio</a>
+      <a href="../artist/">María Silva · Makeup</a>
+    </div>
+    <p>San Juan de Colón, Táchira — <em>propuesta de ejemplo</em></p>
+    <p style="margin-top:8px">Hecha por <a href="../../">Jackson Jaimes · Webs y pedidos por WhatsApp</a></p>
+  </div>
+</footer>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-bg" onclick="closeSheet()"></div>
+  <div class="sheet-panel">
+    <div class="sh-head"><h3>Tu bolsa</h3><button class="x" onclick="closeSheet()" aria-label="Cerrar">&times;</button></div>
+    <div id="lines"></div>
+    <div class="total" id="totalRow" hidden><span>Total</span><b id="totalV">$0</b></div>
+    <div id="form" hidden>
+      <div class="field"><label for="f-name">Nombre completo</label><input id="f-name" placeholder="Ej: Andrea Rojas"></div>
+      <div class="field"><label for="f-env">Cómo lo recibes</label>
+        <select id="f-env" onchange="renderCart()">
+          <option>Delivery en San Cristóbal (+$2)</option>
+          <option>Retiro en San Juan de Colón</option>
+          <option>Envío al Táchira (por cobrar)</option>
+        </select></div>
+      <div class="field"><label for="f-addr">Dirección</label><input id="f-addr" placeholder="Calle, casa, punto de referencia"></div>
+      <div class="field"><label for="f-pay">Forma de pago</label>
+        <select id="f-pay"><option>Efectivo (USD)</option><option>Pago móvil</option><option>Zelle</option>
+        <option>Transferencia</option><option>Nequi</option></select></div>
+      <div class="field"><label for="f-note">Nota (opcional)</label><textarea id="f-note" rows="2" placeholder="Ej: necesito el tono más claro"></textarea></div>
+      <button class="btn wa" onclick="sendWA()">Enviar pedido por WhatsApp</button>
+      <p class="note">Se abre tu WhatsApp con el pedido ya escrito.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  var CONFIG = {
+    negocio: 'MaríBeauty Shop',
+    whatsapp: '584247481963',     // demo: llega a Jackson
+    moneda: '$',
+    delivery: 2
+  };
+
+  var G = {
+    rosa:  'linear-gradient(135deg,#D9AFA4,#B8836F)',
+    nude:  'linear-gradient(135deg,#E2CBB8,#C2A188)',
+    vino:  'linear-gradient(135deg,#B07A80,#8A555F)',
+    verde: 'linear-gradient(135deg,#BCC7B4,#94A38C)',
+    oro:   'linear-gradient(135deg,#DFC79A,#B08D57)'
+  };
+
+  var PRODUCTOS = [
+    {n:'Base de larga duración', cat:'Rostro', marca:'Maybelline', p:14, antes:18, s:6, img:G.nude,
+     d:'Cobertura media-alta, acabado natural. 8 tonos disponibles.', t:'Más vendido'},
+    {n:'Corrector alta cobertura', cat:'Rostro', marca:'Maybelline', p:9, s:12, img:G.nude,
+     d:'Cubre ojeras sin cuartearse. Aplicador de esponja.'},
+    {n:'Polvo compacto matificante', cat:'Rostro', marca:'Ruby Rose', p:7, s:9, img:G.nude,
+     d:'Sella el maquillaje y controla el brillo todo el día.'},
+    {n:'Primer poros', cat:'Rostro', marca:'Ruby Rose', p:8, s:4, img:G.verde,
+     d:'Difumina poros y alarga la duración de la base.'},
+
+    {n:'Paleta de sombras 18 tonos', cat:'Ojos', marca:'Ruby Rose', p:12, s:7, img:G.nude,
+     d:'Mates y satinados. Pigmentación alta, poco fallout.', t:'Recomendado'},
+    {n:'Máscara de pestañas volumen', cat:'Ojos', marca:'Essence', p:6, s:14, img:G.vino,
+     d:'Cepillo curvo, no se corre. Ideal con lifting.'},
+    {n:'Delineador líquido negro', cat:'Ojos', marca:'Essence', p:5, s:11, img:G.vino,
+     d:'Punta fina, secado rápido, resistente al agua.'},
+    {n:'Gel para cejas transparente', cat:'Ojos', marca:'Ruby Rose', p:4, s:3, img:G.verde,
+     d:'Fija el vello sin endurecer. Perfecto tras el laminado.'},
+
+    {n:'Labial mate larga duración', cat:'Labios', marca:'Ruby Rose', p:6, s:16, img:G.vino,
+     d:'No transfiere. 12 tonos del nude al vino.'},
+    {n:'Gloss efecto volumen', cat:'Labios', marca:'Essence', p:5, s:8, img:G.rosa,
+     d:'Brillo espejo con leve efecto plumping.'},
+    {n:'Delineador de labios', cat:'Labios', marca:'Ruby Rose', p:3.5, s:10, img:G.vino,
+     d:'Cremoso, no arrastra. Combina con los labiales.'},
+
+    {n:'Rubor en polvo', cat:'Rubores', marca:'Ruby Rose', p:6, s:9, img:G.rosa,
+     d:'Acabado natural, se difumina fácil. 6 tonos.'},
+    {n:'Iluminador prensado', cat:'Rubores', marca:'Ruby Rose', p:8, s:5, img:G.oro,
+     d:'Brillo fino, sin glitter. Se ve como piel bonita.'},
+    {n:'Bronceador mate', cat:'Rubores', marca:'Maybelline', p:9, s:4, img:G.nude,
+     d:'Para contorno y calidez. Tono neutro, sin naranja.'},
+
+    {n:'Set de 12 brochas', cat:'Brochas', marca:'MaríBeauty', p:18, antes:24, s:3, img:G.rosa,
+     d:'Cerda sintética suave, con estuche. Rostro y ojos.', t:'Últimas unidades'},
+    {n:'Esponja de maquillaje', cat:'Brochas', marca:'MaríBeauty', p:3, s:20, img:G.rosa,
+     d:'Sin látex, crece al humedecerse. Difumina sin absorber.'},
+    {n:'Brocha kabuki densa', cat:'Brochas', marca:'MaríBeauty', p:7, s:6, img:G.rosa,
+     d:'Para base líquida. Acabado sin marcas.'},
+
+    {n:'Limpiador facial en gel', cat:'Skincare', marca:'CeraVe', p:12, s:7, img:G.verde,
+     d:'Piel mixta a grasa. No reseca ni deja tirantez.'},
+    {n:'Sérum con niacinamida', cat:'Skincare', marca:'The Ordinary', p:14, s:5, img:G.verde,
+     d:'Controla el brillo y empareja el tono con el uso.'},
+    {n:'Protector solar FPS 50', cat:'Skincare', marca:'ISDIN', p:22, s:4, img:G.verde,
+     d:'Toque seco, no deja blanco. Se puede usar bajo la base.', t:'Imprescindible'},
+    {n:'Crema hidratante ligera', cat:'Skincare', marca:'CeraVe', p:15, s:6, img:G.verde,
+     d:'Con ceramidas. Buena base antes del maquillaje.'},
+
+    {n:'Shampoo sin sal', cat:'Cabello', marca:'Ilicit', p:11, s:8, img:G.oro,
+     d:'Cuida el color y no reseca. 1 litro.'},
+    {n:'Mascarilla reparadora', cat:'Cabello', marca:'Ilicit', p:13, s:5, img:G.oro,
+     d:'Para cabello con tinte o decoloración. Uso semanal.'},
+    {n:'Aceite de argán', cat:'Cabello', marca:'Ilicit', p:9, s:9, img:G.oro,
+     d:'Sella puntas y da brillo sin engrasar.'},
+
+    {n:'Crema corporal humectante', cat:'Corporal', marca:'Nivea', p:8, s:11, img:G.rosa,
+     d:'Absorción rápida, aroma suave. 400 ml.'},
+    {n:'Exfoliante corporal', cat:'Corporal', marca:'MaríBeauty', p:10, s:4, img:G.rosa,
+     d:'Azúcar y aceites. Deja la piel lista para el bronceador.'}
+  ];
+
+  var cart = {}, filtro = 'Todo';
+  var $ = function(id){ return document.getElementById(id); };
+  function safe(f){ try{ f(); }catch(e){} }
+  function money(v){ return CONFIG.moneda + (Math.round(v*100)/100).toFixed(2).replace(/\.00$/,''); }
+
+  function cats(){
+    var o = ['Todo'];
+    for(var i=0;i<PRODUCTOS.length;i++) if(o.indexOf(PRODUCTOS[i].cat) < 0) o.push(PRODUCTOS[i].cat);
+    return o;
+  }
+  function renderTabs(){
+    var c = cats(), h = '';
+    for(var i=0;i<c.length;i++)
+      h += '<button class="tab" role="tab" aria-selected="'+(c[i]===filtro)+'" data-c="'+c[i]+'">'+c[i]+'</button>';
+    $('tabs').innerHTML = h;
+    var e = $('tabs').querySelectorAll('.tab');
+    for(var j=0;j<e.length;j++) e[j].addEventListener('click', function(){
+      filtro = this.dataset.c; renderTabs(); renderProds();
+    });
+  }
+
+  function renderProds(){
+    var h = '';
+    for(var i=0;i<PRODUCTOS.length;i++){
+      var p = PRODUCTOS[i];
+      if(filtro !== 'Todo' && p.cat !== filtro) continue;
+      var badge = p.s === 0 ? '<span class="badge">Agotado</span>'
+                : p.s <= 4 ? '<span class="badge low">Últimas '+p.s+'</span>'
+                : (p.t ? '<span class="badge">'+p.t+'</span>' : '');
+      h += '<article class="prod">'
+        +   '<div class="pimg" style="background:'+p.img+'">'+badge+'<span>'+p.n.charAt(0)+'</span></div>'
+        +   '<div class="pbody">'
+        +     '<span class="pmarca">'+p.marca+'</span>'
+        +     '<h3>'+p.n+'</h3><p class="pdesc">'+p.d+'</p>'
+        +     '<div class="pprice">'+(p.antes?'<s>'+money(p.antes)+'</s>':'')+money(p.p)+'</div>'
+        +     '<button class="btn add" data-i="'+i+'"'+(p.s===0?' disabled':'')+'>'+(p.s===0?'Agotado':'Agregar')+'</button>'
+        +   '</div></article>';
+    }
+    $('grid').innerHTML = h;
+    var b = $('grid').querySelectorAll('.add');
+    for(var j=0;j<b.length;j++) b[j].addEventListener('click', function(){
+      if(!this.disabled) addItem(+this.dataset.i);
+    });
+  }
+
+  function addItem(i){
+    var p = PRODUCTOS[i], k = 'p'+i;
+    if(!cart[k]) cart[k] = {n:p.n, marca:p.marca, p:p.p, img:p.img, q:0, max:p.s};
+    if(cart[k].q < cart[k].max) cart[k].q++;
+    renderCart(); openSheet();
+  }
+  function setQty(k,d){
+    if(!cart[k]) return;
+    cart[k].q += d;
+    if(cart[k].q > cart[k].max) cart[k].q = cart[k].max;
+    if(cart[k].q <= 0) delete cart[k];
+    renderCart();
+  }
+  function keys(){ return Object.keys(cart); }
+  function sub(){ var t=0,k=keys(); for(var i=0;i<k.length;i++) t += cart[k[i]].p*cart[k[i]].q; return t; }
+  function count(){ var c=0,k=keys(); for(var i=0;i<k.length;i++) c += cart[k[i]].q; return c; }
+  function envio(){
+    var v = $('f-env') ? $('f-env').value : '';
+    if(v.indexOf('Delivery') !== 0) return 0;
+    return sub() >= 30 ? 0 : CONFIG.delivery;
+  }
+  function total(){ return sub() + envio(); }
+
+  function renderCart(){
+    var k = keys(), h = '';
+    for(var i=0;i<k.length;i++){
+      var c = cart[k[i]];
+      h += '<div class="line"><div class="lth" style="background:'+c.img+'"></div>'
+        +  '<div class="lb"><b>'+c.n+'</b><small>'+c.marca+' · '+money(c.p)+'</small>'
+        +    '<div class="qty"><button data-k="'+k[i]+'" data-d="-1">&minus;</button><span>'+c.q+'</span><button data-k="'+k[i]+'" data-d="1">+</button></div>'
+        +  '</div><div class="lsub">'+money(c.p*c.q)+'</div></div>';
+    }
+    if(!k.length) h = '<p class="empty">Tu bolsa está vacía.<br>Vuelve al catálogo y elige algo.</p>';
+    else {
+      var e = envio();
+      var v = $('f-env') ? $('f-env').value : '';
+      if(v.indexOf('Delivery') === 0)
+        h += '<div class="line" style="align-items:center"><div class="lb" style="margin-left:4px"><b>Delivery</b>'
+          +  (e===0?'<small>Gratis por superar $30</small>':'') + '</div><div class="lsub">'+money(e)+'</div></div>';
+    }
+    $('lines').innerHTML = h;
+    var q = $('lines').querySelectorAll('.qty button');
+    for(var j=0;j<q.length;j++) q[j].addEventListener('click', function(){ setQty(this.dataset.k, +this.dataset.d); });
+    $('totalRow').hidden = !k.length;
+    $('form').hidden = !k.length;
+    $('totalV').textContent = money(total());
+    $('bagN').textContent = count();
+  }
+  window.renderCart = renderCart;
+
+  function sendWA(){
+    var k = keys();
+    if(!k.length) return;
+    var name = ($('f-name').value||'').trim();
+    if(!name){ $('f-name').focus(); $('f-name').style.borderColor='#A8342F'; return; }
+    var env = $('f-env').value, addr = ($('f-addr').value||'').trim();
+    if(env.indexOf('Retiro') < 0 && !addr){ $('f-addr').focus(); $('f-addr').style.borderColor='#A8342F'; return; }
+
+    var L = [];
+    L.push('*NUEVO PEDIDO — ' + CONFIG.negocio + '*');
+    L.push('--------------------------------');
+    for(var i=0;i<k.length;i++){
+      var c = cart[k[i]];
+      L.push('• ' + c.q + 'x  ' + c.n + '  (' + c.marca + ')  —  ' + money(c.p*c.q));
+    }
+    if(envio()) L.push('• Delivery — ' + money(envio()));
+    L.push('--------------------------------');
+    L.push('*TOTAL: ' + money(total()) + '*');
+    L.push('');
+    L.push('*Clienta:* ' + name);
+    L.push('*Entrega:* ' + env);
+    if(env.indexOf('Retiro') < 0) L.push('*Dirección:* ' + addr);
+    L.push('*Pago:* ' + $('f-pay').value);
+    var nota = ($('f-note').value||'').trim();
+    if(nota) L.push('*Nota:* ' + nota);
+    L.push('');
+    L.push('_Pedido enviado desde la web_');
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(L.join('\n')), '_blank');
+  }
+  window.sendWA = function(){ safe(sendWA); };
+
+  function openSheet(){ $('sheet').classList.add('open'); document.body.style.overflow='hidden'; }
+  function closeSheet(){ $('sheet').classList.remove('open'); document.body.style.overflow=''; }
+  window.openSheet = openSheet; window.closeSheet = closeSheet;
+
+  safe(function(){ renderTabs(); renderProds(); renderCart(); });
+  safe(function(){
+    var e = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<e.length;i++) e[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<e.length;j++) io.observe(e[j]);
+    setTimeout(function(){ for(var k2=0;k2<e.length;k2++) e[k2].classList.add('in'); }, 2000);
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeSheet(); });
+})();
+</script>
+</body>
+</html>
