@@ -1,0 +1,39 @@
+name: Publish demos to GitHub Pages
+
+on:
+  push:
+    branches: [claude/jackson-local-commerce-niches-6ljcwm]
+    paths: ['demos/**', '.github/workflows/demos.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update demos/ on gh-pages (preserving everything else)
+        run: |
+          git clone --depth 1 --branch gh-pages \
+            "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" /tmp/site \
+            || { mkdir -p /tmp/site && cd /tmp/site && git init -b gh-pages; }
+
+          rm -rf /tmp/site/demos
+          mkdir -p /tmp/site/demos
+          cp -r demos/. /tmp/site/demos/
+          touch /tmp/site/.nojekyll
+
+          cd /tmp/site
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet && { echo "Sin cambios"; exit 0; }
+          git commit -m "Actualizar demos en GitHub Pages"
+          git push "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git" gh-pages

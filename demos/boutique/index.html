@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casa Lino · Boutique — Demo</title>
+<meta name="description" content="Catálogo con tallas, stock y pedido por WhatsApp. Plantilla demo para boutiques de San Cristóbal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5f1e8; --bg-2:#ebe4d6; --paper:#fffdf8;
+  --ink:#1e1b16; --ink-2:#3a352c; --mute:#8a8071;
+  --accent:#a8543a;  /* terracota */
+  --accent-2:#5c6b4a; /* musgo */
+  --line:rgba(30,27,22,.13);
+  --r:4px; --max:1120px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;line-height:1.65;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 22px}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;font-weight:400;line-height:1.05;letter-spacing:-.015em}
+em{font-style:italic}
+.eyebrow{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);font-weight:400}
+
+.demo-bar{background:var(--ink);color:var(--bg);font-size:12px;padding:8px 16px;text-align:center;position:relative;z-index:95;letter-spacing:.02em}
+.demo-bar strong{color:#d9a06f}
+.demo-bar a{color:var(--bg);text-decoration:underline;text-underline-offset:3px}
+
+nav{position:sticky;top:0;z-index:80;background:rgba(245,241,232,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:16px;padding-bottom:16px}
+.logo{font-family:Fraunces,serif;font-size:22px;letter-spacing:-.02em}
+.logo em{color:var(--accent)}
+.nav-links{display:flex;gap:26px;font-size:13px;letter-spacing:.1em;text-transform:uppercase}
+.nav-links a{color:var(--mute);text-decoration:none;transition:color .2s}
+.nav-links a:hover{color:var(--ink)}
+@media(max-width:860px){.nav-links{display:none}}
+.bag{display:flex;align-items:center;gap:8px;background:none;border:1px solid var(--line);border-radius:100px;padding:9px 17px;
+  font-family:Jost,sans-serif;font-size:13px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;transition:all .2s;color:var(--ink)}
+.bag:hover{border-color:var(--ink)}
+.bag .n{background:var(--accent);color:var(--paper);border-radius:100px;min-width:19px;height:19px;display:grid;place-items:center;font-size:11px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--ink);background:var(--ink);color:var(--bg);
+  font-family:Jost,sans-serif;font-size:13px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;padding:15px 32px;
+  cursor:pointer;text-decoration:none;transition:all .25s;border-radius:100px}
+.btn:hover{background:transparent;color:var(--ink)}
+.btn-o{background:transparent;color:var(--ink)}
+.btn-o:hover{background:var(--ink);color:var(--bg)}
+
+/* HERO */
+.hero{padding:76px 0 60px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-140px;right:-160px;width:520px;height:520px;border-radius:50%;
+  background:radial-gradient(circle,rgba(168,84,58,.13),transparent 66%);pointer-events:none}
+.hero .eyebrow{display:block;margin-bottom:22px}
+.hero h1{font-size:clamp(42px,9vw,84px);margin-bottom:22px;max-width:15ch}
+.hero h1 em{color:var(--accent)}
+.hero p{font-size:17px;color:var(--ink-2);max-width:46ch;margin-bottom:32px}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap}
+.marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;margin-top:54px;background:var(--bg-2)}
+.marquee div{display:inline-block;animation:slide 28s linear infinite;padding:13px 0}
+.marquee span{padding:0 26px;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--mute)}
+.marquee span::after{content:'—';margin-left:26px;color:var(--accent);opacity:.5}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+section{padding:70px 0}
+.sec-head{margin-bottom:36px;display:flex;justify-content:space-between;align-items:flex-end;gap:22px;flex-wrap:wrap}
+.sec-head h2{font-size:clamp(30px,5.6vw,50px)}
+.sec-head h2 em{color:var(--accent)}
+.sec-head p{color:var(--mute);max-width:40ch;font-size:15px}
+
+/* FILTROS */
+.filters{display:flex;gap:0;overflow-x:auto;border-bottom:1px solid var(--line);margin-bottom:28px;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filter{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--mute);padding:12px 20px 12px 0;
+  margin-right:8px;font-family:Jost,sans-serif;font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.filter[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+/* PRODUCTOS */
+.pgrid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.prod{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;
+  transition:transform .3s cubic-bezier(.2,.7,.3,1),box-shadow .3s}
+.prod:hover{transform:translateY(-5px);box-shadow:0 18px 40px rgba(30,27,22,.10)}
+.pimg{aspect-ratio:4/5;position:relative;display:grid;place-items:center;overflow:hidden}
+.pimg .mono{font-family:Fraunces,serif;font-size:64px;color:rgba(255,255,255,.62);font-style:italic;user-select:none}
+.badge{position:absolute;top:12px;left:12px;background:var(--paper);color:var(--ink);font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;padding:5px 11px;border-radius:100px}
+.badge.low{background:var(--accent);color:var(--paper)}
+.pbody{padding:18px;display:flex;flex-direction:column;gap:9px;flex:1}
+.pbody h3{font-size:19px}
+.pdesc{font-size:13px;color:var(--mute);flex:1}
+.pprice{font-family:Fraunces,serif;font-size:22px;color:var(--accent)}
+.pprice s{font-size:14px;color:var(--mute);margin-right:8px}
+.opts{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.opt-row{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.opt-lbl{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mute);width:100%}
+.sz{border:1px solid var(--line);background:transparent;color:var(--ink-2);min-width:34px;height:32px;padding:0 9px;
+  font-family:Jost,sans-serif;font-size:12.5px;cursor:pointer;border-radius:100px;transition:all .18s}
+.sz:hover{border-color:var(--ink)}
+.sz[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.sz:disabled{opacity:.3;cursor:not-allowed;text-decoration:line-through}
+.co{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);cursor:pointer;padding:0;transition:transform .18s,box-shadow .18s}
+.co:hover{transform:scale(1.12)}
+.co[aria-pressed="true"]{box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--ink)}
+.padd{margin-top:12px;width:100%;padding:12px;font-size:12px}
+.padd:disabled{opacity:.42;cursor:not-allowed;background:var(--mute);border-color:var(--mute)}
+
+/* CARRITO */
+.sheet{position:fixed;inset:0;z-index:100;display:none}
+.sheet.open{display:block}
+.sheet-bg{position:absolute;inset:0;background:rgba(30,27,22,.5)}
+.sheet-panel{position:absolute;top:0;right:0;bottom:0;width:min(430px,100%);background:var(--paper);overflow-y:auto;
+  padding:26px 22px calc(26px + env(safe-area-inset-bottom));animation:slidein .34s cubic-bezier(.2,.9,.3,1);border-left:1px solid var(--line)}
+@keyframes slidein{from{transform:translateX(100%)}}
+.sheet-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+.sheet-head h3{font-size:26px}
+.x{background:none;border:0;color:var(--mute);font-size:30px;cursor:pointer;line-height:1;padding:0 4px}
+.line{display:flex;gap:13px;padding:15px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+.lthumb{width:52px;height:64px;border-radius:2px;flex:0 0 auto}
+.lbody{flex:1}
+.lbody b{display:block;font-size:14.5px;font-weight:400;font-family:Fraunces,serif}
+.lbody small{color:var(--mute);font-size:12px;display:block;margin-bottom:7px}
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:100px}
+.qty button{width:26px;height:26px;border:0;background:none;color:var(--ink);cursor:pointer;font-size:15px;font-family:inherit}
+.qty span{min-width:22px;text-align:center;font-size:13px}
+.lsub{font-family:Fraunces,serif;font-size:15px;text-align:right;min-width:52px}
+.total{display:flex;justify-content:space-between;align-items:baseline;padding:20px 0;font-family:Fraunces,serif;font-size:19px;
+  border-bottom:1px solid var(--line);margin-bottom:18px}
+.total b{font-size:30px;color:var(--accent)}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--ink);
+  border-radius:2px;padding:13px 14px;font-family:Jost,sans-serif;font-size:15px}
+.field input:focus,.field select:focus,.field textarea:focus{outline:0;border-color:var(--accent)}
+.wa{width:100%;background:#25D366;border-color:#25D366;color:#06280e;margin-top:6px;padding:16px}
+.wa:hover{background:transparent;color:#0d6b2c;border-color:#25D366}
+.note{font-size:12px;color:var(--mute);text-align:center;margin-top:12px;text-transform:none;letter-spacing:0}
+.empty{color:var(--mute);text-align:center;padding:40px 0;font-size:15px}
+
+.strip{background:var(--bg-2);padding:56px 0}
+.strip-grid{display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+.sitem h3{font-size:17px;margin-bottom:8px;color:var(--accent)}
+.sitem p{font-size:14px;color:var(--ink-2)}
+
+footer{padding:46px 0;text-align:center;color:var(--mute);font-size:13.5px;border-top:1px solid var(--line)}
+footer a{color:var(--accent);text-decoration:none}
+
+.rv{opacity:0;transform:translateY(20px);transition:opacity .75s,transform .75s cubic-bezier(.2,.7,.3,1)}
+.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.marquee div{animation:none}}
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <strong>DEMO</strong> · Plantilla de ejemplo, tienda ficticia. <a href="../index.html">Quiero una así →</a>
+</div>
+
+<nav>
+  <div class="wrap">
+    <div class="logo">Casa <em>Lino</em></div>
+    <div class="nav-links"><a href="#catalogo">Catálogo</a><a href="#nosotros">Nosotros</a><a href="#envios">Envíos</a></div>
+    <button class="bag" onclick="openSheet()">Bolsa <span class="n" id="bagN">0</span></button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Boutique · San Cristóbal, Táchira</span>
+    <h1>Ropa que se ve mejor <em>en persona.</em></h1>
+    <p>Pero se compra igual de fácil desde aquí. Elige talla y color, mira si hay stock, y manda tu pedido armado por WhatsApp.</p>
+    <div class="hero-cta">
+      <button class="btn" onclick="document.getElementById('catalogo').scrollIntoView()">Ver catálogo</button>
+      <a class="btn btn-o" href="#envios">Envíos y pagos</a>
+    </div>
+  </div>
+  <div class="marquee"><div id="mq"></div></div>
+</header>
+
+<section id="catalogo">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div><span class="eyebrow">Temporada actual</span><h2 style="margin-top:10px">El <em>catálogo</em></h2></div>
+      <p>Lo que ves es lo que hay. Si dice «últimas unidades», es en serio.</p>
+    </div>
+    <div class="filters" id="filters" role="tablist"></div>
+    <div class="pgrid" id="pgrid"></div>
+  </div>
+</section>
+
+<section class="strip" id="envios">
+  <div class="wrap">
+    <div class="strip-grid">
+      <div class="sitem rv"><h3>Envíos</h3><p>Delivery en San Cristóbal el mismo día ($2). A todo el Táchira por Zoom o MRW en 24–48 h.</p></div>
+      <div class="sitem rv"><h3>Formas de pago</h3><p>Efectivo (USD y Bs), pago móvil, Zelle, transferencia y punto de venta a domicilio.</p></div>
+      <div class="sitem rv"><h3>Cambios</h3><p>Tienes 7 días para cambiar talla, siempre que la prenda esté sin usar y con su etiqueta.</p></div>
+      <div class="sitem rv"><h3>Apartado</h3><p>Con el 50% te guardamos la prenda hasta por 15 días. Se coordina por WhatsApp.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="nosotros">
+  <div class="wrap" style="max-width:640px;text-align:center">
+    <span class="eyebrow">Quiénes somos</span>
+    <h2 style="font-size:clamp(28px,5vw,42px);margin:14px 0 16px">Diez años vistiendo <em>el Táchira</em></h2>
+    <p style="color:var(--ink-2);font-size:16px">Empezamos con una mesa en un pasillo del centro y hoy tenemos local propio en Barrio Obrero. Seguimos escogiendo cada prenda a mano, una por una. <em>(Historia de ejemplo — aquí va la del negocio real.)</em></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>Casa Lino · San Cristóbal, Táchira — <em>tienda de ejemplo</em></p>
+    <p style="margin-top:8px">Plantilla creada por <a href="../index.html">Jackson · Webs y pedidos por WhatsApp</a></p>
+  </div>
+</footer>
+
+<div class="sheet" id="sheet">
+  <div class="sheet-bg" onclick="closeSheet()"></div>
+  <div class="sheet-panel">
+    <div class="sheet-head"><h3>Tu bolsa</h3><button class="x" onclick="closeSheet()" aria-label="Cerrar">&times;</button></div>
+    <div id="lines"></div>
+    <div class="total" id="totalRow" hidden><span>Total</span><b id="totalV">$0</b></div>
+    <div id="form" hidden>
+      <div class="field"><label for="f-name">Nombre completo</label><input id="f-name" placeholder="Ej: Ana Pérez"></div>
+      <div class="field"><label for="f-env">Cómo lo recibes</label>
+        <select id="f-env" onchange="renderCart()">
+          <option>Delivery en San Cristóbal (+$2)</option>
+          <option>Retiro en la tienda</option>
+          <option>Envío nacional (por cobrar)</option>
+        </select></div>
+      <div class="field"><label for="f-addr">Dirección</label><input id="f-addr" placeholder="Calle, casa/edificio, punto de referencia"></div>
+      <div class="field"><label for="f-pay">Forma de pago</label>
+        <select id="f-pay"><option>Efectivo (USD)</option><option>Pago móvil</option><option>Zelle</option>
+        <option>Transferencia</option><option>Punto de venta</option></select></div>
+      <div class="field"><label for="f-note">Nota (opcional)</label><textarea id="f-note" rows="2" placeholder="Ej: es un regalo, ponle bolsa bonita"></textarea></div>
+      <button class="btn wa" onclick="sendWA()">Enviar pedido por WhatsApp</button>
+      <p class="note">Se abre tu WhatsApp con el pedido ya escrito. Solo tocas enviar.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ==========================================================
+     CONFIG — Jackson: edita SOLO este bloque por cliente
+     ========================================================== */
+  var CONFIG = {
+    negocio: 'Casa Lino',
+    whatsapp: '584121234567',
+    moneda: '$',
+    delivery: 2
+  };
+
+  var PRODUCTOS = [
+    {n:'Camisa de lino',      cat:'Mujer',   p:22, antes:28, d:'Lino 100%, corte holgado, manga larga con puño.',
+     tallas:{S:3,M:5,L:2,XL:0}, colores:[['Hueso','#efe6d6'],['Terracota','#a8543a'],['Oliva','#5c6b4a']], img:'linear-gradient(135deg,#c9b8a0,#a89880)'},
+    {n:'Vestido midi',        cat:'Mujer',   p:30, d:'Viscosa fluida, largo midi, con bolsillos.',
+     tallas:{S:2,M:4,L:3,XL:1}, colores:[['Negro','#22201c'],['Vino','#6d2b34']], img:'linear-gradient(135deg,#8b7d6b,#6b5f52)'},
+    {n:'Jean recto tiro alto',cat:'Mujer',   p:26, d:'Denim rígido, tiro alto, pierna recta. Talla real.',
+     tallas:{'28':2,'30':4,'32':3,'34':0}, colores:[['Azul medio','#4a6785'],['Negro','#22201c']], img:'linear-gradient(135deg,#6d8098,#4a5c72)'},
+    {n:'Blusa satinada',      cat:'Mujer',   p:18, d:'Caída suave, ideal para oficina o salida.',
+     tallas:{S:5,M:6,L:2}, colores:[['Marfil','#f0e9dc'],['Verde jade','#3f6b5c'],['Rosa palo','#d9b3ae']], img:'linear-gradient(135deg,#d4c4b0,#b8a68e)'},
+    {n:'Camisa oxford',       cat:'Hombre',  p:24, d:'Algodón oxford, corte slim, cuello botón.',
+     tallas:{S:2,M:6,L:5,XL:3}, colores:[['Celeste','#a8bfd4'],['Blanco','#f5f2ea'],['Gris','#8a8a86']], img:'linear-gradient(135deg,#9aacc0,#75879b)'},
+    {n:'Chemise piqué',       cat:'Hombre',  p:19, d:'Piqué de algodón, cuello reforzado.',
+     tallas:{M:4,L:6,XL:2}, colores:[['Marino','#26364f'],['Verde militar','#4f5a42'],['Vinotinto','#5e2a30']], img:'linear-gradient(135deg,#5a6b7d,#3d4b5c)'},
+    {n:'Pantalón chino',      cat:'Hombre',  p:27, d:'Gabardina con algo de elastano. Cómodo todo el día.',
+     tallas:{'30':3,'32':5,'34':4,'36':1}, colores:[['Beige','#c4b499'],['Negro','#22201c'],['Azul','#3a4a63']], img:'linear-gradient(135deg,#b3a78f,#8f8471)'},
+    {n:'Cartera de cuero',    cat:'Accesorios', p:35, d:'Cuero legítimo, forro interno, correa ajustable.',
+     tallas:{'Única':2}, colores:[['Camel','#a87c4f'],['Negro','#22201c']], img:'linear-gradient(135deg,#9c7b57,#7a5d3f)'},
+    {n:'Correa trenzada',     cat:'Accesorios', p:12, d:'Cuero trenzado, hebilla metálica.',
+     tallas:{'S/M':4,'L/XL':3}, colores:[['Marrón','#6b4a30'],['Negro','#22201c']], img:'linear-gradient(135deg,#7d6047,#5c4634)'},
+    {n:'Pañuelo de seda',     cat:'Accesorios', p:9, d:'Seda estampada, 70x70 cm.',
+     tallas:{'Única':6}, colores:[['Estampado A','#c07a5c'],['Estampado B','#5c7a6b']], img:'linear-gradient(135deg,#c4917a,#a06f5a)'}
+  ];
+
+  /* ========== A partir de aquí NO hace falta tocar nada ========== */
+
+  var cart = {}, filtro = 'Todo', pick = {};
+  var $ = function(id){ return document.getElementById(id); };
+  function safe(fn){ try{ fn(); }catch(e){} }
+  function money(v){ return CONFIG.moneda + (Math.round(v*100)/100).toFixed(2).replace(/\.00$/,''); }
+
+  function cats(){
+    var out = ['Todo'];
+    for(var i=0;i<PRODUCTOS.length;i++) if(out.indexOf(PRODUCTOS[i].cat) < 0) out.push(PRODUCTOS[i].cat);
+    return out;
+  }
+
+  function renderFilters(){
+    var c = cats(), h = '';
+    for(var i=0;i<c.length;i++) h += '<button class="filter" role="tab" aria-selected="'+(c[i]===filtro)+'" data-c="'+c[i]+'">'+c[i]+'</button>';
+    $('filters').innerHTML = h;
+    var els = $('filters').querySelectorAll('.filter');
+    for(var j=0;j<els.length;j++) els[j].addEventListener('click', function(){ filtro = this.dataset.c; renderFilters(); renderProds(); });
+  }
+
+  function stockTotal(p){
+    var t = 0; for(var k in p.tallas) t += p.tallas[k]; return t;
+  }
+
+  function renderProds(){
+    var h = '';
+    for(var i=0;i<PRODUCTOS.length;i++){
+      var p = PRODUCTOS[i];
+      if(filtro !== 'Todo' && p.cat !== filtro) continue;
+      var st = stockTotal(p);
+      var sel = pick[i] || {};
+      var badge = st === 0 ? '<span class="badge">Agotado</span>'
+                : st <= 4 ? '<span class="badge low">Últimas '+st+'</span>'
+                : (p.antes ? '<span class="badge low">Oferta</span>' : '');
+
+      var tallas = '', ks = Object.keys(p.tallas);
+      for(var t=0;t<ks.length;t++){
+        var q = p.tallas[ks[t]];
+        tallas += '<button class="sz" data-i="'+i+'" data-t="'+ks[t]+'" aria-pressed="'+(sel.talla===ks[t])+'"'+(q<=0?' disabled':'')+'>'+ks[t]+'</button>';
+      }
+      var colores = '';
+      for(var c=0;c<p.colores.length;c++){
+        colores += '<button class="co" data-i="'+i+'" data-c="'+p.colores[c][0]+'" aria-pressed="'+(sel.color===p.colores[c][0])+'"'
+                +  ' style="background:'+p.colores[c][1]+'" title="'+p.colores[c][0]+'" aria-label="'+p.colores[c][0]+'"></button>';
+      }
+      var listo = sel.talla && sel.color && st > 0;
+
+      h += '<article class="prod">'
+        +   '<div class="pimg" style="background:'+p.img+'">'+badge+'<span class="mono">'+p.n.charAt(0)+'</span></div>'
+        +   '<div class="pbody">'
+        +     '<h3>'+p.n+'</h3><p class="pdesc">'+p.d+'</p>'
+        +     '<div class="pprice">'+(p.antes?'<s>'+money(p.antes)+'</s>':'')+money(p.p)+'</div>'
+        +     '<div class="opts">'
+        +       '<div class="opt-row"><span class="opt-lbl">Talla</span>'+tallas+'</div>'
+        +       '<div class="opt-row"><span class="opt-lbl">Color'+(sel.color?' · '+sel.color:'')+'</span>'+colores+'</div>'
+        +     '</div>'
+        +     '<button class="btn padd" data-add="'+i+'"'+(listo?'':' disabled')+'>'
+        +       (st===0 ? 'Agotado' : (listo ? 'Agregar a la bolsa' : 'Elige talla y color')) + '</button>'
+        +   '</div>'
+        + '</article>';
+    }
+    $('pgrid').innerHTML = h;
+
+    var szs = $('pgrid').querySelectorAll('.sz');
+    for(var a=0;a<szs.length;a++) szs[a].addEventListener('click', function(){
+      if(this.disabled) return;
+      var i = +this.dataset.i; pick[i] = pick[i] || {}; pick[i].talla = this.dataset.t; renderProds();
+    });
+    var cos = $('pgrid').querySelectorAll('.co');
+    for(var b=0;b<cos.length;b++) cos[b].addEventListener('click', function(){
+      var i = +this.dataset.i; pick[i] = pick[i] || {}; pick[i].color = this.dataset.c; renderProds();
+    });
+    var adds = $('pgrid').querySelectorAll('[data-add]');
+    for(var d=0;d<adds.length;d++) adds[d].addEventListener('click', function(){
+      if(this.disabled) return; addItem(+this.dataset.add);
+    });
+  }
+
+  function addItem(i){
+    var p = PRODUCTOS[i], s = pick[i];
+    if(!s || !s.talla || !s.color) return;
+    var key = i+'|'+s.talla+'|'+s.color;
+    if(!cart[key]) cart[key] = {n:p.n, p:p.p, talla:s.talla, color:s.color, img:p.img, q:0, max:p.tallas[s.talla]};
+    if(cart[key].q < cart[key].max) cart[key].q++;
+    renderCart(); openSheet();
+  }
+  function setQty(k,d){
+    if(!cart[k]) return;
+    cart[k].q += d;
+    if(cart[k].q > cart[k].max) cart[k].q = cart[k].max;
+    if(cart[k].q <= 0) delete cart[k];
+    renderCart();
+  }
+  function keys(){ return Object.keys(cart); }
+  function subtotal(){ var t=0, ks=keys(); for(var i=0;i<ks.length;i++) t += cart[ks[i]].p*cart[ks[i]].q; return t; }
+  function count(){ var c=0, ks=keys(); for(var i=0;i<ks.length;i++) c += cart[ks[i]].q; return c; }
+  function envio(){ var v = $('f-env') ? $('f-env').value : ''; return v.indexOf('Delivery') === 0 ? CONFIG.delivery : 0; }
+  function total(){ return subtotal() + envio(); }
+
+  function renderCart(){
+    var ks = keys(), h = '';
+    for(var i=0;i<ks.length;i++){
+      var c = cart[ks[i]];
+      h += '<div class="line">'
+        +   '<div class="lthumb" style="background:'+c.img+'"></div>'
+        +   '<div class="lbody"><b>'+c.n+'</b><small>Talla '+c.talla+' · '+c.color+' · '+money(c.p)+'</small>'
+        +     '<div class="qty"><button data-k="'+ks[i]+'" data-d="-1">&minus;</button><span>'+c.q+'</span><button data-k="'+ks[i]+'" data-d="1">+</button></div>'
+        +   '</div><div class="lsub">'+money(c.p*c.q)+'</div></div>';
+    }
+    if(!ks.length) h = '<p class="empty">Tu bolsa está vacía.<br>Vuelve al catálogo y elige algo.</p>';
+    else if(envio()) h += '<div class="line" style="align-items:center"><div class="lbody" style="margin-left:4px"><b>Delivery</b></div><div class="lsub">'+money(envio())+'</div></div>';
+    $('lines').innerHTML = h;
+
+    var qb = $('lines').querySelectorAll('.qty button');
+    for(var j=0;j<qb.length;j++) qb[j].addEventListener('click', function(){ setQty(this.dataset.k, +this.dataset.d); });
+
+    $('totalRow').hidden = !ks.length;
+    $('form').hidden = !ks.length;
+    $('totalV').textContent = money(total());
+    $('bagN').textContent = count();
+  }
+  window.renderCart = renderCart;
+
+  function sendWA(){
+    var ks = keys();
+    if(!ks.length) return;
+    var name = ($('f-name').value || '').trim();
+    if(!name){ $('f-name').focus(); $('f-name').style.borderColor = 'var(--accent)'; return; }
+    var env = $('f-env').value, addr = ($('f-addr').value || '').trim();
+    if(env.indexOf('Retiro') < 0 && !addr){ $('f-addr').focus(); $('f-addr').style.borderColor = 'var(--accent)'; return; }
+
+    var L = [];
+    L.push('*NUEVO PEDIDO — ' + CONFIG.negocio + '*');
+    L.push('--------------------------------');
+    for(var i=0;i<ks.length;i++){
+      var c = cart[ks[i]];
+      L.push('• ' + c.q + 'x  ' + c.n);
+      L.push('   Talla ' + c.talla + ' · ' + c.color + ' — ' + money(c.p*c.q));
+    }
+    if(envio()) L.push('• Delivery — ' + money(envio()));
+    L.push('--------------------------------');
+    L.push('*TOTAL: ' + money(total()) + '*');
+    L.push('');
+    L.push('*Cliente:* ' + name);
+    L.push('*Entrega:* ' + env);
+    if(env.indexOf('Retiro') < 0) L.push('*Dirección:* ' + addr);
+    L.push('*Pago:* ' + $('f-pay').value);
+    var note = ($('f-note').value || '').trim();
+    if(note) L.push('*Nota:* ' + note);
+    L.push('');
+    L.push('_Pedido enviado desde la web_');
+
+    window.open('https://wa.me/' + CONFIG.whatsapp + '?text=' + encodeURIComponent(L.join('\n')), '_blank');
+  }
+  window.sendWA = function(){ safe(sendWA); };
+
+  function openSheet(){ $('sheet').classList.add('open'); document.body.style.overflow = 'hidden'; }
+  function closeSheet(){ $('sheet').classList.remove('open'); document.body.style.overflow = ''; }
+  window.openSheet = openSheet; window.closeSheet = closeSheet;
+
+  safe(function(){
+    var w = ['Envíos a todo el Táchira','Cambios en 7 días','Apartado con 50%','Lino · Algodón · Seda','Barrio Obrero'];
+    $('mq').innerHTML = w.concat(w).map(function(x){ return '<span>'+x+'</span>'; }).join('');
+  });
+  safe(function(){ renderFilters(); renderProds(); renderCart(); });
+  safe(function(){
+    var els = document.querySelectorAll('.rv');
+    if(!('IntersectionObserver' in window)){ for(var i=0;i<els.length;i++) els[i].classList.add('in'); return; }
+    var io = new IntersectionObserver(function(en){
+      for(var i=0;i<en.length;i++) if(en[i].isIntersecting){ en[i].target.classList.add('in'); io.unobserve(en[i].target); }
+    }, {threshold:.05, rootMargin:'0px 0px -40px 0px'});
+    for(var j=0;j<els.length;j++) io.observe(els[j]);
+    setTimeout(function(){ for(var k=0;k<els.length;k++) els[k].classList.add('in'); }, 2000);
+  });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeSheet(); });
+})();
+</script>
+</body>
+</html>
