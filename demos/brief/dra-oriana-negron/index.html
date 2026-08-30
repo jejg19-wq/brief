@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Brief · Dra. Oriana Negrón</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf9f6;--card:#fff;--ink:#16181c;--ink2:#3d434c;--mute:#767d88;
+  --line:#e2e0da;--n:#1f7a4d;--n2:#e8f3ec;--warn:#a8640f;--warn2:#fdf3e3;--r:12px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;
+  line-height:1.62;-webkit-font-smoothing:antialiased;padding-bottom:60px}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+a{color:var(--n)}
+header{background:var(--ink);color:#fff;padding:22px 0 20px;margin-bottom:20px}
+header .eyebrow{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8fd6b0;margin-bottom:7px}
+header h1{font-size:24px;font-weight:700;letter-spacing:-.025em;line-height:1.14}
+header .meta{font-size:13.5px;color:#a9b0ba;margin-top:6px}
+header .meta a{color:#8fd6b0}
+.back{display:inline-block;font-size:12.5px;color:#a9b0ba;text-decoration:none;margin-bottom:12px}
+
+.bar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;
+  margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.bar .pct{font-size:24px;font-weight:700;color:var(--n);letter-spacing:-.03em;min-width:52px}
+.bar .track{flex:1;height:7px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar .fill{height:100%;background:var(--n);width:0;transition:width .35s cubic-bezier(.2,.8,.3,1)}
+.bar small{font-size:12px;color:var(--mute);white-space:nowrap}
+
+section{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:13px}
+h2{font-size:16.5px;font-weight:600;letter-spacing:-.015em;margin-bottom:4px;display:flex;gap:9px;align-items:center}
+h2 .num{width:23px;height:23px;border-radius:7px;background:var(--n);color:#fff;font-size:12px;
+  display:grid;place-items:center;flex:0 0 auto;font-weight:600}
+.lead{font-size:13.5px;color:var(--mute);margin-bottom:14px;margin-left:32px}
+.chk{display:flex;gap:11px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer;font-size:14.5px}
+.chk:last-child{border:0}
+.chk input{width:19px;height:19px;margin-top:2px;flex:0 0 auto;accent-color:var(--n);cursor:pointer}
+.chk input:checked + span{color:var(--mute);text-decoration:line-through}
+.box{background:var(--n2);border:1px solid #c3e2d1;border-radius:9px;padding:13px 15px;font-size:13.5px;color:#134d31;margin-top:12px}
+.box b{color:#0d3a24}
+.tip{background:var(--warn2);border:1px solid #edd8ae;border-radius:9px;padding:13px 15px;font-size:13.5px;color:#6b430b;margin-top:12px}
+.tip b{color:var(--warn)}
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);font-weight:600}
+td:first-child{color:var(--mute);white-space:nowrap;padding-right:14px}
+.msg{background:#f4f3ef;border:1px solid var(--line);border-radius:9px;padding:15px;font-size:13.5px;
+  white-space:pre-wrap;line-height:1.72;margin-top:12px;color:var(--ink2)}
+.b{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:0;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:600;padding:13px 22px;border-radius:99px;text-decoration:none;
+  transition:filter .15s,transform .12s}
+.b:active{transform:scale(.98)}
+.b:hover{filter:brightness(1.08)}
+.bn{background:var(--n);color:#fff}
+.bg{background:#eceae4;color:var(--ink);border:1px solid var(--line)}
+.acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.no{font-size:14px;color:var(--mute);padding:7px 0;border-bottom:1px solid var(--line)}
+.no:last-child{border:0}
+.no b{color:var(--ink2);font-weight:500}
+.toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(120%);background:var(--ink);
+  color:#fff;padding:12px 24px;border-radius:99px;font-weight:600;font-size:14px;z-index:60;
+  transition:transform .3s cubic-bezier(.2,.9,.3,1.2),opacity .2s;opacity:0;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+@media print{header{background:#fff;color:#000}body{padding:0}.acts,.toast,.back{display:none}
+  section{break-inside:avoid;border-color:#ccc}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="back" href="https://jejg19-wq.github.io/brief/demos/panel/">← Volver al panel</a>
+    <p class="eyebrow">Brief de recolección</p>
+    <h1>Dra. Oriana Negrón</h1>
+    <p class="meta">Diseño de sonrisa y estética dental · Barrio Obrero, Centro Profesional Belsan</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="bar">
+    <span class="pct" id="pct">0%</span>
+    <div class="track"><div class="fill" id="fill"></div></div>
+    <small id="cnt">0 de 0</small>
+  </div>
+
+  <section>
+    <h2><span class="num">1</span> La marca</h2>
+    <p class="lead">Lo que define cómo se va a ver la página.</p>
+    <label class="chk"><input type="checkbox" data-k="m-0"><span><b>El logo.</b> En archivo si lo tiene (PNG, JPG o PDF, lo que sea). Si no lo tiene: una <b>foto del aviso del local</b> de frente y bien enfocada.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-1"><span><b>Los colores.</b> No hace falta que los sepa. Con una foto del local, del aviso o de una tarjeta suya, yo saco la paleta.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-2"><span><b>Cómo se escribe el nombre exactamente.</b> Con mayúsculas, tildes y símbolos como él lo usa.</span></label>
+    <label class="chk"><input type="checkbox" data-k="m-3"><span><b>Una frase que lo describa.</b> Lo que le diría a un cliente nuevo en una línea. Si no la tiene, se la escribo yo.</span></label>
+    <div class="tip"><b>Si no tiene logo:</b> no lo mandes a hacerse uno ni pierdas la venta por eso. Toma la foto del aviso, yo le armo un logotipo simple con el nombre y se lo incluyo. Es la objeción más común y la más fácil de resolver.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">2</span> Los servicios</h2>
+    <p class="lead">El corazón de la página. Sin esto no hay nada que montar.</p>
+    <table>
+      <tr><th>Cuántos</th><td>Unos <b>10</b> para arrancar. Si tiene más, empezamos con los que más vende.</td></tr>
+      <tr><th>Cómo</th><td>Agrupados en: Tratamientos odontológicos</td></tr>
+      <tr><th>De cada uno</th><td>nombre del tratamiento · precio de referencia en $ · duración de la cita · una línea de qué es</td></tr>
+      <tr><th>Formato</th><td>Como lo tenga: escrito, foto de la lista de precios, Excel, o dictado por nota de voz. <b>No lo mandes a pasarlo en limpio</b> — eso lo hago yo.</td></tr>
+    </table>
+    <label class="chk" style="margin-top:12px"><input type="checkbox" data-k="c-0"><span>Lista completa recibida</span></label>
+    <label class="chk"><input type="checkbox" data-k="c-1"><span>Precios confirmados y al día</span></label>
+    <label class="chk"><input type="checkbox" data-k="c-2"><span>Marcados cuáles son los 3 que más vende (van destacados)</span></label>
+  </section>
+
+  <section>
+    <h2><span class="num">3</span> Las fotos</h2>
+    <p class="lead">Cuatro fotos, con el teléfono, de día y sin flash. No hace falta fotógrafo.</p>
+    <label class="chk"><input type="checkbox" data-k="f-0"><span>El consultorio con la unidad odontológica</span></label><label class="chk"><input type="checkbox" data-k="f-1"><span>La sala de espera</span></label><label class="chk"><input type="checkbox" data-k="f-2"><span>El equipo de trabajo (con su permiso)</span></label><label class="chk"><input type="checkbox" data-k="f-3"><span>La entrada o el edificio</span></label>
+    <div class="tip"><b>Cómo pedirlas:</b> «Párese cerca de la ventana o salga a la puerta, que le pegue luz de día. Sin flash. Mándemelas como estén, yo las arreglo.» Si el negocio ya publica buenas fotos en Instagram, pídele permiso para usar esas y te ahorras el paso.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">4</span> Los datos fijos</h2>
+    <p class="lead">Lo que va en la página y no cambia casi nunca.</p>
+    <label class="chk"><input type="checkbox" data-k="d-0"><span><b>Dirección exacta</b> — calle, número, punto de referencia. Como se la daría a alguien que nunca ha ido.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-1"><span><b>Horario de cada día</b> — incluyendo si cierra al mediodía o si el domingo es distinto.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-2"><span><b>El número de WhatsApp que va a recibir los pedidos.</b> Confirma que sea el correcto y que alguien lo revise.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-3"><span><b>Formas de pago que acepta</b> — efectivo $, efectivo Bs, pago móvil, Zelle, punto de venta, transferencia, Binance.</span></label>
+    <label class="chk"><input type="checkbox" data-k="d-4"><span><b>Sus redes</b> — Instagram, Facebook, TikTok. Las que use de verdad.</span></label>
+  </section>
+
+  <section>
+    <h2><span class="num">5</span> Cómo trabaja</h2>
+    <p class="lead">Preguntas específicas de su rubro. Aquí es donde se nota que sabes de lo suyo.</p>
+    <label class="chk"><input type="checkbox" data-k="e-0"><span>¿La consulta de valoración es gratis o tiene costo?</span></label><label class="chk"><input type="checkbox" data-k="e-1"><span>¿Cuántos profesionales atienden y en qué se especializa cada uno?</span></label><label class="chk"><input type="checkbox" data-k="e-2"><span>¿Qué días y horas atiende cada uno?</span></label><label class="chk"><input type="checkbox" data-k="e-3"><span>¿Cuántas citas se le caen al mes por pacientes que no avisan?</span></label><label class="chk"><input type="checkbox" data-k="e-4"><span>¿Trabajan por partes el pago de tratamientos largos?</span></label>
+  </section>
+
+  <section>
+    <h2><span class="num">6</span> Lo que NO le tienes que pedir</h2>
+    <p class="lead">Pedir de más alarga la entrega y enfría la venta.</p>
+    <div class="no"><b>Textos redactados.</b> Los escribo yo con lo que me cuente.</div>
+    <div class="no"><b>Fotos profesionales.</b> Las del teléfono sirven.</div>
+    <div class="no"><b>Un dominio o un hosting.</b> Va incluido.</div>
+    <div class="no"><b>Manual de marca, tipografías, códigos de color.</b> Casi ninguno los tiene.</div>
+    <div class="no"><b>Que decida el diseño.</b> Se lo muestras hecho y ajustas. Preguntarle «¿qué colores quiere?» retrasa una semana.</div>
+  </section>
+
+  <section>
+    <h2><span class="num">7</span> El mensaje para pedirle todo</h2>
+    <p class="lead">Cuando ya dijo que sí. Mándalo tal cual.</p>
+    <div class="msg">Perfecto. Para dejarle la agenda lista necesito estas cosas. Me las puede mandar por aquí mismo, por partes, como le quede cómodo:
+
+1. *Su logo.* Si lo tiene en archivo, mándemelo. Si no lo tiene o no lo consigue, una foto del aviso del local me sirve igual.
+
+2. *Los servicios.* Unos 10 más o menos, con: nombre del tratamiento · precio de referencia en $ · duración de la cita · una línea de qué es. Como los tenga — escritos, en una foto de la lista, o me los dicta por nota de voz.
+
+3. *Fotos.* Estas cuatro, tomadas con el teléfono y con luz de día:
+   • El consultorio con la unidad odontológica
+   • La sala de espera
+   • El equipo de trabajo (con su permiso)
+   • La entrada o el edificio
+
+4. *Los datos fijos:* la dirección exacta, los horarios de cada día, el número de WhatsApp que quiere que aparezca, y las formas de pago que acepta.
+
+5. *Dos o tres cosas más:*
+   • ¿La consulta de valoración es gratis o tiene costo?
+   • ¿Cuántos profesionales atienden y en qué se especializa cada uno?
+   • ¿Qué días y horas atiende cada uno?
+
+Con eso arranco. En 72 horas le mando el enlace funcionando para que lo revise.</div>
+    <div class="acts">
+      <button class="b bn" id="cop">Copiar mensaje</button>
+      <a class="b bg" href="https://jejg19-wq.github.io/brief/demos/p/dra-oriana-negron/" target="_blank" rel="noopener">Ver su propuesta</a>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">8</span> Antes de entregar</h2>
+    <p class="lead">Repásalo antes de mandarle el enlace final.</p>
+    <label class="chk"><input type="checkbox" data-k="x-0"><span>Cobrado el montaje <b>completo y por adelantado</b></span></label>
+    <label class="chk"><input type="checkbox" data-k="x-1"><span>Cambiado el WhatsApp del bloque CONFIG al <b>número del negocio</b> (no el tuyo)</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-2"><span><b>Borrada la barra de PROPUESTA</b> de arriba</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-3"><span>Probado en tu teléfono: pedido de prueba que llega bien al WhatsApp del negocio</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-4"><span>Precios revisados uno por uno contra la lista que te dio</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-5"><span>Grabado un video de 30 segundos usándola, para mandárselo con el enlace</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-6"><span>Pedido el referido el mismo día de la entrega</span></label>
+    <label class="chk"><input type="checkbox" data-k="x-7"><span>Anotada en el calendario la fecha de cobro del mes 2</span></label>
+  </section>
+
+</div>
+
+<div class="toast" id="toast">Copiado</div>
+
+<script>
+(function(){
+  'use strict';
+  var CLAVE = 'brief_dra-oriana-negron';
+  var MSG = "Perfecto. Para dejarle la agenda lista necesito estas cosas. Me las puede mandar por aquí mismo, por partes, como le quede cómodo:\n\n1. *Su logo.* Si lo tiene en archivo, mándemelo. Si no lo tiene o no lo consigue, una foto del aviso del local me sirve igual.\n\n2. *Los servicios.* Unos 10 más o menos, con: nombre del tratamiento · precio de referencia en $ · duración de la cita · una línea de qué es. Como los tenga — escritos, en una foto de la lista, o me los dicta por nota de voz.\n\n3. *Fotos.* Estas cuatro, tomadas con el teléfono y con luz de día:\n   • El consultorio con la unidad odontológica\n   • La sala de espera\n   • El equipo de trabajo (con su permiso)\n   • La entrada o el edificio\n\n4. *Los datos fijos:* la dirección exacta, los horarios de cada día, el número de WhatsApp que quiere que aparezca, y las formas de pago que acepta.\n\n5. *Dos o tres cosas más:*\n   • ¿La consulta de valoración es gratis o tiene costo?\n   • ¿Cuántos profesionales atienden y en qué se especializa cada uno?\n   • ¿Qué días y horas atiende cada uno?\n\nCon eso arranco. En 72 horas le mando el enlace funcionando para que lo revise.";
+  function safe(f){ try{ f(); }catch(e){} }
+  var $ = function(id){ return document.getElementById(id); };
+  var st = {};
+  safe(function(){ st = JSON.parse(localStorage.getItem(CLAVE) || '{}'); });
+
+  var cajas = document.querySelectorAll('input[type=checkbox]');
+  function pintar(){
+    var n = 0;
+    for(var i=0;i<cajas.length;i++) if(cajas[i].checked) n++;
+    var pct = cajas.length ? Math.round(n*100/cajas.length) : 0;
+    $('pct').textContent = pct + '%';
+    $('fill').style.width = pct + '%';
+    $('cnt').textContent = n + ' de ' + cajas.length;
+  }
+  for(var i=0;i<cajas.length;i++){
+    (function(c){
+      var k = c.dataset.k;
+      c.checked = !!st[k];
+      c.addEventListener('change', function(){
+        st[k] = c.checked;
+        safe(function(){ localStorage.setItem(CLAVE, JSON.stringify(st)); });
+        pintar();
+      });
+    })(cajas[i]);
+  }
+  safe(pintar);
+
+  var tid = null;
+  function toast(t){
+    var e = $('toast'); e.textContent = t; e.classList.add('show');
+    clearTimeout(tid); tid = setTimeout(function(){ e.classList.remove('show'); }, 1800);
+  }
+  $('cop').addEventListener('click', function(){
+    var ok = function(){ toast('Mensaje copiado'); };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(MSG).then(ok, function(){ fb(); });
+    } else fb();
+    function fb(){
+      try{
+        var t = document.createElement('textarea');
+        t.value = MSG; t.style.position='fixed'; t.style.opacity='0';
+        document.body.appendChild(t); t.select(); document.execCommand('copy');
+        document.body.removeChild(t); ok();
+      }catch(e){ toast('Selecciona el texto a mano'); }
+    }
+  });
+})();
+</script>
+</body>
+</html>

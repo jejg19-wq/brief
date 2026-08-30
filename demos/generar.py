@@ -454,8 +454,27 @@ def seguimiento(p, link):
     return ("Buenas, le escribí hace unos días por lo de la página de pedidos para " + p["nombre"] + ".\n\n"
             "Si no le interesa no hay problema, no le escribo más. Solo quería asegurarme de que le llegó el ejemplo:\n" + link)
 
+# ---------------------------------------------------------------- tandas
+# Orden de ataque. La tanda 1 no es la de mas seguidores: es la de dueños
+# accesibles por movil, con catalogo corto, que se entregan en un dia.
+TANDA1 = ["barberia-gustavo-sc","oral-center","sonrivida","dra-karla-rosales",
+          "gimnasio-gold","paraiso-de-las-tortas"]
+# Cuentas grandes o poco activas: van cuando ya haya casos que mostrar.
+TANDA3 = ["dulce-y-dulce","la-casa-del-peluquero","plastic-tortas","ferreteria-raca",
+          "helus-resto-bar","wakame-sushi-bar","burger-express","faena-steak-house",
+          "toche","bosque-restaurante","la-reina-burger","pizzas-tachira",
+          "pizzeria-vincenzo","gympoc","jeiky-barbers-room","capos-barberia",
+          "dra-rossana-sanchez"]
+
+def tanda(slug):
+    if slug in TANDA1: return 1
+    if slug in TANDA3: return 3
+    return 2
+
 # -------------------------------------------------------------------- main
 def main():
+    import brief_tpl
+    globals()["brief_tpl"] = brief_tpl
     datos = json.load(open(os.path.join(RAIZ, "prospectos.json"), encoding="utf-8"))
     wa_jackson = datos["jackson"]["whatsapp"]
     bases = {k: open(os.path.join(RAIZ, k, "index.html"), encoding="utf-8").read()
@@ -468,7 +487,16 @@ def main():
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8").write(pagina)
         link = BASE_URL + "/p/" + p["slug"] + "/"
-        salida.append(dict(p, link=link, msg=mensaje(p, link), msg2=seguimiento(p, link)))
+
+        sp = brief_tpl.SPEC[p["carta"]]
+        db = os.path.join(RAIZ, "brief", p["slug"])
+        os.makedirs(db, exist_ok=True)
+        open(os.path.join(db, "index.html"), "w", encoding="utf-8").write(
+            brief_tpl.render(p, sp, link, BASE_URL))
+        brief = BASE_URL + "/brief/" + p["slug"] + "/"
+
+        salida.append(dict(p, link=link, brief=brief, tanda=tanda(p["slug"]),
+                           msg=mensaje(p, link), msg2=seguimiento(p, link)))
 
     panel(salida, wa_jackson)
     print("Generadas " + str(len(salida)) + " paginas + el panel.")
