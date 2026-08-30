@@ -1,0 +1,126 @@
+{
+  "_nota": "Datos de prospección. Los teléfonos vienen de perfiles y directorios públicos y DEBEN verificarse antes de escribir. tel: formato internacional sin +. verificar:true = abrir el perfil y confirmar el número antes de enviar.",
+  "jackson": {
+    "whatsapp": "584121234567",
+    "nombre": "Jackson"
+  },
+  "prospectos": [
+
+    {"slug":"helus-resto-bar","nombre":"Helus Resto Bar","ig":"helusrestobar","tel":[],"zona":"Av. Libertador, San Cristóbal","base":"restaurante","carta":"parrilla","tipo":"Restaurante · Café · Bar","prio":1,"verificar":true,
+     "gancho":"vi que publican el menú y los horarios por Instagram, pero los pedidos y las reservas les entran todos por el chat"},
+
+    {"slug":"faena-steak-house","nombre":"Faena Steak House","ig":"faena_sc","tel":[],"zona":"Asogata, San Cristóbal","base":"restaurante","carta":"parrilla","tipo":"Steak House","prio":1,"verificar":true,
+     "gancho":"vi que las reservas y el menú los manejan por el link de la bio"},
+
+    {"slug":"wakame-sushi-bar","nombre":"Wakame Sushi Bar","ig":"wakamesushibar","tel":[],"zona":"Barrio Obrero, Calle 10 con Carrera 21","base":"restaurante","carta":"sushi","tipo":"Sushi Bar","prio":1,"verificar":true,
+     "gancho":"vi que hacen delivery y pick up, y que todo eso lo coordinan por el chat"},
+
+    {"slug":"burger-express","nombre":"Burger Express","ig":"burger_express","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"hamburguesas","tipo":"Hamburguesería","prio":1,"verificar":true,
+     "gancho":"vi que tienen el botón de WhatsApp en la bio y que llevan más de 26 años vendiendo hamburguesas"},
+
+    {"slug":"toche","nombre":"Toche","ig":"toche.sc","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"comida-rapida","tipo":"Comida rápida","prio":1,"verificar":true,
+     "gancho":"vi que los pedidos les entran todos por el link de 'Haz tu pedido' de la bio"},
+
+    {"slug":"bosque-restaurante","nombre":"Bosque Restaurante","ig":"_bosque.sc","tel":[],"zona":"Pasaje Pirineos, Calle 9 con Carrera 25","base":"restaurante","carta":"parrilla","tipo":"Restaurante","prio":2,"verificar":true,
+     "gancho":"vi que están en el Pasaje Pirineos y que tienen música en vivo"},
+
+    {"slug":"la-reina-burger","nombre":"La Reina Burger","ig":"lareina.burger","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"hamburguesas","tipo":"Hamburguesería","prio":2,"verificar":true,
+     "gancho":"vi que llevan desde 1988 y que la hamburguesa grande es la que los identifica"},
+
+    {"slug":"ninja-pizza","nombre":"Ninja Pizza","ig":"ninjapizzacapacho","tel":["582767883959"],"zona":"San Cristóbal / Capacho","base":"restaurante","carta":"pizza","tipo":"Pizzería","prio":2,"verificar":true,
+     "gancho":"vi que hacen servicio a domicilio y que el único contacto publicado es un teléfono fijo"},
+
+    {"slug":"pizzas-tachira","nombre":"Pizzas Táchira","ig":"pizzastachira","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"pizza","tipo":"Pizzería","prio":3,"verificar":true,
+     "gancho":"vi su Instagram y que los pedidos los toman por mensaje"},
+
+    {"slug":"pizzeria-vincenzo","nombre":"Pizzería Vincenzo","ig":"pizzeriavincenzoca","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"pizza","tipo":"Pizzería","prio":3,"verificar":true,
+     "gancho":"vi su Instagram y que los pedidos los toman por mensaje"},
+
+    {"slug":"cafe-cristobal","nombre":"Café Cristóbal","ig":"cafe_cristobal","tel":[],"zona":"Av. Independencia, San Cristóbal","base":"restaurante","carta":"cafe","tipo":"Cafetería","prio":2,"verificar":true,
+     "gancho":"vi que toman los pedidos por el teléfono que tienen en la bio"},
+
+    {"slug":"dulce-y-dulce","nombre":"Dulce & Dulce","ig":"dulceydulce","tel":["582763568238"],"zona":"San Cristóbal","base":"restaurante","carta":"postres","tipo":"Tortas y postres","prio":1,"verificar":true,
+     "gancho":"vi que tienen delivery y que los encargos les entran por mensaje, uno por uno"},
+
+    {"slug":"plastic-tortas","nombre":"Plastic Tortas","ig":"plactictortas","tel":[],"zona":"Táchira","base":"restaurante","carta":"postres","tipo":"Repostería","prio":1,"verificar":true,
+     "gancho":"vi que tienen tienda física y que hacen envíos"},
+
+    {"slug":"paraiso-de-las-tortas","nombre":"Paraíso de las Tortas","ig":"paraisodelastortas","tel":["584247818788","582763416535"],"zona":"Barrio Obrero, Calle 13 con Carrera 15-16","base":"restaurante","carta":"postres","tipo":"Tortas y postres","prio":2,"verificar":true,
+     "gancho":"vi que tienen el teléfono publicado en la bio y que los encargos se coordinan por ahí"},
+
+    {"slug":"ferreteria-raca","nombre":"Ferretería RACA","ig":"ferreteriaraca.sc","tel":[],"zona":"Táchira","base":"restaurante","carta":"ferreteria","tipo":"Ferretería","prio":1,"verificar":true,
+     "gancho":"vi que hacen delivery y envíos nacionales, y que las consultas de precio les entran una por una por el chat"},
+
+    {"slug":"ferrenorte","nombre":"Ferrenorte C.A.","ig":"ferrenorteferreteria","tel":["584147216582","584247064210"],"zona":"Av. Guayana, San Cristóbal","base":"restaurante","carta":"ferreteria","tipo":"Ferretería","prio":2,"verificar":true,
+     "gancho":"vi que tienen varios WhatsApp publicados para atender las consultas"},
+
+    {"slug":"la-casa-del-peluquero","nombre":"La Casa del Peluquero","ig":"lacasadelpeluquerosc_","tel":[],"zona":"San Cristóbal","base":"restaurante","carta":"insumos","tipo":"Insumos de peluquería · Mayor y detal","prio":1,"verificar":true,
+     "gancho":"vi que venden al mayor y al detal, y que cada pedido y cada lista de precios se manda por mensaje"},
+
+    {"slug":"machos-barberia","nombre":"Macho's Barbería","ig":"machosbarberiasc","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"barberia","tipo":"Barbería","prio":1,"verificar":true,
+     "gancho":"vi que las citas las agendan por el link de la bio y que además tienen academia"},
+
+    {"slug":"barberia-gustavo-sc","nombre":"Barbería Gustavo SC","ig":"","tel":["584247576141"],"zona":"San Cristóbal","base":"barberia","carta":"barberia","tipo":"Barbería","prio":1,"verificar":false,
+     "gancho":"vi que atienden de lunes a sábado de 9 a 9 y que las citas las coordinan por WhatsApp"},
+
+    {"slug":"capos-barberia","nombre":"Capos Barbería","ig":"capos_sc","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"barberia","tipo":"Barbería","prio":2,"verificar":true,
+     "gancho":"vi su Instagram y que las citas se piden por mensaje"},
+
+    {"slug":"jeiky-barbers-room","nombre":"Barbers Room","ig":"jeikybarbersroom","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"barberia","tipo":"Barbería","prio":3,"verificar":true,
+     "gancho":"vi su Instagram y que las citas se piden por mensaje"},
+
+    {"slug":"katy-rouse-peluqueria","nombre":"Katy Rouse Peluquería","ig":"katyrousepeluqueria","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"salon","tipo":"Peluquería y estética","prio":2,"verificar":true,
+     "gancho":"vi que llevan 12 años y que hacen alisados, uñas, cejas y masajes"},
+
+    {"slug":"osadia-salon","nombre":"Osadía Salón","ig":"osadia_salon","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"salon","tipo":"Centro estético","prio":1,"verificar":true,
+     "gancho":"vi que tienen el botón de 'Agenda tu cita' en la bio"},
+
+    {"slug":"pipols","nombre":"Barbería y Peluquería Pipol's","ig":"","tel":["582765560713"],"zona":"Barrio Obrero, Calle 10 con Carrera 20","base":"barberia","carta":"salon","tipo":"Barbería y peluquería","prio":2,"verificar":true,
+     "gancho":"los busqué en internet y lo único que aparece de ustedes es el teléfono en un directorio"},
+
+    {"slug":"barberia-genessi","nombre":"Salón de Barbería Genessi","ig":"","tel":["582765418670"],"zona":"7ma Avenida, San Cristóbal","base":"barberia","carta":"barberia","tipo":"Barbería","prio":2,"verificar":true,
+     "gancho":"los busqué en internet y lo único que aparece de ustedes es el teléfono en un directorio"},
+
+    {"slug":"estetica-mariabita","nombre":"Estética Integral Mariabita","ig":"","tel":["582765566472"],"zona":"Barrio Obrero, Calle 15 esquina Carrera 17","base":"barberia","carta":"spa","tipo":"Estética integral","prio":2,"verificar":true,
+     "gancho":"los busqué en internet y lo único que aparece de ustedes es el teléfono en un directorio"},
+
+    {"slug":"divini-spa","nombre":"Divini Spa","ig":"","tel":["584147137429"],"zona":"Barrio Obrero / Capacho","base":"barberia","carta":"spa","tipo":"Spa · Cejas · Uñas","prio":2,"verificar":true,
+     "gancho":"vi que la agenda la llevan por WhatsApp"},
+
+    {"slug":"adriana-santander-studio","nombre":"Adriana Santander Studio","ig":"","tel":["584127028507"],"zona":"San Cristóbal","base":"barberia","carta":"spa","tipo":"Estética y tratamientos","prio":2,"verificar":true,
+     "gancho":"vi que las citas para los tratamientos las coordinan por WhatsApp"},
+
+    {"slug":"gimnasio-gold","nombre":"Gimnasio Gold","ig":"gimnasiogold.sc","tel":["584247240779","584247092791"],"zona":"Barrio Sucre parte baja / Z.I. Paramillo","base":"barberia","carta":"gym","tipo":"Gimnasio","prio":1,"verificar":true,
+     "gancho":"vi que tienen los WhatsApp en la bio y que las inscripciones y las consultas de planes entran por ahí"},
+
+    {"slug":"gympoc","nombre":"Gympo'c","ig":"gympocca","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"gym","tipo":"Gimnasio","prio":3,"verificar":true,
+     "gancho":"vi su Instagram y que las consultas de planes entran por mensaje"},
+
+    {"slug":"profitness-gym","nombre":"ProFitness Gym","ig":"gimnasioprofitness_gym","tel":[],"zona":"San Cristóbal","base":"barberia","carta":"gym","tipo":"Gimnasio","prio":2,"verificar":true,
+     "gancho":"vi su Instagram y que las consultas de planes entran por mensaje"},
+
+    {"slug":"clinica-odontologica-sc","nombre":"Clínica Odontológica San Cristóbal","ig":"clinicaodontologicasc","tel":[],"zona":"San Cristóbal","base":"clinica","carta":"odontologia","tipo":"Odontología estética","prio":1,"verificar":true,
+     "gancho":"vi que trabajan estética dental y que las citas se piden por mensaje"},
+
+    {"slug":"araque-odontologico","nombre":"Araque Consultorio Odontológico","ig":"","tel":["582764170098"],"zona":"Barrio Obrero, Calle 14 con Carrera 17-18","base":"clinica","carta":"odontologia","tipo":"Odontología general y ortodoncia","prio":2,"verificar":true,
+     "gancho":"los busqué en internet y lo único que aparece del consultorio es el teléfono en un directorio"},
+
+    {"slug":"dra-karla-rosales","nombre":"Consultorio Dra. Karla Rosales","ig":"","tel":["584147363661"],"zona":"Centro, Pasaje Arismendi","base":"clinica","carta":"odontologia","tipo":"Odontología general y endodoncia","prio":1,"verificar":true,
+     "gancho":"vi que las citas las coordina por WhatsApp"},
+
+    {"slug":"dra-oriana-negron","nombre":"Dra. Oriana Negrón","ig":"","tel":["582765172779"],"zona":"Barrio Obrero, Centro Profesional Belsan","base":"clinica","carta":"odontologia","tipo":"Diseño de sonrisa y estética dental","prio":2,"verificar":true,
+     "gancho":"vi que hace diseño de sonrisa y que el único contacto publicado es un teléfono fijo"},
+
+    {"slug":"sonrivida","nombre":"Sonrivida — Dra. Francy Castro","ig":"","tel":["584147182724","582763475289"],"zona":"Av. Lucio Oquendo, San Cristóbal","base":"clinica","carta":"odontologia","tipo":"Odontología","prio":1,"verificar":true,
+     "gancho":"vi que tiene WhatsApp publicado y que por ahí le entran las citas"},
+
+    {"slug":"oral-center","nombre":"Oral Center — Dra. María Salazar","ig":"","tel":["584247659363","582768896592"],"zona":"Barrio Obrero, Edif. El Tama, Calle 11","base":"clinica","carta":"odontologia","tipo":"Odontología","prio":1,"verificar":true,
+     "gancho":"vi que tiene WhatsApp publicado y que por ahí le entran las citas"},
+
+    {"slug":"dr-alfonso-davila","nombre":"Dr. Alfonso Dávila — Dermatología","ig":"alfonsodaviladermatologo","tel":[],"zona":"San Cristóbal","base":"clinica","carta":"dermatologia","tipo":"Dermatología","prio":2,"verificar":true,
+     "gancho":"vi su Instagram y que la consulta privada se agenda por mensaje"},
+
+    {"slug":"dra-rossana-sanchez","nombre":"Dra. Rossana Sánchez — Dermatología","ig":"","tel":[],"zona":"San Cristóbal","base":"clinica","carta":"dermatologia","tipo":"Dermatología","prio":2,"verificar":true,
+     "gancho":"vi que agenda a través de una aplicación de terceros y no desde una página propia"}
+  ]
+}
