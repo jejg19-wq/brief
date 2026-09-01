@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ridchar · Espacio de construcción</title>
+<meta name="description" content="El espacio de Ridchar para contar qué quiere construir. 18 preguntas, unos 15 minutos, desde el teléfono. Se guarda solo.">
+<meta name="theme-color" content="#0F1418">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Ridchar, este espacio es tuyo">
+<meta property="og:description" content="Cuéntame qué quieres construir. 18 preguntas, unos 15 minutos desde el teléfono, se guarda solo y al final lo mandas con un toque.">
+<meta property="og:url" content="https://jejg19-wq.github.io/brief/ridchar/">
+<meta property="og:image" content="https://jejg19-wq.github.io/brief/ridchar/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%230F1418'/%3E%3Crect x='6' y='34' width='24' height='11' fill='%23FFB020'/%3E%3Crect x='34' y='34' width='24' height='11' fill='%23FFB020'/%3E%3Crect x='6' y='47' width='52' height='11' fill='%235AD1A0'/%3E%3Crect x='6' y='19' width='24' height='11' fill='%232A333D'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* color — obra de noche: base oscura, ámbar de construcción */
+  --bg:#0F1418; --bg-2:#161C22; --panel:#1A212A;
+  --ink:#F4F3EF; --ink-70:rgba(244,243,239,.74); --ink-50:rgba(244,243,239,.52);
+  --rule:#2A333D;
+  --amber:#FFB020; --amber-press:#E29A0F; --mint:#5AD1A0;
+  /* spacing — escala base 8px */
+  --s-1:.25rem; --s-2:.5rem; --s-3:.75rem; --s-4:1rem;
+  --s-6:1.5rem; --s-8:2rem; --s-12:3rem; --s-16:4rem;
+  /* type — fluida, con componente rem para respetar zoom */
+  --t-sm:clamp(.875rem,.85rem + .2vw,.9375rem);
+  --t-body:clamp(1rem,.97rem + .25vw,1.0625rem);
+  --t-lede:clamp(1.0625rem,1rem + .5vw,1.1875rem);
+  --t-h2:clamp(1.375rem,1.2rem + 1.2vw,1.8125rem);
+  --t-h1:clamp(2rem,1.4rem + 4.5vw,3.375rem);
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:"Inter Tight",system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:var(--t-body);line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:44rem;margin:0 auto;padding:0 var(--s-4)}
+
+/* ---------- barra de progreso: se va levantando una pared ---------- */
+.bar{
+  position:sticky;top:0;z-index:30;background:rgba(15,20,24,.92);
+  backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--rule);
+}
+.bar .wrap{display:flex;flex-direction:column;gap:var(--s-2);padding-top:var(--s-3);padding-bottom:var(--s-3)}
+.meta{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-3)}
+.meta .who{font-family:"Space Grotesk",sans-serif;font-weight:700;letter-spacing:-.01em}
+.meta .who span{color:var(--amber)}
+.meta .nums{font-family:var(--mono);font-size:var(--t-sm);color:var(--ink-70);white-space:nowrap}
+.meta .nums b{color:var(--ink);font-weight:500}
+.wall{display:flex;gap:3px;height:10px}
+.brick{flex:1;background:var(--rule);border-radius:1px;transition:background .3s ease}
+.brick.on{background:var(--amber)}
+.brick.on.cap{background:var(--mint)}
+.cheer{font-size:var(--t-sm);color:var(--ink-70)}
+
+/* ---------- portada ---------- */
+header{padding:var(--s-16) 0 var(--s-12)}
+.eyebrow{
+  display:inline-block;font-family:var(--mono);font-size:.75rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--amber);margin-bottom:var(--s-3);
+}
+h1{
+  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:var(--t-h1);
+  line-height:1.02;letter-spacing:-.03em;margin:0 0 var(--s-6);
+}
+h1 em{font-style:normal;color:var(--amber)}
+.lede{font-size:var(--t-lede);color:var(--ink-70);margin:0 0 var(--s-4);max-width:34rem}
+.facts{
+  display:flex;flex-wrap:wrap;gap:var(--s-2);margin-top:var(--s-8);padding:0;list-style:none;
+}
+.facts li{
+  font-family:var(--mono);font-size:.75rem;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-70);border:1px solid var(--rule);border-radius:999px;padding:var(--s-2) var(--s-3);
+}
+
+/* ---------- bloques ---------- */
+.block{border-top:1px solid var(--rule);padding:var(--s-12) 0}
+.blockhead{margin-bottom:var(--s-8)}
+.blockhead h2{
+  font-family:"Space Grotesk",sans-serif;font-weight:700;font-size:var(--t-h2);
+  letter-spacing:-.02em;margin:0 0 var(--s-2);
+}
+.blockhead p{color:var(--ink-70);margin:0;max-width:32rem}
+
+.q{position:relative;background:var(--bg-2);border:1px solid var(--rule);border-radius:14px;
+   padding:var(--s-6) var(--s-4) var(--s-4);margin-bottom:var(--s-4)}
+.qnum{
+  position:absolute;top:-.7rem;left:var(--s-4);background:var(--bg);border:1px solid var(--rule);
+  border-radius:999px;padding:.05rem .5rem;font-family:var(--mono);font-size:.72rem;color:var(--ink-50);
+}
+label{display:block;font-weight:600;letter-spacing:-.01em;margin-bottom:var(--s-2)}
+.hint{font-size:var(--t-sm);color:var(--ink-70);margin:0 0 var(--s-3)}
+.chiphint{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-50);margin:0 0 var(--s-2)}
+.chips{display:flex;flex-wrap:wrap;gap:var(--s-2);margin-bottom:var(--s-3)}
+.chip{
+  font:inherit;font-size:var(--t-sm);color:var(--ink-70);background:transparent;
+  border:1px solid var(--rule);border-radius:999px;padding:.3rem .7rem;cursor:pointer;
+  transition:border-color .15s,color .15s,background .15s;
+}
+.chip:hover{border-color:var(--amber);color:var(--ink)}
+.chip.sel{border-color:var(--amber);color:var(--bg);background:var(--amber)}
+textarea{
+  width:100%;font:inherit;color:var(--ink);background:var(--panel);
+  border:1px solid var(--rule);border-radius:10px;padding:var(--s-3);resize:none;overflow:hidden;
+  transition:border-color .15s,box-shadow .15s;
+}
+textarea::placeholder{color:var(--ink-50)}
+textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 3px rgba(255,176,32,.18)}
+textarea.filled{border-color:rgba(90,209,160,.5)}
+:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+
+/* ---------- pasos + envío ---------- */
+.steps{counter-reset:s;list-style:none;padding:0;margin:0}
+.steps li{counter-increment:s;position:relative;padding-left:2.25rem;margin-bottom:var(--s-4);color:var(--ink-70)}
+.steps li::before{
+  content:counter(s,decimal-leading-zero);position:absolute;left:0;top:.1rem;
+  font-family:var(--mono);font-size:.8rem;color:var(--amber);
+}
+.steps b{color:var(--ink);font-weight:600}
+
+.send{border-top:1px solid var(--rule);padding:var(--s-12) 0 var(--s-16);display:flex;
+  flex-direction:column;gap:var(--s-3);align-items:flex-start}
+.btn{
+  font:inherit;font-weight:600;cursor:pointer;border:1px solid var(--amber);
+  background:var(--amber);color:#0F1418;border-radius:999px;padding:.7rem 1.4rem;
+  transition:background .15s,border-color .15s;
+}
+.btn:hover{background:var(--amber-press);border-color:var(--amber-press)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink-50);background:transparent}
+.status{font-size:var(--t-sm);color:var(--ink-70);margin:0}
+
+footer{border-top:1px solid var(--rule);padding:var(--s-6) 0 var(--s-12);display:flex;
+  justify-content:space-between;gap:var(--s-3);flex-wrap:wrap;
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-50)}
+
+.stickysend{
+  position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(15,20,24,.95);
+  backdrop-filter:blur(8px);border-top:1px solid var(--rule);
+  transform:translateY(110%);transition:transform .25s ease;padding:var(--s-3) 0;
+}
+.stickysend.show{transform:translateY(0)}
+.stickysend .inner{max-width:44rem;margin:0 auto;padding:0 var(--s-4);display:flex;
+  align-items:center;justify-content:space-between;gap:var(--s-3)}
+.done-msg{font-size:var(--t-sm);color:var(--ink-70)}
+
+.reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="meta">
+      <span class="who">obra de <span>ridchar</span></span>
+      <span class="nums"><b id="pct">0%</b> · <span id="cnt">0/18</span></span>
+    </div>
+    <div class="wall" id="wall" aria-hidden="true"></div>
+    <span class="cheer" id="cheer">Empieza cuando quieras</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Espacio privado · Ridchar</span>
+    <h1>Ridchar, este espacio <em>es tuyo</em>.</h1>
+    <p class="lede">Aquí no hay proyectos de nadie más. Es tu terreno para contarme qué quieres construir, con tus palabras, sin apuro y sin tener que sonar profesional.</p>
+    <p class="lede">Responde lo que puedas. Si una pregunta no la sabes, escribe «no sé todavía» — eso también me dice muchísimo. Se guarda solo en tu teléfono: puedes cerrar y volver después.</p>
+    <ul class="facts">
+      <li>18 preguntas</li>
+      <li>≈ 15 minutos</li>
+      <li>Se guarda solo</li>
+      <li>No hay respuestas malas</li>
+    </ul>
+  </header>
+
+  <main>
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">Parte 01</span>
+        <h2>Quién eres tú</h2>
+        <p>Antes de la idea, tú. Para saber con qué manos vamos a construir esto.</p>
+      </div>
+
+      <div class="q reveal"><span class="qnum">01</span>
+        <label for="q1">¿En qué se te va el día hoy?</label>
+        <p class="hint">Trabajo, estudio, negocio propio, buscando qué hacer. Lo real, no lo que suena bonito.</p>
+        <textarea id="q1" rows="2" data-label="A qué se dedica hoy" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">02</span>
+        <label for="q2">¿Qué es eso que se te da bien y la gente te termina pidiendo?</label>
+        <p class="hint">Puede no tener nada que ver con la idea. Arreglar cosas, vender, explicar, organizar, convencer, aguantar. Ahí casi siempre está la ventaja.</p>
+        <textarea id="q2" rows="2" data-label="En qué es bueno / qué le piden" placeholder="Escribe aquí…"></textarea></div>
+    </section>
+
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">Parte 02</span>
+        <h2>La idea</h2>
+        <p>Sin tecnicismos. Como se la contarías a tu mamá en la cocina.</p>
+      </div>
+
+      <div class="q reveal"><span class="qnum">03</span>
+        <label for="q3">¿Qué quieres construir?</label>
+        <p class="hint">Una app, una página, un negocio, un servicio, una marca, un canal, algo que todavía no tiene nombre. Suéltalo como te salga.</p>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q3">
+          <button type="button" class="chip">App</button>
+          <button type="button" class="chip">Página web</button>
+          <button type="button" class="chip">Tienda online</button>
+          <button type="button" class="chip">Negocio físico</button>
+          <button type="button" class="chip">Servicio</button>
+          <button type="button" class="chip">Marca de productos</button>
+          <button type="button" class="chip">Contenido</button>
+          <button type="button" class="chip">Todavía no sé qué es</button>
+        </div>
+        <textarea id="q3" rows="4" data-label="Qué quiere construir" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">04</span>
+        <label for="q4">¿De dónde salió esta idea?</label>
+        <p class="hint">¿Qué te pasó, qué viste o qué te fastidió tanto que dijiste «esto se puede hacer mejor»? La historia importa más de lo que crees.</p>
+        <textarea id="q4" rows="3" data-label="De dónde salió la idea" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">05</span>
+        <label for="q5">¿Para quién es? Descríbeme a UNA persona.</label>
+        <p class="hint">No «para todo el mundo». Una persona concreta: edad más o menos, qué hace, dónde vive, cómo es su día. Si conoces a alguien así de verdad, dime quién.</p>
+        <textarea id="q5" rows="3" data-label="Para quién es (una persona concreta)" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">06</span>
+        <label for="q6">¿Qué problema le resuelve? ¿Qué hace esa persona hoy sin ti?</label>
+        <p class="hint">Cómo se las arregla ahora mismo: lo hace a mano, le paga a alguien, lo sufre, o simplemente no lo hace. Eso es contra lo que realmente competimos.</p>
+        <textarea id="q6" rows="3" data-label="Problema que resuelve y qué hace hoy sin él" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">07</span>
+        <label for="q7">¿Ya existe algo parecido?</label>
+        <p class="hint">Si existe, buenísimo: significa que hay mercado. Dime cuáles conoces, qué te gusta de ellos y qué harías distinto. Si no conoces ninguno, dilo también.</p>
+        <textarea id="q7" rows="3" data-label="Competencia o referencias que conoce" placeholder="Escribe aquí…"></textarea></div>
+    </section>
+
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">Parte 03</span>
+        <h2>Cómo se ve funcionando</h2>
+        <p>Aterrizamos la idea en cosas que se pueden construir de verdad.</p>
+      </div>
+
+      <div class="q reveal"><span class="qnum">08</span>
+        <label for="q8">Cuéntame el día en que ya funciona, paso a paso.</label>
+        <p class="hint">Alguien entra… ¿y qué pasa? ¿Qué ve, qué toca, qué recibe, cómo termina contento? Como si me narraras una película corta.</p>
+        <textarea id="q8" rows="4" data-label="Cómo se ve funcionando, paso a paso" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">09</span>
+        <label for="q9">Si solo pudiéramos construir UNA cosa este mes, ¿cuál sería?</label>
+        <p class="hint">La pieza sin la cual nada de esto sirve. Esa es por donde arrancamos; el resto viene después.</p>
+        <textarea id="q9" rows="2" data-label="La primera pieza a construir" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">10</span>
+        <label for="q10">¿Por dónde entraría el dinero?</label>
+        <p class="hint">«Todavía no sé» es una respuesta legítima y muy común al principio. Si ya tienes una idea de precio, escríbelo.</p>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q10">
+          <button type="button" class="chip">Venta directa</button>
+          <button type="button" class="chip">Suscripción mensual</button>
+          <button type="button" class="chip">Comisión por venta</button>
+          <button type="button" class="chip">Servicio por proyecto</button>
+          <button type="button" class="chip">Publicidad</button>
+          <button type="button" class="chip">Gratis por ahora</button>
+          <button type="button" class="chip">Todavía no sé</button>
+        </div>
+        <textarea id="q10" rows="3" data-label="Cómo entra el dinero" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+    </section>
+
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">Parte 04</span>
+        <h2>Qué tienes en la mano</h2>
+        <p>Para armarte un plan que aguante tu vida real, no una fantasía.</p>
+      </div>
+
+      <div class="q reveal"><span class="qnum">11</span>
+        <label for="q11">¿Qué tienes ya hecho?</label>
+        <p class="hint">«Nada todavía» es perfectamente válido — muchas veces es la mejor noticia, porque se construye derecho desde el día uno.</p>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q11">
+          <button type="button" class="chip">Solo la idea</button>
+          <button type="button" class="chip">Nombre</button>
+          <button type="button" class="chip">Logo</button>
+          <button type="button" class="chip">Instagram</button>
+          <button type="button" class="chip">Dominio</button>
+          <button type="button" class="chip">Prototipo</button>
+          <button type="button" class="chip">Primeros clientes</button>
+          <button type="button" class="chip">Socios</button>
+          <button type="button" class="chip">Nada todavía</button>
+        </div>
+        <textarea id="q11" rows="3" data-label="Qué tiene ya hecho" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">12</span>
+        <label for="q12">¿Cuántas horas a la semana le puedes meter de verdad?</label>
+        <p class="hint">Sé honesto contigo, no conmigo. Con 4 horas reales se construye; con 20 imaginarias no se construye nada.</p>
+        <textarea id="q12" rows="2" data-label="Horas semanales disponibles" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">13</span>
+        <label for="q13">¿Con cuánto dinero cuentas para arrancar?</label>
+        <p class="hint">$0 es una respuesta común y se puede trabajar con eso: hay muchísimo que se construye gratis. Esto no es para cobrarte, es para no proponerte algo que no puedas sostener.</p>
+        <textarea id="q13" rows="2" data-label="Presupuesto para arrancar" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">14</span>
+        <label for="q14">¿Cuánto sabes de computadoras, diseño o programación?</label>
+        <p class="hint">Dímelo sin pena: así sé si te explico todo desde cero o si puedo ir más técnico. Las dos formas están bien.</p>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q14">
+          <button type="button" class="chip">Cero, solo uso el teléfono</button>
+          <button type="button" class="chip">Me defiendo</button>
+          <button type="button" class="chip">Diseño algo</button>
+          <button type="button" class="chip">Programo un poco</button>
+          <button type="button" class="chip">Programo bien</button>
+        </div>
+        <textarea id="q14" rows="2" data-label="Nivel técnico" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+    </section>
+
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">Parte 05</span>
+        <h2>Hacia dónde vas</h2>
+        <p>Tus ganas y tus miedos. Los dos cuentan igual.</p>
+      </div>
+
+      <div class="q reveal"><span class="qnum">15</span>
+        <label for="q15">Dentro de 6 meses, ¿qué tendría que haber pasado para decir «valió la pena»?</label>
+        <p class="hint">Concreto si puedes: cuánta gente usándolo, cuánto dinero entrando, o simplemente «que exista y funcione».</p>
+        <textarea id="q15" rows="3" data-label="Cómo se ve el éxito en 6 meses" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">16</span>
+        <label for="q16">¿Qué es lo que más miedo te da de esto?</label>
+        <p class="hint">Sin filtro. Que no funcione, que se rían, que se te acabe el dinero, que no sepas seguir. Escribirlo ayuda a resolverlo.</p>
+        <textarea id="q16" rows="3" data-label="Principal miedo o preocupación" placeholder="Escribe aquí…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">17</span>
+        <label for="q17">¿En qué quieres que te ayude primero?</label>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q17">
+          <button type="button" class="chip">Ordenar la idea</button>
+          <button type="button" class="chip">Ver si es viable</button>
+          <button type="button" class="chip">Ponerle nombre y marca</button>
+          <button type="button" class="chip">Construir el producto</button>
+          <button type="button" class="chip">Página web</button>
+          <button type="button" class="chip">Conseguir clientes</button>
+          <button type="button" class="chip">Ponerle precio</button>
+          <button type="button" class="chip">Un plan paso a paso</button>
+        </div>
+        <textarea id="q17" rows="3" data-label="En qué quiere ayuda primero" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+
+      <div class="q reveal"><span class="qnum">18</span>
+        <label for="q18">¿Cómo prefieres que te hable?</label>
+        <p class="hint">Para que las respuestas te lleguen como a ti te sirven.</p>
+        <p class="chiphint">Toca para agregar</p>
+        <div class="chips" data-for="q18">
+          <button type="button" class="chip">Al grano</button>
+          <button type="button" class="chip">Con detalle</button>
+          <button type="button" class="chip">Sin tecnicismos</button>
+          <button type="button" class="chip">Directo aunque duela</button>
+          <button type="button" class="chip">Paso a paso</button>
+        </div>
+        <textarea id="q18" rows="2" data-label="Cómo prefiere que le hablen" placeholder="Escribe aquí o toca las opciones…"></textarea></div>
+    </section>
+
+    <section class="block">
+      <div class="blockhead reveal">
+        <span class="eyebrow">¿Y después qué?</span>
+        <h2>Qué pasa cuando mandes esto</h2>
+      </div>
+      <ol class="steps">
+        <li><b>Leo todo con calma</b> y reviso qué existe ya en tu mercado y qué está haciendo la gente parecida a lo tuyo.</li>
+        <li><b>Recibes un reporte tuyo</b>: qué entendí de tu idea, qué tan viable la veo, qué construir primero y qué evitar. Escrito claro, sin palabras raras.</li>
+        <li><b>Arrancamos por la primera pieza</b> — la del punto 09 — y de ahí seguimos, una cosa a la vez. Cada vez que hagamos algo, te queda su reporte.</li>
+      </ol>
+    </section>
+
+    <div class="send" id="sendzone">
+      <button class="btn" id="wa">Mandar mis respuestas por WhatsApp</button>
+      <button class="btn ghost" id="copy">Copiar mis respuestas</button>
+      <p class="status" id="status">Se abre WhatsApp con todo lo que escribiste, listo para mandar.</p>
+    </div>
+  </main>
+
+  <footer>
+    <span>Espacio de Ridchar</span>
+    <span>Privado · solo entre nosotros</span>
+  </footer>
+</div>
+
+<div class="stickysend" id="stickysend" aria-hidden="true">
+  <div class="inner">
+    <span class="done-msg">¡Terminaste! Mándalo con un toque</span>
+    <button class="btn" id="wa2" tabindex="-1">Mandar por WhatsApp</button>
+  </div>
+</div>
+
+<script>
+/* Número que recibe las respuestas de Ridchar (formato internacional, sin + ni ceros).
+   Para cambiarlo, edita solo esta línea. */
+const WHATSAPP = "584247481963";
+
+const fields = [];
+document.querySelectorAll("main textarea").forEach(function(el){
+  fields.push({ id: el.id, el: el, label: el.getAttribute("data-label") || el.id });
+});
+const TOTAL = fields.length;
+
+const store = {
+  get(k){ try { return window.localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { window.localStorage.setItem(k,v); } catch(e){} }
+};
+
+const wall = document.getElementById("wall");
+for (let i = 0; i < TOTAL; i++) {
+  const b = document.createElement("div");
+  b.className = "brick" + (i === TOTAL - 1 ? " cap" : "");
+  wall.appendChild(b);
+}
+const bricks = wall.children;
+document.getElementById("cnt").textContent = "0/" + TOTAL;
+
+function autoGrow(el){ el.style.height = "auto"; el.style.height = (el.scrollHeight + 2) + "px"; }
+
+function cheerText(done){
+  if (done === 0) return "Empieza cuando quieras";
+  if (done < TOTAL * 0.25) return "Primer ladrillo puesto";
+  if (done < TOTAL * 0.5) return "La pared va subiendo";
+  if (done < TOTAL * 0.75) return "Ya pasaste la mitad";
+  if (done < TOTAL) return "Ya casi, lo último";
+  return "¡Listo! Dale mandar";
+}
+
+const sticky = document.getElementById("stickysend");
+const sendzone = document.getElementById("sendzone");
+let sendzoneVisible = false;
+
+function refreshSticky(done){
+  const show = done === TOTAL && !sendzoneVisible;
+  sticky.classList.toggle("show", show);
+  sticky.setAttribute("aria-hidden", show ? "false" : "true");
+  document.getElementById("wa2").tabIndex = show ? 0 : -1;
+}
+
+function countDone(){
+  return fields.filter(function(f){ return f.el.value.trim().length > 1; }).length;
+}
+
+function refresh(){
+  let done = 0;
+  fields.forEach(function(f){
+    const filled = f.el.value.trim().length > 1;
+    f.el.classList.toggle("filled", filled);
+    if (filled) done++;
+  });
+  for (let i = 0; i < bricks.length; i++) bricks[i].classList.toggle("on", i < done);
+  document.getElementById("pct").textContent = Math.round(done / TOTAL * 100) + "%";
+  document.getElementById("cnt").textContent = done + "/" + TOTAL;
+  document.getElementById("cheer").textContent = cheerText(done);
+  refreshSticky(done);
+  syncChips();
+}
+
+function syncChips(){
+  document.querySelectorAll(".chips").forEach(function(group){
+    const ta = document.getElementById(group.getAttribute("data-for"));
+    if (!ta) return;
+    const val = ta.value.toLowerCase();
+    group.querySelectorAll(".chip").forEach(function(ch){
+      ch.classList.toggle("sel", val.indexOf(ch.textContent.toLowerCase()) !== -1);
+    });
+  });
+}
+
+document.querySelectorAll(".chips").forEach(function(group){
+  const ta = document.getElementById(group.getAttribute("data-for"));
+  if (!ta) return;
+  group.querySelectorAll(".chip").forEach(function(ch){
+    ch.addEventListener("click", function(){
+      const text = ch.textContent;
+      if (ta.value.toLowerCase().indexOf(text.toLowerCase()) !== -1) return;
+      const cur = ta.value.trim();
+      ta.value = cur ? (cur.replace(/[,.\s]+$/,"") + ", " + text) : text;
+      store.set("ridchar_" + ta.id, ta.value);
+      autoGrow(ta);
+      refresh();
+    });
+  });
+});
+
+fields.forEach(function(f){
+  const saved = store.get("ridchar_" + f.id);
+  if (saved) f.el.value = saved;
+  autoGrow(f.el);
+  f.el.addEventListener("input", function(){
+    store.set("ridchar_" + f.id, f.el.value);
+    autoGrow(f.el);
+    refresh();
+  });
+});
+
+if ("IntersectionObserver" in window) {
+  const zoneIO = new IntersectionObserver(function(entries){
+    sendzoneVisible = entries[0].isIntersecting;
+    refreshSticky(countDone());
+  }, { threshold: 0.2 });
+  zoneIO.observe(sendzone);
+
+  const revealIO = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) { e.target.classList.add("in"); revealIO.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: "0px 0px -20px 0px" });
+  document.querySelectorAll(".reveal").forEach(function(el){ revealIO.observe(el); });
+} else {
+  document.querySelectorAll(".reveal").forEach(function(el){ el.classList.add("in"); });
+}
+
+refresh();
+
+function buildText(){
+  let out = "QUÉ QUIERO CONSTRUIR — respuestas de Ridchar\n\n";
+  fields.forEach(function(f, i){
+    out += String(i + 1).padStart(2,"0") + ". " + f.label + "\n" + (f.el.value.trim() || "(sin responder)") + "\n\n";
+  });
+  return out;
+}
+
+const status = document.getElementById("status");
+
+function sendWhatsApp(){
+  const done = countDone();
+  if (done === 0) {
+    status.textContent = "Responde al menos una pregunta antes de mandar.";
+    sendzone.scrollIntoView({ behavior: "smooth" });
+    fields[0].el.focus();
+    return;
+  }
+  window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(buildText()), "_blank");
+  status.textContent = "WhatsApp abierto. Si no se abrió, usa el botón de copiar.";
+}
+
+document.getElementById("wa").addEventListener("click", sendWhatsApp);
+document.getElementById("wa2").addEventListener("click", sendWhatsApp);
+
+document.getElementById("copy").addEventListener("click", function(){
+  const txt = buildText();
+  function ok(){ status.textContent = "Copiado. Pégalo en el chat de WhatsApp."; }
+  function fallback(){
+    const ta = document.createElement("textarea");
+    ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); ok(); }
+    catch(e){ status.textContent = "No pude copiar automáticamente. Selecciona el texto a mano."; }
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(txt).then(ok, fallback); }
+  else { fallback(); }
+});
+</script>
+</body>
+</html>
