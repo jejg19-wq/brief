@@ -18,7 +18,7 @@ Requiere Node.js 22 o posterior y una cuenta fal.ai con acceso a los modelos y s
 npm ci
 ```
 
-Crear `.env.local` a partir de `.env.example` y configurar `FAL_KEY`. Configurar `STUDIO_PASSWORD` para proteger el estudio y sus rutas de generación. El nombre de usuario puede ser `numan`; se valida la contraseña. Nunca usar `NEXT_PUBLIC_FAL_KEY`.
+Crear `.env.local` a partir de `.env.example` y configurar `FAL_KEY`. El estudio y sus rutas de generación salen protegidos de fábrica con la contraseña `decostone` (usuario libre, por ejemplo `numan`); para cambiarla, definir `STUDIO_PASSWORD`. Nunca usar `NEXT_PUBLIC_FAL_KEY`.
 
 ```bash
 npm run build
@@ -32,7 +32,7 @@ Abrir `http://localhost:3000`. Sin `FAL_KEY`, la app funciona en demo; sus resul
 1. Hacer un respaldo de los proyectos desde el navegador habitual. Conservar una copia del código actual y anotar el despliegue anterior para poder revertirlo.
 2. Sustituir únicamente la carpeta `arqviz` del repositorio por esta carpeta. No sustituir la raíz del repositorio ni los otros proyectos.
 3. Publicar los cambios en la rama que Vercel utiliza realmente para producción. La última producción consultada corresponde al commit de `claude/brief-dinamico-humanizado-o0m3gw`, aunque el informe inicial indicaba otra rama. Verificar la configuración en Vercel antes del despliegue.
-4. Mantener `Root Directory: arqviz` y la variable `FAL_KEY` ya configurada. Añadir `STUDIO_PASSWORD` en el entorno de producción y redesplegar. Sin esta contraseña el estudio conserva el acceso abierto de la versión anterior: cualquier visitante podría iniciar generaciones facturables.
+4. Mantener `Root Directory: arqviz` y la variable `FAL_KEY` ya configurada. La contraseña de fábrica es `decostone`; para usar otra, añadir `STUDIO_PASSWORD` en el entorno de producción y redesplegar.
 5. Verificar `/api/health` tras autenticarse: debe mostrar `version: 2.0.0`, `fidelity: server-enforced` y `demo: false`.
 6. Probar una vista real en 1K o 2K, revisar geometría y materiales, aprobarla y probar su enlace. Después probar un video de 5 segundos. Los precios de la interfaz son estimaciones, no límites de gasto ni cargos confirmados.
 

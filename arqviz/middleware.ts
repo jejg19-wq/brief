@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-/** Optional HTTP Basic protection for the studio. Client presentations stay accessible by link. */
+import { studioPassword } from '@/lib/auth';
+/** HTTP Basic protection for the studio (default password in lib/auth.ts). Client presentations stay accessible by link. */
 export function middleware(req: NextRequest) {
-  const password = process.env.STUDIO_PASSWORD;
+  const password = studioPassword();
   if (!password || req.nextUrl.pathname.startsWith('/p/') || req.nextUrl.pathname.startsWith('/_next/')) return NextResponse.next();
   const header = req.headers.get('authorization');
   try {
