@@ -55,7 +55,7 @@ Mantener el mismo dominio conserva el acceso a los proyectos de ese navegador. S
 - Portal incluido dentro de la aplicación en `/p/index.html`, con resultados aprobados y etiquetas para propuestas conceptuales.
 - IndexedDB con migración desde localStorage sin borrar el respaldo anterior; exportación/importación JSON y aviso si falla el guardado. No es sincronización en nube.
 - Firmas de trabajos para consultar la cola y tratamiento separado de fallos temporales. No se reenvían automáticamente solicitudes de generación cobrables.
-- Límite de 4 MB por subida para ajustarse a las funciones de Vercel, validación de cabeceras de archivo y formatos PNG/JPG/WebP. Exportar previamente los planos PDF y las vistas de SKP/DWG/IFC a imagen; no se importan geometrías nativas.
+- Cualquier foto o captura se acepta: la app la reduce y comprime en el navegador (lado mayor de 4000 px, JPEG o PNG) antes de subirla, porque las funciones de Vercel admiten ~4 MB por petición. El servidor valida cabeceras de archivo y formatos PNG/JPG/WebP. Exportar previamente los planos PDF y las vistas de SKP/DWG/IFC a imagen; no se importan geometrías nativas.
 
 ## Exactitud y límites
 

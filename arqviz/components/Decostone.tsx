@@ -8,6 +8,7 @@ import {
   buildCladdingPrompt, pieceThumb,
 } from '@/lib/decostone';
 import { DEMO_PREFIX, fileToDataUrl } from '@/lib/demo';
+import { prepareUpload, fitDataUrl } from '@/lib/media';
 import { uid } from '@/lib/store';
 import GenerationCard from './GenerationCard';
 
@@ -53,8 +54,9 @@ export default function Decostone({
 
   const loadPhoto = async (file: File) => {
     setError('');
-    if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>4*1024*1024){setError('Sube PNG, JPG o WebP de hasta 4 MB.');return;}
-    const dataUrl = await fileToDataUrl(file);
+    let prepared: File;
+    try { prepared = await prepareUpload(file, 3200); } catch (e) { setError((e as Error).message); return; }
+    const dataUrl = await fileToDataUrl(prepared);
     setPhotoUrl(dataUrl);
     setHasMask(false);
     setDrawMode(false);
@@ -130,9 +132,7 @@ export default function Decostone({
         requestId = DEMO_PREFIX + uid();
       } else {
         async function uploadData(value:string,name:string) {
-          const blob=await(await fetch(value)).blob();
-          if(blob.size>4*1024*1024)throw new Error('La imagen preparada supera 4 MB. Reduce la resolución de la foto.');
-          const form=new FormData();form.append('file',new File([blob],name,{type:blob.type}));
+          const form=new FormData();form.append('file',await fitDataUrl(value,name));
           const response=await fetch('/api/upload',{method:'POST',body:form});const data=await response.json();
           if(!response.ok)throw new Error(data.error||'Error al subir');return data.url;
         }
@@ -186,7 +186,7 @@ export default function Decostone({
         </div>
       </div>
 
-      <div className="panel" style={{marginBottom:20}}><h2>Muestra real del revestimiento</h2><p className="empty-note">El catálogo de abajo es orientativo. Sube la pieza real y escribe sus medidas y acabado en las notas; así evitamos sustituirla por una textura inventada.</p>{sampleUrl && <img src={sampleUrl} alt="Muestra real del material" style={{width:140,maxHeight:140,objectFit:'contain'}}/>}<button className="btn-ghost" onClick={()=>sampleInput.current?.click()}>Subir muestra de material</button><input ref={sampleInput} type="file" hidden accept="image/png,image/jpeg,image/webp" onChange={async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>4*1024*1024){setError('Sube una muestra de hasta 4 MB.');return;}setSampleUrl(await fileToDataUrl(f));}}/></div>
+      <div className="panel" style={{marginBottom:20}}><h2>Muestra real del revestimiento</h2><p className="empty-note">El catálogo de abajo es orientativo. Sube la pieza real y escribe sus medidas y acabado en las notas; así evitamos sustituirla por una textura inventada.</p>{sampleUrl && <img src={sampleUrl} alt="Muestra real del material" style={{width:140,maxHeight:140,objectFit:'contain'}}/>}<button className="btn-ghost" onClick={()=>sampleInput.current?.click()}>Subir muestra de material</button><input ref={sampleInput} type="file" hidden accept="image/*" onChange={async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;try{setSampleUrl(await fileToDataUrl(await prepareUpload(f,2000)));}catch(err){setError((err as Error).message);}}}/></div>
       {/* Paso 1: foto del cliente */}
       <section className="section">
         <div className="section-head">
@@ -257,7 +257,7 @@ export default function Decostone({
             </div>
           )}
           <input
-            ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" hidden
+            ref={inputRef} type="file" accept="image/*" hidden
             onChange={(e) => { const f = e.target.files?.[0]; if (f) loadPhoto(f); e.target.value = ''; }}
           />
         </div>

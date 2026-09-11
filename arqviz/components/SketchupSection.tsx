@@ -5,6 +5,7 @@ import type { Generation, Project, SkpView } from '@/lib/types';
 import { IMAGE_MODEL, IMAGE_MODELS, estimateImageCost } from '@/lib/models';
 import { STYLES, LIGHTING, buildSkpPrompt } from '@/lib/prompts';
 import { DEMO_PREFIX, fileToDataUrl } from '@/lib/demo';
+import { prepareUpload } from '@/lib/media';
 import { uid } from '@/lib/store';
 
 const usd = (n: number) => `$${n.toFixed(2)}`;
@@ -41,14 +42,16 @@ export default function SketchupSection({
 
   const addFiles = async (files: FileList | File[]) => {
     setError('');
-    const list = Array.from(files).filter((f) => ['image/png','image/jpeg','image/webp'].includes(f.type) && f.size <= 4 * 1024 * 1024);
-    if (list.length !== files.length) setError('Solo PNG, JPG o WebP de hasta 4 MB por imagen.');
+    const list = Array.from(files).filter((f) => f.type.startsWith('image/') || /\.(heic|heif|jpe?g|png|webp|bmp|tiff?)$/i.test(f.name));
+    if (list.length !== files.length) setError('Solo se aceptan imágenes (JPG, PNG, WebP…).');
     if (list.length === 0) return;
     let done = 0;
-    for (const file of list) {
+    for (const chosen of list) {
       done++;
-      setUploading(`Subiendo vista ${done} de ${list.length}…`);
+      setUploading(`Preparando vista ${done} de ${list.length}…`);
       try {
+        const file = await prepareUpload(chosen);
+        setUploading(`Subiendo vista ${done} de ${list.length}…`);
         let url: string;
         if (demo) {
           url = await fileToDataUrl(file);
@@ -151,10 +154,10 @@ export default function SketchupSection({
           <div className="dz-icon">🏗️</div>
           {uploading
             ? <div><strong>{uploading}</strong></div>
-            : <div><strong>Arrastra aquí tus fotos o vistas 3D</strong> (PNG, JPG, WebP · máximo 4 MB cada una) o haz clic para buscarlas</div>}
+            : <div><strong>Arrastra aquí tus fotos o vistas 3D</strong> (cualquier foto o captura; la app la ajusta sola) o haz clic para buscarlas</div>}
         </div>
         <input
-          ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" multiple hidden
+          ref={inputRef} type="file" accept="image/*" multiple hidden
           onChange={(e) => { if (e.target.files) addFiles(e.target.files); e.target.value = ''; }}
         />
 

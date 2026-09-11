@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
       );
     }
     if (file.size > MAX_BYTES) {
-      return NextResponse.json({ error: 'El archivo supera los 4 MB' }, { status: 400 });
+      return NextResponse.json({ error: 'La imagen supera los 4 MB. Actualiza la página y vuelve a intentarlo: la app la ajusta sola.' }, { status: 400 });
     }
     const bytes = new Uint8Array(await file.slice(0,12).arrayBuffer());
     const valid = file.type === 'image/png' ? bytes[0]===137 && bytes[1]===80 && bytes[2]===78 && bytes[3]===71

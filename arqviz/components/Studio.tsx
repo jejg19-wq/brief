@@ -22,7 +22,7 @@ import ReviewDialog from './ReviewDialog';
 import ProjectTools from './ProjectTools';
 import MaterialSection from './MaterialSection';
 import PanoramaImport from './PanoramaImport';
-import { compositeMasked } from '@/lib/media';
+import { compositeMasked, prepareUpload, fitDataUrl } from '@/lib/media';
 
 const DECO_PROJECT_ID = 'decostone';
 
@@ -133,12 +133,9 @@ export default function Studio() {
                 urls = [protectedImage]; maskedComposite = true;
                 // Upload the finished PNG only; the unprotected AI output is never shared.
                 try {
-                  const blob = await (await fetch(protectedImage)).blob();
-                  if (blob.size <= 4 * 1024 * 1024) {
-                    const form = new FormData(); form.append('file', new File([blob], 'revestimiento-verificado.png', { type: 'image/png' }));
-                    const response = await fetch('/api/upload', { method:'POST', body:form });
-                    if (response.ok) urls = [(await response.json()).url];
-                  }
+                  const form = new FormData(); form.append('file', await fitDataUrl(protectedImage, 'revestimiento-verificado.png'));
+                  const response = await fetch('/api/upload', { method:'POST', body:form });
+                  if (response.ok) urls = [(await response.json()).url];
                 } catch { /* retain downloadable local PNG when upload is unavailable */ }
               }
               catch { updateProject(projectId, p => ({ ...p, generations: p.generations.map(g => g.id === gen.id ? { ...g, status: 'error', rawResultUrl: data.urls[0], error: 'La IA terminó, pero no se pudo conservar el exterior de la máscara. Resultado bloqueado; no regeneres para evitar otro cobro.' } : g) })); continue; }
@@ -454,7 +451,7 @@ function PlanSection({
     setError('');
     setUploading(true);
     try {
-      if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 4*1024*1024) throw new Error('Sube PNG, JPG o WebP de hasta 4 MB.');
+      file = await prepareUpload(file);
       if (demo) {
         // En demo el plano se queda en el navegador, no se sube a ningún lado
         const dataUrl = await fileToDataUrl(file);
@@ -511,7 +508,7 @@ function PlanSection({
           </div>
         )}
         <input
-          ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" hidden
+          ref={inputRef} type="file" accept="image/*" hidden
           onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); e.target.value = ''; }}
         />
         {error && <div className="error-note">{error}</div>}
@@ -722,8 +719,7 @@ function VideoModal({
     try {
       let videoInputUrl = sourceUrl;
       if (!demo && sourceUrl.startsWith('data:')) {
-        const blob = await (await fetch(sourceUrl)).blob();
-        const form = new FormData(); form.append('file', new File([blob], 'render-aprobado.png', { type: blob.type }));
+        const form = new FormData(); form.append('file', await fitDataUrl(sourceUrl, 'render-aprobado.png'));
         const response = await fetch('/api/upload', { method: 'POST', body: form }); const data = await response.json();
         if (!response.ok) throw new Error(data.error); videoInputUrl = data.url;
       }

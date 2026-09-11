@@ -40,3 +40,92 @@ export async function presentationVideo(url: string): Promise<void> {
     const start = Date.now(); timer = setInterval(() => { ctx.drawImage(image, 0, 0, canvas.width, canvas.height); if (Date.now() - start >= 5000 && recorder.state === 'recording') recorder.stop(); }, 1000 / 24);
   });
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Ajuste automático de fotos antes de subir.
+//
+// Vercel limita el cuerpo de cada petición a ~4.5 MB, así que /api/upload
+// acepta hasta 4 MB. Para que el arquitecto pueda usar cualquier foto (las
+// del teléfono suelen pesar 8-15 MB), la app la reduce y comprime en el
+// navegador antes de enviarla. Las imágenes que ya caben se envían intactas.
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const UPLOAD_LIMIT = 4 * 1024 * 1024;
+const SAFE_LIMIT = Math.floor(3.8 * 1024 * 1024);
+const IMAGE_TYPES = ['image/png', 'image/jpeg', 'image/webp'];
+const IMAGE_NAME = /\.(heic|heif|jpe?g|png|webp|bmp|tiff?|gif|avif)$/i;
+
+type Decoded = ImageBitmap | HTMLImageElement;
+
+async function decodeImage(source: Blob): Promise<Decoded> {
+  if (typeof createImageBitmap === 'function') {
+    try { return await createImageBitmap(source); } catch { /* algunos formatos no decodifican aquí */ }
+  }
+  const url = URL.createObjectURL(source);
+  try { return await loadImage(url); } finally { URL.revokeObjectURL(url); }
+}
+
+function decodedSize(img: Decoded): [number, number] {
+  return 'naturalWidth' in img ? [img.naturalWidth, img.naturalHeight] : [img.width, img.height];
+}
+
+function canvasToBlob(canvas: HTMLCanvasElement, type: string, quality?: number): Promise<Blob> {
+  return new Promise((resolve, reject) => canvas.toBlob(b => (b ? resolve(b) : reject(new Error('No se pudo codificar la imagen.'))), type, quality));
+}
+
+/**
+ * Devuelve una versión de la imagen que cabe en el límite de subida.
+ * Reduce el lado mayor a `maxEdge` píxeles y comprime en JPEG (o PNG si se
+ * pide y cabe). Repite reduciendo el tamaño hasta lograrlo.
+ */
+export async function shrinkImage(source: Blob, opts: { maxEdge?: number; preferPng?: boolean } = {}): Promise<Blob> {
+  const maxEdge = opts.maxEdge ?? 4000;
+  let img: Decoded;
+  try { img = await decodeImage(source); } catch { throw new Error('No se pudo leer esta imagen. Guárdala como JPG o PNG e inténtalo de nuevo.'); }
+  const [w, h] = decodedSize(img);
+  if (!w || !h) throw new Error('La imagen está vacía o dañada.');
+  let scale = Math.min(1, maxEdge / Math.max(w, h));
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(w * scale));
+    canvas.height = Math.max(1, Math.round(h * scale));
+    const ctx = canvas.getContext('2d')!;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    if (opts.preferPng) {
+      const png = await canvasToBlob(canvas, 'image/png');
+      if (png.size <= SAFE_LIMIT) return png;
+    }
+    for (const quality of [0.92, 0.86, 0.8, 0.72]) {
+      const jpg = await canvasToBlob(canvas, 'image/jpeg', quality);
+      if (jpg.size <= SAFE_LIMIT) return jpg;
+    }
+    scale *= 0.7;
+  }
+  throw new Error('La imagen es demasiado grande incluso reducida. Prueba con una foto más pequeña.');
+}
+
+function renamed(name: string, type: string): string {
+  return name.replace(/\.[^.]+$/, '') + (type === 'image/png' ? '.png' : '.jpg');
+}
+
+/**
+ * Prepara un archivo elegido por el arquitecto: acepta cualquier foto que el
+ * navegador pueda abrir y la deja lista para /api/upload. Si ya es PNG/JPG/WebP
+ * y pesa menos del límite, se devuelve sin tocar.
+ */
+export async function prepareUpload(file: File, maxEdge = 4000): Promise<File> {
+  if (IMAGE_TYPES.includes(file.type) && file.size <= SAFE_LIMIT) return file;
+  if (!file.type.startsWith('image/') && !IMAGE_NAME.test(file.name)) {
+    throw new Error('Ese archivo no es una imagen. Sube una foto en JPG, PNG o WebP.');
+  }
+  const blob = await shrinkImage(file, { maxEdge, preferPng: file.type === 'image/png' });
+  return new File([blob], renamed(file.name, blob.type), { type: blob.type });
+}
+
+/** Igual que prepareUpload pero partiendo de un data URL generado en la app (composiciones, máscaras). */
+export async function fitDataUrl(dataUrl: string, name: string, maxEdge = 4000): Promise<File> {
+  const blob = await (await fetch(dataUrl)).blob();
+  if (IMAGE_TYPES.includes(blob.type) && blob.size <= SAFE_LIMIT) return new File([blob], name, { type: blob.type });
+  const shrunk = await shrinkImage(blob, { maxEdge });
+  return new File([shrunk], renamed(name, shrunk.type), { type: shrunk.type });
+}
