@@ -1,32 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFal } from '@/lib/fal';
-import { ALLOWED_ENDPOINTS } from '@/lib/models';
-
+import { prepareGeneration, POLICY_VERSION } from '@/lib/fidelity';
+import { jobToken } from '@/lib/jobs';
 export const runtime = 'nodejs';
 export const maxDuration = 60;
-
-/**
- * Encola una generación en fal.ai y devuelve el request_id.
- * El cliente luego consulta /api/status hasta que termine.
- */
 export async function POST(req: NextRequest) {
+  if (req.headers.get('origin') && req.headers.get('origin') !== req.nextUrl.origin) return NextResponse.json({ error: 'Origen no permitido' }, { status: 403 });
+  let prepared;
   try {
-    const { endpoint, input } = (await req.json()) as {
-      endpoint: string;
-      input: Record<string, unknown>;
-    };
-    if (!endpoint || !ALLOWED_ENDPOINTS.has(endpoint)) {
-      return NextResponse.json({ error: 'Modelo no permitido' }, { status: 400 });
-    }
-    if (!input || typeof input !== 'object') {
-      return NextResponse.json({ error: 'Falta el input de la generación' }, { status: 400 });
-    }
-    const fal = getFal();
-    const { request_id } = await fal.queue.submit(endpoint, { input });
-    return NextResponse.json({ requestId: request_id });
+    const raw = await req.text();
+    if (raw.length > 65000) throw new Error('Solicitud demasiado grande.');
+    prepared = prepareGeneration(JSON.parse(raw));
   } catch (err) {
-    console.error('generate error', err);
-    const message = err instanceof Error ? err.message : 'Error al encolar la generación';
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Solicitud inválida' }, { status: 400 });
+  }
+  try {
+    const { request_id } = await getFal().queue.submit(prepared.endpoint, { input: prepared.input });
+    return NextResponse.json({ requestId: request_id, jobToken: jobToken(prepared.endpoint, request_id), prompt: prepared.prompt, policyVersion: POLICY_VERSION });
+  } catch {
+    return NextResponse.json({ error: 'No se pudo confirmar la generación. Revisa la cola de fal antes de repetir para evitar un cobro duplicado.' }, { status: 502 });
   }
 }

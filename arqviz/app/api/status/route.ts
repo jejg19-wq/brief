@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getFal } from '@/lib/fal';
+import { verifyJob } from '@/lib/jobs';
 import { ALLOWED_ENDPOINTS } from '@/lib/models';
 
 export const runtime = 'nodejs';
@@ -19,6 +20,8 @@ export async function GET(req: NextRequest) {
   if (!ALLOWED_ENDPOINTS.has(endpoint) || !requestId) {
     return NextResponse.json({ error: 'Parámetros inválidos' }, { status: 400 });
   }
+  const token = req.nextUrl.searchParams.get('token') ?? '';
+  if (!verifyJob(endpoint, requestId, token)) return NextResponse.json({ status: 'error', error: 'Trabajo anterior a esta versión o firma inválida. Consulta el resultado en fal.' }, { status: 403 });
   try {
     const fal = getFal();
     const status = await fal.queue.status(endpoint, { requestId, logs: false });
@@ -32,13 +35,15 @@ export async function GET(req: NextRequest) {
       }
       if (data.image?.url) urls.push(data.image.url);
       if (data.video?.url) urls.push(data.video.url);
+      if (!urls.length) return NextResponse.json({ status: 'error', error: 'El proveedor terminó sin devolver un archivo.' });
       return NextResponse.json({ status: 'done', urls });
     }
 
     if (status.status === 'IN_PROGRESS') return NextResponse.json({ status: 'running' });
     return NextResponse.json({ status: 'queued' });
   } catch (err) {
-    console.error('status error', err);
-    return NextResponse.json({ status: 'error', error: 'La generación falló' }, { status: 200 });
+    const code = (err as { status?: number }).status;
+    if (code === 422 || code === 400) return NextResponse.json({ status: 'error', error: 'El proveedor no pudo generar este resultado.' });
+    return NextResponse.json({ status: 'retry', error: 'Consulta temporalmente no disponible; volveremos a comprobar.' }, { status: 503 });
   }
 }

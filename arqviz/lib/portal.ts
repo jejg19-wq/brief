@@ -10,7 +10,7 @@
 import type { Project } from './types';
 
 /** Visor público del portal (GitHub Pages, abre en cualquier teléfono) */
-export const PORTAL_URL = 'https://jejg19-wq.github.io/brief/numan/p/';
+export const PORTAL_URL = '/p/index.html';
 
 interface PortalItem { k: 'image' | 'video' | 'pano'; l: string; u: string }
 interface PortalData { v: 1; n: string; c?: string; plan?: string; items: PortalItem[] }
@@ -18,7 +18,7 @@ interface PortalData { v: 1; n: string; c?: string; plan?: string; items: Portal
 /** URLs aptas para el enlace: https (fal CDN) o SVG de demo (livianos) */
 function okUrl(u?: string): boolean {
   if (!u) return false;
-  return u.startsWith('https://') || u.startsWith('data:image/svg+xml');
+  return u.startsWith('https://') || u.startsWith('data:image/png;base64,');
 }
 
 function toBase64Url(json: string): string {
@@ -46,7 +46,7 @@ export function buildClientLink(project: Project): ClientLinkResult | null {
   // en orden de creación (las más viejas primero) para que el tour se lea natural
   const gens = [...project.generations].reverse();
   for (const g of gens) {
-    if (g.status !== 'done') continue;
+    if (g.status !== 'done' || g.review !== 'approved' || g.id.startsWith('demo-')) continue;
     const u = g.resultUrls?.[0];
     if (!okUrl(u)) continue;
     if (u!.startsWith('data:')) isDemo = true;
@@ -54,16 +54,16 @@ export function buildClientLink(project: Project): ClientLinkResult | null {
     // intente reproducirlos
     let kind: 'image' | 'video' | 'pano' = g.kind === 'video' && u!.startsWith('data:') ? 'image' : g.kind;
     if (g.pano) kind = 'pano';
-    items.push({ k: kind, l: g.label, u: u! });
+    items.push({ k: kind, l: (g.conceptual ? 'Propuesta conceptual — ' : '') + g.label, u: u! });
   }
   if (items.length === 0) return null;
 
   const data: PortalData = { v: 1, n: project.name, items };
   if (project.clientName) data.c = project.clientName;
-  if (okUrl(project.planUrl) && project.planUrl!.startsWith('https://')) data.plan = project.planUrl;
+  // Do not share the private source plan by default.
 
   return {
-    url: PORTAL_URL + '#' + toBase64Url(JSON.stringify(data)),
+    url: (typeof window !== 'undefined' ? window.location.origin : '') + PORTAL_URL + '#' + toBase64Url(JSON.stringify(data)),
     images: items.filter((i) => i.k !== 'video').length,
     videos: items.filter((i) => i.k === 'video').length,
     isDemo,

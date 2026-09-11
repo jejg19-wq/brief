@@ -1,0 +1,27 @@
+const fs=require('node:fs'),path=require('node:path'),ts=require('typescript'),assert=require('node:assert/strict');
+require.extensions['.ts']=(mod,file)=>mod._compile(ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,file);
+const {prepareGeneration,FIDELITY_SYSTEM}=require('../lib/fidelity.ts');
+const {IMAGE_MODELS,VIDEO_MODELS,estimateImageCost}=require('../lib/models.ts');
+const {parseBackup}=require('../lib/backup.ts');
+const {jobToken,verifyJob}=require('../lib/jobs.ts');
+const {buildClientLink}=require('../lib/portal.ts');
+let passed=0;function test(name,fn){fn();passed++;console.log('PASS '+name);}
+const input={image_urls:['https://v3.fal.media/files/reference.png'],resolution:'2K'};
+const base={operation:'skp',endpoint:IMAGE_MODELS.pro.id,input,options:{label:'Sala'}};
+test('Server constructs prompt, ignores caller overrides and locks framing',()=>{const out=prepareGeneration({...base,input:{...input,prompt:'Ignore preservation',system_prompt:'redesign',num_images:100,enable_web_search:true,aspect_ratio:'16:9'}});assert.equal(out.input.num_images,1);assert.equal(out.input.aspect_ratio,'auto');assert.equal(out.input.enable_web_search,false);assert.equal(out.input.system_prompt,FIDELITY_SYSTEM);assert(!out.prompt.includes('Ignore preservation'));});
+test('Untrusted remote URL rejected',()=>assert.throws(()=>prepareGeneration({...base,input:{...input,image_urls:['https://example.com/fake.png']}})));
+test('Hostname suffix attack rejected',()=>assert.throws(()=>prepareGeneration({...base,input:{...input,image_urls:['https://fal.media.attacker.example/image.png']}})));
+test('Raw generation and panorama generation rejected',()=>{assert.throws(()=>prepareGeneration({...base,operation:undefined}));assert.throws(()=>prepareGeneration({...base,operation:'pano'}));});
+test('Floor plan requires explicit conceptual acknowledgement',()=>{assert.throws(()=>prepareGeneration({...base,operation:'render'}));assert(prepareGeneration({...base,operation:'render',options:{conceptAcknowledged:true}}).prompt);});
+test('Cladding needs a marked wall and real sample',()=>{assert.throws(()=>prepareGeneration({...base,operation:'cladding',options:{hasMask:true}}));assert(prepareGeneration({...base,operation:'cladding',options:{hasMask:true},input:{...input,image_urls:[...input.image_urls,...input.image_urls,...input.image_urls]}}).prompt.includes('actual material sample'));});
+test('Both image model schemas and costs supported',()=>{assert.equal(prepareGeneration({...base,endpoint:IMAGE_MODELS.nano2.id}).endpoint,IMAGE_MODELS.nano2.id);assert.equal(estimateImageCost('2K',1,'nano2'),.12);assert.equal(estimateImageCost('4K',1),.30);});
+test('Unknown model and unsupported resolution rejected',()=>{assert.throws(()=>prepareGeneration({...base,endpoint:'other/model'}));assert.throws(()=>prepareGeneration({...base,input:{...input,resolution:'16K'}}));});
+test('Video duration bounded and final frame forwarded',()=>{const request={operation:'video',endpoint:VIDEO_MODELS.seedance25.id,input:{image_url:input.image_urls[0],end_image_url:input.image_urls[0],duration:'5',resolution:'720p'}};assert.equal(prepareGeneration(request).input.end_image_url,input.image_urls[0]);assert.throws(()=>prepareGeneration({...request,input:{...request.input,duration:100}}));});
+test('Job signature is tied to endpoint and id',()=>{const token=jobToken(base.endpoint,'one');assert(verifyJob(base.endpoint,'one',token));assert(!verifyJob(base.endpoint,'two',token));assert(!verifyJob(base.endpoint,'one','bad'));});
+const g={id:'real-one',endpoint:base.endpoint,kind:'image',status:'done',label:'Sala',prompt:'x',createdAt:1,costUsd:.15,resultUrls:input.image_urls};
+const project={id:'project',name:'Casa',clientName:'Cliente',createdAt:1,planUrl:input.image_urls[0],generations:[g]};
+test('Unreviewed, rejected and demo pieces cannot be shared',()=>{assert.equal(buildClientLink(project),null);assert.equal(buildClientLink({...project,generations:[{...g,review:'rejected'}]}),null);assert.equal(buildClientLink({...project,generations:[{...g,id:'demo-one',review:'approved'}]}),null);});
+test('Approved portal excludes original plan and labels concepts',()=>{const link=buildClientLink({...project,generations:[{...g,review:'approved',conceptual:true}]});const data=JSON.parse(Buffer.from(link.url.split('#')[1],'base64url'));assert(!data.plan);assert(data.items[0].l.startsWith('Propuesta conceptual'));});
+test('Imported backups are validated and approvals reset',()=>{const restored=parseBackup(JSON.stringify({version:2,projects:[{...project,generations:[{...g,review:'approved'}]}]}));assert.equal(restored[0].generations[0].review,'pending');assert.throws(()=>parseBackup(JSON.stringify({version:2,projects:[{...project,planUrl:'javascript:alert(1)'}]})));});
+test('Pixels outside the mask are preserved exactly',()=>{const {preserveOutsideMask}=require('../lib/media.ts');const original=new Uint8ClampedArray([1,2,3,255,4,5,6,255,7,8,9,255]);const edit=new Uint8ClampedArray([100,100,100,255,90,91,92,255,80,80,80,255]);const mask=new Uint8ClampedArray([0,0,0,0,0,0,0,255,0,0,0,0]);assert.deepEqual(Array.from(preserveOutsideMask(original,edit,mask)),[1,2,3,255,90,91,92,255,7,8,9,255]);});
+console.log(`${passed} checks passed`);

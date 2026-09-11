@@ -85,7 +85,7 @@ export function buildCladdingPrompt(opts: {
 }): string {
   const { piece, color, finish, hasMask, extra } = opts;
   const parts: string[] = [
-    `The reference image is a client's photo of a real space.`,
+    `Image 1 is the original space. Image 2 shows the green selection. Image 3 is the actual material sample; use its pattern and texture only, never its scene.`,
   ];
   if (hasMask) {
     parts.push(
@@ -103,7 +103,7 @@ export function buildCladdingPrompt(opts: {
       `panel courses follow the wall plane realistically. Keep the original lighting, ` +
       `shadows, reflections and every other element of the photo unchanged: furniture, ` +
       `floor, ceiling, windows, plants and people stay exactly as they are.`,
-    `Photorealistic result, realistic panel scale (strips of about 10-15 cm height), ` +
+    `Photorealistic result. Use panel dimensions from the material specifications only; never claim measured scale from an uncalibrated photo. ` +
       `natural texture variation between panels, no text, no watermarks.`,
   );
   if (extra?.trim()) parts.push(`Additional notes: ${extra.trim()}.`);

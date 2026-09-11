@@ -24,6 +24,11 @@ export const IMAGE_MODEL: ModelDef = {
   cost: { perImage: 0.15, perImage4K: 0.3 },
 };
 
+export const IMAGE_MODELS: Record<string, ModelDef> = {
+  pro: IMAGE_MODEL,
+  nano2: { id: 'fal-ai/nano-banana-2/edit', kind: 'image', label: 'Nano Banana 2',
+    description: 'Alternativa rápida para comparar el mismo encuadre', cost: { perImage: 0.08, perImage4K: 0.16 } },
+};
 export const VIDEO_MODELS: Record<string, ModelDef & { resolutions: string[]; durations: number[] }> = {
   seedance25: {
     id: 'bytedance/seedance-2.5/image-to-video',
@@ -60,7 +65,8 @@ export const VIDEO_MODELS: Record<string, ModelDef & { resolutions: string[]; du
 export const VIDEO_RESOLUTIONS = ['480p', '720p', '1080p'] as const;
 export const VIDEO_DURATIONS = [5, 10] as const;
 
-export function estimateImageCost(resolution: '1K' | '2K' | '4K', numImages: number): number {
+export function estimateImageCost(resolution: '1K' | '2K' | '4K', numImages: number, modelKey = 'pro'): number {
+  if (modelKey === 'nano2') return ({ '1K': 0.08, '2K': 0.12, '4K': 0.16 }[resolution]) * numImages;
   const per = resolution === '4K' ? (IMAGE_MODEL.cost.perImage4K ?? 0.3) : (IMAGE_MODEL.cost.perImage ?? 0.15);
   return per * numImages;
 }
@@ -73,6 +79,6 @@ export function estimateVideoCost(modelKey: string, resolution: string, duration
 
 /** Lista blanca de endpoints que el server acepta encolar */
 export const ALLOWED_ENDPOINTS = new Set<string>([
-  IMAGE_MODEL.id,
+  ...Object.values(IMAGE_MODELS).map(m => m.id),
   ...Object.values(VIDEO_MODELS).map((m) => m.id),
 ]);

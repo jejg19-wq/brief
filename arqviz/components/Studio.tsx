@@ -9,7 +9,7 @@ import {
 } from '@/lib/models';
 import {
   SPACES, STYLES, LIGHTING, CAMERAS,
-  buildRenderPrompt, buildVideoPrompt, buildPanoPrompt,
+  buildRenderPrompt, buildVideoPrompt,
 } from '@/lib/prompts';
 import {
   DEMO_PREFIX, isDemoGen, demoRenderImage, demoVideoImage, demoPanoImage, fileToDataUrl,
@@ -18,6 +18,11 @@ import GenerationCard from './GenerationCard';
 import { buildClientLink, type ClientLinkResult } from '@/lib/portal';
 import Decostone from './Decostone';
 import SketchupSection from './SketchupSection';
+import ReviewDialog from './ReviewDialog';
+import ProjectTools from './ProjectTools';
+import MaterialSection from './MaterialSection';
+import PanoramaImport from './PanoramaImport';
+import { compositeMasked } from '@/lib/media';
 
 const DECO_PROJECT_ID = 'decostone';
 
@@ -42,7 +47,12 @@ export default function Studio() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const [demo, setDemo] = useState(false);
+  const [demo, setDemo] = useState(true);
+  const [connectionReady, setConnectionReady] = useState(false);
+  const [connectionError, setConnectionError] = useState('');
+  const [storageError, setStorageError] = useState('');
+  const [reviewTarget, setReviewTarget] = useState<{projectId: string; gen: Generation} | null>(null);
+  const polling = useRef(false);
   const [margin, setMargin] = useMargin();
   const [showNewProject, setShowNewProject] = useState(false);
   const [videoSource, setVideoSource] = useState<Generation | null>(null);
@@ -51,19 +61,16 @@ export default function Studio() {
 
   // hidratar desde localStorage + detectar modo demo
   useEffect(() => {
-    const loaded = loadProjects();
-    setProjects(loaded);
-    if (loaded.length > 0) setActiveId(loaded[0].id);
-    setHydrated(true);
+    loadProjects().then(loaded => { setProjects(loaded); if (loaded.length > 0) setActiveId(loaded[0].id); setHydrated(true); }).catch(() => setStorageError('No se pudo abrir el archivo local de proyectos. Exporta un respaldo antes de cerrar.'));
     fetch('/api/health')
-      .then((r) => r.json())
-      .then((d) => setDemo(Boolean(d.demo)))
-      .catch(() => setDemo(true));
+      .then((r) => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((d) => { setDemo(Boolean(d.demo)); setConnectionReady(true); })
+      .catch(() => setConnectionError('No se pudo comprobar la conexión. Recarga la página antes de generar.'));
   }, []);
 
   // persistir
   useEffect(() => {
-    if (hydrated) saveProjects(projects);
+    if (hydrated) saveProjects(projects).then(() => setStorageError('')).catch(() => setStorageError('No se pudieron guardar los cambios en este navegador. Descarga un respaldo antes de cerrar.'));
   }, [projects, hydrated]);
 
   const visibleProjects = projects.filter((p) => p.id !== DECO_PROJECT_ID);
@@ -96,6 +103,9 @@ export default function Studio() {
     if (pending.length === 0) return;
 
     const timer = setInterval(async () => {
+      if (polling.current) return;
+      polling.current = true;
+      try {
       for (const { projectId, gen } of pending) {
         // Modo demo: completar localmente con placeholder de marca
         if (isDemoGen(gen.id)) {
@@ -111,14 +121,32 @@ export default function Studio() {
         }
         try {
           const res = await fetch(
-            `/api/status?endpoint=${encodeURIComponent(gen.endpoint)}&requestId=${encodeURIComponent(gen.id)}`,
+            `/api/status?endpoint=${encodeURIComponent(gen.endpoint)}&requestId=${encodeURIComponent(gen.id)}&token=${encodeURIComponent(gen.jobToken || '')}`,
           );
           const data = await res.json();
           if (data.status === 'done') {
+            let urls = data.urls;
+            let maskedComposite = false;
+            if (gen.originalUrl && gen.maskUrl) {
+              try {
+                const protectedImage = await compositeMasked(gen.originalUrl, data.urls[0], gen.maskUrl);
+                urls = [protectedImage]; maskedComposite = true;
+                // Upload the finished PNG only; the unprotected AI output is never shared.
+                try {
+                  const blob = await (await fetch(protectedImage)).blob();
+                  if (blob.size <= 4 * 1024 * 1024) {
+                    const form = new FormData(); form.append('file', new File([blob], 'revestimiento-verificado.png', { type: 'image/png' }));
+                    const response = await fetch('/api/upload', { method:'POST', body:form });
+                    if (response.ok) urls = [(await response.json()).url];
+                  }
+                } catch { /* retain downloadable local PNG when upload is unavailable */ }
+              }
+              catch { updateProject(projectId, p => ({ ...p, generations: p.generations.map(g => g.id === gen.id ? { ...g, status: 'error', rawResultUrl: data.urls[0], error: 'La IA terminó, pero no se pudo conservar el exterior de la máscara. Resultado bloqueado; no regeneres para evitar otro cobro.' } : g) })); continue; }
+            }
             updateProject(projectId, (p) => ({
               ...p,
               generations: p.generations.map((g) =>
-                g.id === gen.id ? { ...g, status: 'done', resultUrls: data.urls } : g,
+                g.id === gen.id ? { ...g, status: 'done', resultUrls: urls, rawResultUrl: data.urls[0], maskedComposite, review: 'pending' } : g,
               ),
             }));
           } else if (data.status === 'error') {
@@ -140,6 +168,7 @@ export default function Studio() {
           // error transitorio de red: se reintenta en el próximo tick
         }
       }
+      } finally { polling.current = false; }
     }, 3500);
     return () => clearInterval(timer);
   }, [projects, updateProject]);
@@ -166,53 +195,6 @@ export default function Studio() {
     updateProject(projectId, (p) => ({ ...p, generations: [gen, ...p.generations] }));
   };
 
-  const makePano = async (projectId: string, source: Generation) => {
-    const sourceUrl = source.resultUrls?.[0];
-    if (!sourceUrl) return;
-    const label = `360° — ${source.label}`;
-    const prompt = buildPanoPrompt(source.label);
-    let requestId: string;
-    if (demo) {
-      requestId = DEMO_PREFIX + uid();
-    } else {
-      try {
-        const res = await fetch('/api/generate', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            endpoint: IMAGE_MODEL.id,
-            input: {
-              prompt,
-              image_urls: [sourceUrl],
-              num_images: 1,
-              output_format: 'png',
-              resolution: '2K',
-              aspect_ratio: '21:9',
-            },
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) { window.alert(data.error || 'Error al generar la panorámica'); return; }
-        requestId = data.requestId;
-      } catch {
-        window.alert('Error de red al generar la panorámica');
-        return;
-      }
-    }
-    addGeneration(projectId, {
-      id: requestId,
-      endpoint: IMAGE_MODEL.id,
-      kind: 'image',
-      pano: true,
-      label,
-      prompt,
-      status: 'queued',
-      createdAt: Date.now(),
-      costUsd: estimateImageCost('2K', 1),
-      sourceImageUrl: sourceUrl,
-    });
-  };
-
   // ── costos ──
   const totals = useMemo(() => {
     const all = projects.flatMap((p) => p.generations).filter((g) => g.status !== 'error');
@@ -234,7 +216,7 @@ export default function Studio() {
         ]);
       }
     }
-    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
+    const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/^[=+@-]/, "\'$&").replace(/"/g, '""')}"`).join(',')).join('\n');
     const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
@@ -266,6 +248,7 @@ export default function Studio() {
         <button className="btn-new-proj" onClick={() => { setTab('proyectos'); setShowNewProject(true); }}>
           + Nuevo proyecto
         </button>
+        <ProjectTools projects={projects} onRestore={incoming => setProjects(previous => [...incoming.filter(p => !previous.some(old => old.id === p.id)), ...previous])} />
         <div className="side-label" style={{ marginTop: 14 }}>Fábrica</div>
         <button
           className={`proj-item ${tab === 'decostone' ? 'active' : ''}`}
@@ -277,6 +260,10 @@ export default function Studio() {
       </aside>
 
       <main className="main">
+        {storageError && <p role="alert" className="error-note">{storageError}</p>}
+        {!connectionReady && <p role="status" className="error-note">{connectionError || 'Comprobando conexión…'}</p>}
+        <div className="studio-intro"><div><span className="eyebrow">NUMAN ESTUDIO 3D · 2.0</span><h2>Tu proyecto, con sus materiales.</h2><p>Referencia original → materiales → comparación → aprobación → entrega</p></div><span className="fidelity-badge">Conservación del diseño activa</span></div>
+        <fieldset disabled={!connectionReady} className="workspace-fields">
         {demo && (
           <div className="demo-banner">
             <span className="demo-pill">Modo demo</span>
@@ -292,6 +279,7 @@ export default function Studio() {
             project={decoProject}
             demo={demo}
             onAddGeneration={addDecoGeneration}
+            onReview={(g) => setReviewTarget({projectId: DECO_PROJECT_ID, gen:g})}
             onOpen={(url, kind) => setLightboxUrl({ url, kind })}
           />
         ) : !active ? (
@@ -305,10 +293,11 @@ export default function Studio() {
             onAddGeneration={(g) => addGeneration(active.id, g)}
             onDelete={() => deleteProject(active.id)}
             onMakeVideo={(g) => setVideoSource(g)}
-            onMakePano={(g) => makePano(active.id, g)}
+            onReview={(g) => setReviewTarget({projectId: active.id, gen:g})}
             onOpen={(url, kind) => setLightboxUrl({ url, kind })}
           />
         )}
+        </fieldset>
       </main>
 
       <div className="cost-bar">
@@ -337,12 +326,14 @@ export default function Studio() {
         <button className="btn-ghost" onClick={exportCSV}>Exportar CSV</button>
       </div>
 
+      {reviewTarget && <ReviewDialog gen={reviewTarget.gen} onClose={() => setReviewTarget(null)} onSave={patch => updateProject(reviewTarget.projectId, p => ({ ...p, generations:p.generations.map(g => g.id === reviewTarget.gen.id ? {...g,...patch}:g) }))} />}
       {showNewProject && (
         <NewProjectModal onClose={() => setShowNewProject(false)} onCreate={createProject} />
       )}
       {videoSource && active && (
         <VideoModal
           source={videoSource}
+          project={active}
           demo={demo}
           onClose={() => setVideoSource(null)}
           onQueued={(g) => { addGeneration(active.id, g); setVideoSource(null); }}
@@ -410,7 +401,7 @@ function NewProjectModal({
 // ── vista de proyecto ────────────────────────────────────────────────────────
 
 function ProjectView({
-  project, demo, onUpdate, onAddGeneration, onDelete, onMakeVideo, onMakePano, onOpen,
+  project, demo, onUpdate, onAddGeneration, onDelete, onMakeVideo, onReview, onOpen,
 }: {
   project: Project;
   demo: boolean;
@@ -418,7 +409,7 @@ function ProjectView({
   onAddGeneration: (g: Generation) => void;
   onDelete: () => void;
   onMakeVideo: (g: Generation) => void;
-  onMakePano: (g: Generation) => void;
+  onReview: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const [showLink, setShowLink] = useState(false);
@@ -436,10 +427,15 @@ function ProjectView({
       </div>
       {showLink && <ClientLinkModal project={project} onClose={() => setShowLink(false)} />}
 
+      <div className="project-guidance"><strong>Empieza por una vista 3D o una foto para conservar el encuadre.</strong><p>Si solo tienes un plano, el resultado será conceptual: faltan alturas, cámara y superficies ocultas. Para exactitud dimensional, utiliza el modelo 3D del arquitecto.</p></div>
+      <MaterialSection project={project} demo={demo} onUpdate={onUpdate} />
+      <SketchupSection project={project} demo={demo} onUpdate={onUpdate} onAddGeneration={onAddGeneration} />
+      <details className="plan-details"><summary>Trabajar desde un plano · propuesta conceptual</summary>
       <PlanSection project={project} demo={demo} onUpdate={onUpdate} />
       <RenderSection project={project} demo={demo} onAddGeneration={onAddGeneration} />
-      <SketchupSection project={project} demo={demo} onUpdate={onUpdate} onAddGeneration={onAddGeneration} />
-      <GallerySection project={project} onMakeVideo={onMakeVideo} onMakePano={onMakePano} onOpen={onOpen} />
+      </details>
+      <PanoramaImport demo={demo} onAddGeneration={onAddGeneration} />
+      <GallerySection project={project} onMakeVideo={onMakeVideo} onReview={onReview} onOpen={onOpen} />
     </>
   );
 }
@@ -458,6 +454,7 @@ function PlanSection({
     setError('');
     setUploading(true);
     try {
+      if (!['image/png','image/jpeg','image/webp'].includes(file.type) || file.size > 4*1024*1024) throw new Error('Sube PNG, JPG o WebP de hasta 4 MB.');
       if (demo) {
         // En demo el plano se queda en el navegador, no se sube a ningún lado
         const dataUrl = await fileToDataUrl(file);
@@ -528,6 +525,7 @@ function PlanSection({
 function RenderSection({
   project, demo, onAddGeneration,
 }: { project: Project; demo: boolean; onAddGeneration: (g: Generation) => void }) {
+  const [conceptAcknowledged, setConceptAcknowledged] = useState(false);
   const [spaceIds, setSpaceIds] = useState<string[]>(['sala']);
   const [styleId, setStyleId] = useState('moderno');
   const [lightId, setLightId] = useState('dia');
@@ -544,6 +542,7 @@ function RenderSection({
   const estCost = estimateImageCost(resolution, spaceIds.length);
 
   const generate = async () => {
+    if (!conceptAcknowledged) { setError('Confirma que se trata de una propuesta conceptual.'); return; }
     if (!project.planUrl) { setError('Primero sube el plano del proyecto.'); return; }
     if (spaceIds.length === 0) { setError('Elige al menos un espacio.'); return; }
     setError('');
@@ -551,27 +550,27 @@ function RenderSection({
     try {
       for (const spaceId of spaceIds) {
         const space = SPACES.find((s) => s.id === spaceId)!;
-        const prompt = buildRenderPrompt({ space, style, lighting, extra });
-        let requestId: string;
+        let prompt = buildRenderPrompt({ space, style, lighting, extra });
+        let requestId: string; let jobToken: string | undefined;
         if (demo) {
           requestId = DEMO_PREFIX + uid();
         } else {
-          const res = await postJSON<{ requestId: string }>('/api/generate', {
-            endpoint: IMAGE_MODEL.id,
+          const res = await postJSON<{ requestId: string; jobToken: string; prompt: string }>('/api/generate', {
+            endpoint: IMAGE_MODEL.id, operation: 'render', options: { spaceId, styleId, lightId, extra, materials: project.materials, conceptAcknowledged },
             input: {
               prompt,
-              image_urls: [project.planUrl],
+              image_urls: [project.planUrl, ...(project.materialRefs ?? []).map(r => r.url)],
               num_images: 1,
               output_format: 'png',
               resolution,
               aspect_ratio: '4:3',
             },
           });
-          requestId = res.requestId;
+          requestId = res.requestId; jobToken = res.jobToken; prompt = res.prompt;
         }
         onAddGeneration({
           id: requestId,
-          endpoint: IMAGE_MODEL.id,
+          endpoint: IMAGE_MODEL.id, jobToken, conceptual: true, review: 'pending', policyVersion: 'numan-fidelity-2.0',
           kind: 'image',
           label: `${space.label} — ${style.label}`,
           prompt,
@@ -592,11 +591,12 @@ function RenderSection({
     <section className="section">
       <div className="section-head">
         <div className="step-num">2</div>
-        <h2>Renders fotorrealistas</h2>
+        <h2>Propuestas desde el plano</h2>
         <span className="hint">{IMAGE_MODEL.label} · desde {usd(0.15)} por imagen</span>
       </div>
       <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div className="field">
+          <label className="acknowledge"><input type="checkbox" checked={conceptAcknowledged} onChange={e => setConceptAcknowledged(e.target.checked)} />Entiendo que un plano no define toda la geometría ni los materiales. Revisaré esta propuesta conceptual.</label>
           <label>Espacios a renderizar (elige varios)</label>
           <div className="chips">
             {SPACES.map((s) => (
@@ -644,7 +644,7 @@ function RenderSection({
           />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-          <button className="btn" onClick={generate} disabled={submitting || !project.planUrl}>
+          <button className="btn" onClick={generate} disabled={submitting || !project.planUrl || !conceptAcknowledged}>
             {submitting ? 'Encolando…' : `Generar ${spaceIds.length} render${spaceIds.length === 1 ? '' : 's'}`}
           </button>
           <span className="empty-note">
@@ -661,18 +661,18 @@ function RenderSection({
 // ── paso 3: galería ──────────────────────────────────────────────────────────
 
 function GallerySection({
-  project, onMakeVideo, onMakePano, onOpen,
+  project, onMakeVideo, onReview, onOpen,
 }: {
   project: Project;
   onMakeVideo: (g: Generation) => void;
-  onMakePano: (g: Generation) => void;
+  onReview: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
   const gens = project.generations;
   return (
     <section className="section">
       <div className="section-head">
-        <div className="step-num">4</div>
+        <div className="step-num">3</div>
         <h2>Galería del proyecto</h2>
         <span className="hint">renders y videos listos para mostrar al cliente</span>
       </div>
@@ -681,7 +681,7 @@ function GallerySection({
       ) : (
         <div className="grid">
           {gens.map((g) => (
-            <GenerationCard key={g.id} gen={g} onMakeVideo={onMakeVideo} onMakePano={onMakePano} onOpen={onOpen} />
+            <GenerationCard key={g.id} gen={g} onMakeVideo={onMakeVideo} onReview={onReview} onOpen={onOpen} />
           ))}
         </div>
       )}
@@ -692,14 +692,17 @@ function GallerySection({
 // ── modal de video ───────────────────────────────────────────────────────────
 
 function VideoModal({
-  source, demo, onClose, onQueued,
+  source, project, demo, onClose, onQueued,
 }: {
   source: Generation;
+  project: Project;
   demo: boolean;
   onClose: () => void;
   onQueued: (g: Generation) => void;
 }) {
-  const [cameraId, setCameraId] = useState('recorrido');
+  const [endId, setEndId] = useState('');
+  const [audio, setAudio] = useState(false);
+  const [cameraId, setCameraId] = useState('fija');
   const [modelKey, setModelKey] = useState('seedance25');
   const [resolution, setResolution] = useState('720p');
   const [duration, setDuration] = useState<number>(5);
@@ -717,25 +720,33 @@ function VideoModal({
     setError('');
     setSubmitting(true);
     try {
-      const prompt = buildVideoPrompt({ camera, durationSec: duration, extra });
-      let requestId: string;
+      let videoInputUrl = sourceUrl;
+      if (!demo && sourceUrl.startsWith('data:')) {
+        const blob = await (await fetch(sourceUrl)).blob();
+        const form = new FormData(); form.append('file', new File([blob], 'render-aprobado.png', { type: blob.type }));
+        const response = await fetch('/api/upload', { method: 'POST', body: form }); const data = await response.json();
+        if (!response.ok) throw new Error(data.error); videoInputUrl = data.url;
+      }
+      let prompt = buildVideoPrompt({ camera, durationSec: duration, extra });
+      let requestId: string; let jobToken: string | undefined;
       if (demo) {
         requestId = DEMO_PREFIX + uid();
       } else {
-        const res = await postJSON<{ requestId: string }>('/api/generate', {
-          endpoint: model.id,
+        const res = await postJSON<{ requestId: string; jobToken: string; prompt: string }>('/api/generate', {
+          endpoint: model.id, operation: 'video', options: { cameraId, extra, audio },
           input: {
             prompt,
-            image_url: sourceUrl,
+            image_url: videoInputUrl,
+            ...(endId && modelKey === 'seedance25' ? { end_image_url: project.generations.find(g => g.id === endId)?.resultUrls?.[0] } : {}),
             resolution,
             duration: String(duration),
           },
         });
-        requestId = res.requestId;
+        requestId = res.requestId; jobToken = res.jobToken; prompt = res.prompt;
       }
       onQueued({
         id: requestId,
-        endpoint: model.id,
+        endpoint: model.id, jobToken, review: 'pending', conceptual: source.conceptual, policyVersion: 'numan-fidelity-2.0',
         kind: 'video',
         label: `${source.label} — ${camera.label}`,
         prompt,
@@ -753,12 +764,14 @@ function VideoModal({
   return (
     <div className="modal-back" onClick={onClose}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <p className="empty-note">Para máxima conservación, exporta un video fijo sin IA desde la revisión. Los movimientos generativos pueden revelar o deformar zonas no documentadas: revisa el clip completo.</p>
         <h3>🎬 Video recorrido — {source.label}</h3>
         {sourceUrl && (
           <img src={sourceUrl} alt={source.label} style={{ borderRadius: 8, marginBottom: 14, maxHeight: 180, objectFit: 'cover', width: '100%' }} />
         )}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div className="field">
+            {modelKey === 'seedance25' && <><label>Fotograma final aprobado del mismo ambiente (opcional)</label><select value={endId} onChange={e => setEndId(e.target.value)}><option value="">Solo imagen inicial</option>{project.generations.filter(g => g.id !== source.id && g.kind === 'image' && !g.pano && g.review === 'approved' && g.resultUrls?.[0]?.startsWith('https://')).map(g => <option key={g.id} value={g.id}>{g.label}</option>)}</select><label><input type="checkbox" checked={audio} onChange={e => setAudio(e.target.checked)} /> Sonido ambiente</label></>}
             <label>Movimiento de cámara</label>
             <div className="chips">
               {CAMERAS.map((c) => (
@@ -845,8 +858,7 @@ function ClientLinkModal({ project, onClose }: { project: Project; onClose: () =
         {!result ? (
           <>
             <p className="empty-note" style={{ padding: 0 }}>
-              Este proyecto aún no tiene renders ni videos listos. Genera al menos una pieza
-              y vuelve aquí para crear el enlace.
+              Este proyecto aún no tiene resultados aprobados. Abre Comparar y revisar, verifica el diseño y aprueba una pieza real para compartirla.
             </p>
             <div className="modal-actions">
               <button className="btn-ghost" onClick={onClose}>Entendido</button>
@@ -858,7 +870,7 @@ function ClientLinkModal({ project, onClose }: { project: Project; onClose: () =
               El cliente abre este enlace en su teléfono y ve su proyecto completo con la marca
               del estudio: {result.videos > 0 && <strong>{result.videos} video{result.videos === 1 ? '' : 's'} · </strong>}
               <strong>{result.images} imagen{result.images === 1 ? '' : 'es'}</strong>
-              {project.planUrl?.startsWith('https://') ? ' · el plano original' : ''}.
+              .
             </p>
             {result.isDemo && (
               <p className="error-note" style={{ marginTop: 0, marginBottom: 12 }}>
@@ -866,6 +878,8 @@ function ClientLinkModal({ project, onClose }: { project: Project; onClose: () =
                 piezas con la app activada.
               </p>
             )}
+            <p className="empty-note">Cualquier persona con el enlace podrá ver estos resultados. No incluye el plano original. Los archivos del proveedor pueden caducar: conserva tus descargas.</p>
+            {result.url.length > 12000 && <p className="error-note">Este enlace es largo y algunos mensajeros pueden cortarlo. Comparte menos resultados o descarga los archivos.</p>}
             <textarea
               id="client-link-box"
               readOnly

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import type { Generation, Project, SkpView } from '@/lib/types';
-import { IMAGE_MODEL, estimateImageCost } from '@/lib/models';
+import { IMAGE_MODEL, IMAGE_MODELS, estimateImageCost } from '@/lib/models';
 import { STYLES, LIGHTING, buildSkpPrompt } from '@/lib/prompts';
 import { DEMO_PREFIX, fileToDataUrl } from '@/lib/demo';
 import { uid } from '@/lib/store';
@@ -22,9 +22,11 @@ export default function SketchupSection({
   onUpdate: (fn: (p: Project) => Project) => void;
   onAddGeneration: (g: Generation) => void;
 }) {
-  const [styleId, setStyleId] = useState('moderno');
-  const [lightId, setLightId] = useState('dia');
+  const [styleId, setStyleId] = useState('original');
+  const [lightId, setLightId] = useState('original');
   const [resolution, setResolution] = useState<'1K' | '2K' | '4K'>('2K');
+  const [modelKey, setModelKey] = useState('pro');
+  const model = IMAGE_MODELS[modelKey];
   const [extra, setExtra] = useState('');
   const [uploading, setUploading] = useState('');
   const [submitting, setSubmitting] = useState(false);
@@ -35,11 +37,12 @@ export default function SketchupSection({
   const views = project.skpViews ?? [];
   const style = STYLES.find((s) => s.id === styleId)!;
   const lighting = LIGHTING.find((l) => l.id === lightId)!;
-  const estCost = estimateImageCost(resolution, views.length);
+  const estCost = estimateImageCost(resolution, views.length, modelKey);
 
   const addFiles = async (files: FileList | File[]) => {
     setError('');
-    const list = Array.from(files).filter((f) => f.type.startsWith('image/'));
+    const list = Array.from(files).filter((f) => ['image/png','image/jpeg','image/webp'].includes(f.type) && f.size <= 4 * 1024 * 1024);
+    if (list.length !== files.length) setError('Solo PNG, JPG o WebP de hasta 4 MB por imagen.');
     if (list.length === 0) return;
     let done = 0;
     for (const file of list) {
@@ -84,8 +87,8 @@ export default function SketchupSection({
       for (const view of views) {
         i++;
         const label = view.label.trim() || `Vista ${i}`;
-        const prompt = buildSkpPrompt({ label, style, lighting, extra });
-        let requestId: string;
+        let prompt = buildSkpPrompt({ label, style, lighting, extra });
+        let requestId: string; let jobToken: string | undefined;
         if (demo) {
           requestId = DEMO_PREFIX + uid();
         } else {
@@ -93,10 +96,12 @@ export default function SketchupSection({
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-              endpoint: IMAGE_MODEL.id,
+              endpoint: model.id,
+              operation: 'skp',
+              options: { label, styleId, lightId, extra, materials: project.materials },
               input: {
                 prompt,
-                image_urls: [view.url],
+                image_urls: [view.url, ...(project.materialRefs ?? []).map(r => r.url)],
                 num_images: 1,
                 output_format: 'png',
                 resolution,
@@ -105,17 +110,18 @@ export default function SketchupSection({
           });
           const data = await res.json();
           if (!res.ok) throw new Error(data.error || 'Error al generar');
-          requestId = data.requestId;
+          requestId = data.requestId; jobToken = data.jobToken; prompt = data.prompt;
         }
         onAddGeneration({
           id: requestId,
-          endpoint: IMAGE_MODEL.id,
+          endpoint: model.id,
+          jobToken, review: 'pending', policyVersion: 'numan-fidelity-2.0',
           kind: 'image',
           label: `${label} — ${style.label}`,
           prompt,
           status: 'queued',
           createdAt: Date.now(),
-          costUsd: estimateImageCost(resolution, 1),
+          costUsd: estimateImageCost(resolution, 1, modelKey),
           sourceImageUrl: view.url,
         });
       }
@@ -129,9 +135,9 @@ export default function SketchupSection({
   return (
     <section className="section">
       <div className="section-head">
-        <div className="step-num">3</div>
-        <h2>SketchUp → Realismo</h2>
-        <span className="hint">sube las vistas de tu modelo y conviértelas en fotografías reales</span>
+        <div className="step-num">2</div>
+        <h2>Fotos y vistas 3D → Materiales</h2>
+        <span className="hint">conserva el diseño y revisa el resultado contra el original</span>
       </div>
       <div className="panel" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
         <div
@@ -145,7 +151,7 @@ export default function SketchupSection({
           <div className="dz-icon">🏗️</div>
           {uploading
             ? <div><strong>{uploading}</strong></div>
-            : <div><strong>Arrastra aquí las vistas de SketchUp</strong> (todas las que quieras) o haz clic para buscarlas</div>}
+            : <div><strong>Arrastra aquí tus fotos o vistas 3D</strong> (PNG, JPG, WebP · máximo 4 MB cada una) o haz clic para buscarlas</div>}
         </div>
         <input
           ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" multiple hidden
@@ -169,7 +175,7 @@ export default function SketchupSection({
             </div>
 
             <div className="field">
-              <label>Estilo para el lote</label>
+              <label>Materiales para superficies existentes</label>
               <div className="chips">
                 {STYLES.map((s) => (
                   <button key={s.id} className={`chip ${styleId === s.id ? 'on' : ''}`} onClick={() => setStyleId(s.id)}>
@@ -178,6 +184,7 @@ export default function SketchupSection({
                 ))}
               </div>
             </div>
+            <div className="field"><label>Motor de imagen</label><select value={modelKey} onChange={e => setModelKey(e.target.value)}>{Object.entries(IMAGE_MODELS).map(([key,m]) => <option key={key} value={key}>{m.label}</option>)}</select><p className="empty-note">Ambos usan las mismas restricciones. Compara resultados; ningún motor garantiza geometría exacta.</p></div>
             <div className="field-row">
               <div className="field">
                 <label>Iluminación</label>

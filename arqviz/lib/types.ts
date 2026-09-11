@@ -13,6 +13,16 @@ export interface Generation {
   pano?: boolean;          // true si es panorámica 360° (equirectangular)
   sourceImageUrl?: string; // render base (para videos) o plano (para renders)
   error?: string;
+  review?: 'pending' | 'approved' | 'rejected';
+  reviewNotes?: string;
+  reviewedAt?: number;
+  conceptual?: boolean;
+  policyVersion?: string;
+  jobToken?: string;
+  maskUrl?: string;
+  originalUrl?: string;
+  rawResultUrl?: string;
+  maskedComposite?: boolean;
 }
 
 export interface SkpView {
@@ -29,4 +39,6 @@ export interface Project {
   planUrl?: string;        // plano subido a fal storage
   skpViews?: SkpView[];    // vistas del modelo SketchUp subidas
   generations: Generation[];
+  materials?: string;
+  materialRefs?: SkpView[];
 }

@@ -7,5 +7,5 @@ export const runtime = 'nodejs';
  * En demo, todo el flujo funciona con generaciones simuladas y costo $0.
  */
 export function GET() {
-  return NextResponse.json({ demo: !process.env.FAL_KEY });
+  return NextResponse.json({ demo: !process.env.FAL_KEY, version: '2.0.0', fidelity: 'server-enforced', models: ['Nano Banana Pro', 'Nano Banana 2', 'Seedance'], authConfigured: Boolean(process.env.STUDIO_PASSWORD) });
 }

@@ -19,13 +19,16 @@ const usd = (n: number) => `$${n.toFixed(2)}`;
  * dibujar la zona exacta a revestir, y la IA entrega la foto revestida.
  */
 export default function Decostone({
-  project, demo, onAddGeneration, onOpen,
+  project, demo, onAddGeneration, onOpen, onReview,
 }: {
   project: Project;
+  onReview: (g:Generation)=>void;
   demo: boolean;
   onAddGeneration: (g: Generation) => void;
   onOpen: (url: string, kind: 'image' | 'video') => void;
 }) {
+  const [sampleUrl, setSampleUrl] = useState('');
+  const sampleInput = useRef<HTMLInputElement>(null);
   const [photoUrl, setPhotoUrl] = useState('');
   const [pieceId, setPieceId] = useState('vermont');
   const [colorId, setColorId] = useState('natural');
@@ -50,6 +53,7 @@ export default function Decostone({
 
   const loadPhoto = async (file: File) => {
     setError('');
+    if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>4*1024*1024){setError('Sube PNG, JPG o WebP de hasta 4 MB.');return;}
     const dataUrl = await fileToDataUrl(file);
     setPhotoUrl(dataUrl);
     setHasMask(false);
@@ -63,28 +67,28 @@ export default function Decostone({
     const canvas = maskRef.current;
     if (!img || !canvas) return;
     const sync = () => {
-      canvas.width = img.clientWidth;
-      canvas.height = img.clientHeight;
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
     };
     if (img.complete) sync();
     img.addEventListener('load', sync);
-    window.addEventListener('resize', sync);
+
     return () => {
       img.removeEventListener('load', sync);
-      window.removeEventListener('resize', sync);
+
     };
-  }, [photoUrl, drawMode]);
+  }, [photoUrl]);
 
   const paint = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (!painting.current || !drawMode) return;
     const canvas = maskRef.current!;
     const ctx = canvas.getContext('2d')!;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = (e.clientX - rect.left) * canvas.width / rect.width;
+    const y = (e.clientY - rect.top) * canvas.height / rect.height;
     ctx.fillStyle = 'rgba(46, 230, 140, 0.45)';
     ctx.beginPath();
-    ctx.arc(x, y, brush / 2, 0, Math.PI * 2);
+    ctx.arc(x, y, brush / 2 * canvas.width / rect.width, 0, Math.PI * 2);
     ctx.fill();
     setHasMask(true);
   };
@@ -111,33 +115,39 @@ export default function Decostone({
 
   const generate = async () => {
     if (!photoUrl) { setError('Primero sube la foto del cliente.'); return; }
+    if (!hasMask || !sampleUrl) { setError('Marca la pared y sube una muestra real del revestimiento.'); return; }
     setError('');
     setSubmitting(true);
     try {
-      const prompt = buildCladdingPrompt({ piece, color, finish, hasMask, extra });
+      const savedOriginal = photoUrl;
+      const savedMask = maskRef.current!.toDataURL('image/png');
+      let prompt = buildCladdingPrompt({ piece, color, finish, hasMask, extra });
       const label = `${piece.name} — ${color.label}${finish.id !== 'natural' ? ` — ${finish.label}` : ''}`;
-      let requestId: string;
+      let requestId: string; let jobToken: string | undefined;
       const composed = await compositeImage();
 
       if (demo) {
         requestId = DEMO_PREFIX + uid();
       } else {
-        // subir la foto (con la zona marcada si la hay) a fal storage
-        const blob = await (await fetch(composed)).blob();
-        const form = new FormData();
-        form.append('file', new File([blob], 'pared.png', { type: 'image/png' }));
-        const up = await fetch('/api/upload', { method: 'POST', body: form });
-        const upData = await up.json();
-        if (!up.ok) throw new Error(upData.error || 'Error al subir la foto');
+        async function uploadData(value:string,name:string) {
+          const blob=await(await fetch(value)).blob();
+          if(blob.size>4*1024*1024)throw new Error('La imagen preparada supera 4 MB. Reduce la resolución de la foto.');
+          const form=new FormData();form.append('file',new File([blob],name,{type:blob.type}));
+          const response=await fetch('/api/upload',{method:'POST',body:form});const data=await response.json();
+          if(!response.ok)throw new Error(data.error||'Error al subir');return data.url;
+        }
+        const originalRemote=await uploadData(photoUrl,'original.png');
+        const overlayRemote=await uploadData(composed,'seleccion.png');
+        const sampleRemote=await uploadData(sampleUrl,'muestra.png');
 
         const res = await fetch('/api/generate', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            endpoint: IMAGE_MODEL.id,
+            endpoint: IMAGE_MODEL.id, operation:'cladding', options:{pieceId,colorId,finishId,hasMask,extra},
             input: {
               prompt,
-              image_urls: [upData.url],
+              image_urls: [originalRemote,overlayRemote,sampleRemote],
               num_images: 1,
               output_format: 'png',
               resolution: '2K',
@@ -146,7 +156,7 @@ export default function Decostone({
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error al generar');
-        requestId = data.requestId;
+        requestId = data.requestId; jobToken=data.jobToken;prompt=data.prompt;
       }
 
       onAddGeneration({
@@ -158,7 +168,7 @@ export default function Decostone({
         status: 'queued',
         createdAt: Date.now(),
         costUsd: estCost,
-        sourceImageUrl: composed,
+        sourceImageUrl: savedOriginal, originalUrl:savedOriginal, maskUrl:savedMask, jobToken, review:'pending', policyVersion:'numan-fidelity-2.0',
       });
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al generar');
@@ -176,6 +186,7 @@ export default function Decostone({
         </div>
       </div>
 
+      <div className="panel" style={{marginBottom:20}}><h2>Muestra real del revestimiento</h2><p className="empty-note">El catálogo de abajo es orientativo. Sube la pieza real y escribe sus medidas y acabado en las notas; así evitamos sustituirla por una textura inventada.</p>{sampleUrl && <img src={sampleUrl} alt="Muestra real del material" style={{width:140,maxHeight:140,objectFit:'contain'}}/>}<button className="btn-ghost" onClick={()=>sampleInput.current?.click()}>Subir muestra de material</button><input ref={sampleInput} type="file" hidden accept="image/png,image/jpeg,image/webp" onChange={async e=>{const f=e.target.files?.[0];e.target.value='';if(!f)return;if(!['image/png','image/jpeg','image/webp'].includes(f.type)||f.size>4*1024*1024){setError('Sube una muestra de hasta 4 MB.');return;}setSampleUrl(await fileToDataUrl(f));}}/></div>
       {/* Paso 1: foto del cliente */}
       <section className="section">
         <div className="section-head">
@@ -194,7 +205,7 @@ export default function Decostone({
                 <canvas
                   ref={maskRef}
                   style={{
-                    position: 'absolute', inset: 0,
+                    position: 'absolute', inset: 0, width:'100%',height:'100%',
                     cursor: drawMode ? 'crosshair' : 'default',
                     pointerEvents: drawMode ? 'auto' : 'none',
                     touchAction: drawMode ? 'none' : 'auto',
@@ -225,7 +236,7 @@ export default function Decostone({
               </div>
               {!hasMask && (
                 <div className="empty-note" style={{ padding: 0 }}>
-                  Si no marcas nada, la IA revestirá la pared principal de la foto.
+                  Marca la superficie exacta: fuera de ella se conservarán los píxeles originales.
                 </div>
               )}
             </div>
@@ -311,7 +322,7 @@ export default function Decostone({
             />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
-            <button className="btn" onClick={generate} disabled={submitting || !photoUrl}>
+            <button className="btn" onClick={generate} disabled={submitting || !photoUrl || !hasMask || !sampleUrl}>
               {submitting ? 'Encolando…' : `Revestir con ${piece.name}`}
             </button>
             <span className="empty-note">
@@ -335,7 +346,7 @@ export default function Decostone({
         ) : (
           <div className="grid">
             {project.generations.map((g) => (
-              <GenerationCard key={g.id} gen={g} onOpen={onOpen} />
+              <GenerationCard key={g.id} gen={g} onOpen={onOpen} onReview={onReview} />
             ))}
           </div>
         )}

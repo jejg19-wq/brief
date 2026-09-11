@@ -20,6 +20,7 @@ export const SPACES: SpacePreset[] = [
 export interface StylePreset { id: string; label: string; en: string }
 
 export const STYLES: StylePreset[] = [
+  { id: 'original', label: 'Conservar original', en: 'preserve every existing material and color; unassigned surfaces remain neutral unless explicitly specified' },
   { id: 'moderno',    label: 'Moderno cálido',   en: 'warm modern style: oak wood, off-white walls, matte black accents, linen textiles' },
   { id: 'minimal',    label: 'Minimalista',      en: 'minimalist style: clean lines, neutral palette, hidden storage, few carefully chosen objects' },
   { id: 'industrial', label: 'Industrial',       en: 'industrial style: exposed concrete, black steel frames, warm brick accents, leather furniture' },
@@ -30,6 +31,7 @@ export const STYLES: StylePreset[] = [
 export interface LightPreset { id: string; label: string; en: string }
 
 export const LIGHTING: LightPreset[] = [
+  { id: 'original', label: 'Conservar luz', en: 'preserve source light direction, exposure and existing luminaires; do not add light fixtures' },
   { id: 'dia',       label: 'Día',       en: 'bright natural daylight streaming through the windows, soft shadows' },
   { id: 'atardecer', label: 'Atardecer', en: 'golden hour light, warm low sun entering at an angle, long soft shadows' },
   { id: 'noche',     label: 'Noche',     en: 'evening scene, warm interior artificial lighting, cozy practical lamps, deep blue sky outside' },
@@ -51,23 +53,23 @@ export function buildRenderPrompt(opts: {
   if (space.id === 'aerea') {
     scene =
       `Generate a photorealistic ${space.en}, seen from a high three-quarter angle, ` +
-      `with realistic miniature furniture, materials and lighting inside each room, ` +
+      `with only the furniture drawn in the plan, specified materials and lighting inside each room, ` +
       `on a clean neutral background, architectural visualization quality.`;
   } else if (!space.interior) {
     scene =
       `Generate a photorealistic exterior photograph of the ${space.en} implied by this floor plan, ` +
-      `eye-level shot, 35mm lens, realistic landscaping and materials.`;
+      `eye-level shot, 35mm lens, materials explicitly specified; do not invent landscaping or neighboring buildings.`;
   } else {
     scene =
       `Generate a photorealistic interior photograph of the ${space.en}, ` +
       `eye-level shot from a natural standing position, 24mm lens, ` +
-      `fully furnished and styled as a real lived-in home.`;
+      `only the furniture explicitly drawn in the plan. Do not invent furnishings.`;
   }
 
   const parts = [
     base,
     scene,
-    `Interior design: ${style.en}.`,
+    `Material direction, only on existing surfaces: ${style.en}. Never add moldings, cabinets or objects to express a style.`,
     `Lighting: ${lighting.en}.`,
     `Photorealistic, high-end architectural photography, accurate global illumination, ` +
       `realistic material textures, no people, no text, no watermarks.`,
@@ -79,6 +81,7 @@ export function buildRenderPrompt(opts: {
 export interface CameraPreset { id: string; label: string; en: string }
 
 export const CAMERAS: CameraPreset[] = [
+  { id: 'fija', label: 'Cámara fija', en: 'Locked camera and locked scene. Preserve the complete source frame for the entire clip' },
   {
     id: 'recorrido',
     label: 'Recorrido hacia adelante',
@@ -112,15 +115,15 @@ export function buildVideoPrompt(opts: {
     `Architectural visualization walkthrough. The scene is exactly the interior shown in the input image: ` +
       `same furniture, same materials, same lighting.`,
     `${camera.en}.`,
-    `The space itself is completely static: nothing moves except subtle natural elements ` +
-      `(curtains breathing slightly, soft light shifts). Real-time speed, single continuous take.`,
+    `The space is completely static, including curtains, furniture and lighting. ` +
+      `Single continuous take. Never reveal unseen rooms or objects. Restrict any motion to the visible scene.`,
   ];
   if (durationSec >= 10) {
     const a = Math.round(durationSec * 0.4);
     const b = Math.round(durationSec * 0.8);
     parts.push(
       `Timeline: 0-${a}s the camera movement described above begins smoothly and steadily; ` +
-        `${a}-${b}s the movement continues at the same pace, revealing more of the space; ` +
+        `${a}-${b}s the movement continues at the same pace, remaining within the documented space; ` +
         `${b}-${durationSec}s the camera decelerates and settles on a final composed frame with no new action.`,
     );
   }
@@ -133,21 +136,6 @@ export function buildVideoPrompt(opts: {
   return parts.join(' ');
 }
 
-/** Prompt para nano-banana-pro/edit: render → panorámica 360° del mismo ambiente */
-export function buildPanoPrompt(sourceLabel: string): string {
-  return (
-    `The reference image is a photorealistic interior render. ` +
-    `Generate a full 360-degree equirectangular panorama of this exact same room (${sourceLabel}), ` +
-    `as seen from a camera standing at eye level in the center of the room. ` +
-    `Keep the same furniture, materials, colors and lighting as the reference. ` +
-    `Equirectangular projection covering the full horizontal circle: the left and right edges ` +
-    `of the image must match seamlessly so the panorama wraps around without a visible seam. ` +
-    `Show the complete room: all four walls, floor and ceiling, with natural perspective ` +
-    `distortion typical of equirectangular photos. ` +
-    `Photorealistic, high-end architectural visualization, no people, no text, no watermarks.`
-  );
-}
-
 /** Prompt para nano-banana-pro/edit: vista de SketchUp → render fotorrealista fiel */
 export function buildSkpPrompt(opts: {
   label: string;
@@ -157,7 +145,7 @@ export function buildSkpPrompt(opts: {
 }): string {
   const { label, style, lighting, extra } = opts;
   const parts = [
-    `The reference image is a screenshot of an untextured SketchUp 3D model (${label}).`,
+    `The first reference image is the authoritative architectural view or site photograph (${label}).`,
     `Render this EXACT same view as a photorealistic photograph. Critical: keep the camera ` +
       `angle, framing, geometry, proportions, furniture and cabinetry placement, window and ` +
       `door positions IDENTICAL to the reference — this is the architect's real design and ` +
@@ -165,8 +153,9 @@ export function buildSkpPrompt(opts: {
     `Replace the plain gray/white surfaces with realistic materials and finishes. ` +
       `Interior design direction: ${style.en}.`,
     `Lighting: ${lighting.en}.`,
-    `Add tasteful real-life details consistent with the design (decor, plants, textiles) ` +
-      `without altering the architecture or furniture layout.`,
+    `Do not add decoration, plants, textiles, furniture, moldings, handles or fixtures. ` +
+      `Change only the material properties explicitly requested on existing surfaces. ` +
+      `Keep unassigned surfaces neutral. Preserve all silhouettes, object counts and occlusions.`,
     `Photorealistic, high-end architectural photography, accurate global illumination, ` +
       `realistic textures, no people, no text, no watermarks.`,
   ];
