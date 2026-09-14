@@ -1,0 +1,38 @@
+[
+  {
+    "id": "iphone-12-128",
+    "titulo": "iPhone 12 128GB negro",
+    "precio": 280,
+    "precio_minimo": 250,
+    "negociable": true,
+    "estado": "disponible",
+    "condicion": "Usado, batería al 87 %, pantalla sin rayones, con caja y cable.",
+    "detalles": "Liberado para cualquier operadora. iCloud desvinculado. Incluye forro transparente. No incluye el cubo de carga.",
+    "palabras_clave": ["iphone", "12", "celular", "teléfono", "apple"],
+    "notas_para_el_agente": "Comprado nuevo en 2021, un solo dueño. Si preguntan por el Face ID, funciona perfecto."
+  },
+  {
+    "id": "monitor-lg-27",
+    "titulo": "Monitor LG 27\" IPS Full HD",
+    "precio": 120,
+    "precio_minimo": 120,
+    "negociable": false,
+    "estado": "disponible",
+    "condicion": "Como nuevo, 6 meses de uso, sin píxeles muertos.",
+    "detalles": "Modelo 27MP400. Entradas HDMI y VGA. Incluye cable HDMI y base original.",
+    "palabras_clave": ["monitor", "lg", "pantalla", "27"],
+    "notas_para_el_agente": "Precio fijo. No tiene altavoces integrados."
+  },
+  {
+    "id": "bici-trek",
+    "titulo": "Bicicleta Trek Marlin 5 talla M",
+    "precio": 350,
+    "precio_minimo": 320,
+    "negociable": true,
+    "estado": "reservado",
+    "condicion": "Buen estado, cambios ajustados hace un mes.",
+    "detalles": "Rin 29, frenos hidráulicos. Incluye candado.",
+    "palabras_clave": ["bici", "bicicleta", "trek", "marlin"],
+    "notas_para_el_agente": "Reservada con abono hasta el viernes. Si el comprador actual no concreta, vuelve a estar disponible."
+  }
+]

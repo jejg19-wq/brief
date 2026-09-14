@@ -1,0 +1,18 @@
+{
+  "name": "marketplace-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Agente con Claude que responde los chats de Facebook Marketplace de una Página vía Messenger Platform",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env src/server.mjs",
+    "dev": "node --env-file-if-exists=.env --watch src/server.mjs",
+    "probar": "node --env-file-if-exists=.env scripts/probar.mjs",
+    "test": "node --test \"tests/*.test.mjs\""
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
+    "zod": "^4.0.0"
+  }
+}
