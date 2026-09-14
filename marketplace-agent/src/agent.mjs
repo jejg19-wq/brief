@@ -239,8 +239,8 @@ export class Agente {
     return conv;
   }
 
-  /** Redacta una respuesta para un hilo pegado a mano, sin guardar nada. */
-  async copiloto(textoHilo) {
+  /** Redacta una respuesta para un hilo pegado a mano o una captura, sin guardar nada. */
+  async copiloto(textoHilo, imagen = null) {
     const conv = { psid: 'copiloto', mensajes: [], articuloId: null };
     const lineas = String(textoHilo ?? '').split('\n');
     for (const linea of lineas) {
@@ -248,7 +248,13 @@ export class Agente {
       if (m) conv.mensajes.push({ rol: 'vendedor', texto: m[2], origen: 'humano' });
       else if (linea.trim()) conv.mensajes.push({ rol: 'comprador', texto: linea.replace(/^\s*(comprador|cliente)\s*:\s*/i, ''), origen: 'manual' });
     }
-    if (!conv.mensajes.length) throw new Error('pega al menos un mensaje del comprador');
+    if (imagen?.data) {
+      const nota = conv.mensajes.length
+        ? '[Captura de pantalla del chat. Los mensajes anteriores en texto son un complemento; la captura manda.]'
+        : '[Captura de pantalla del chat de Marketplace. Identifica el artículo, lee todos los mensajes y redacta la siguiente respuesta al comprador.]';
+      conv.mensajes.push({ rol: 'comprador', texto: nota, origen: 'manual', imagen });
+    }
+    if (!conv.mensajes.length) throw new Error('pega al menos un mensaje del comprador o sube una captura');
     const articulo = detectarArticulo({ texto: conv.mensajes.map((m) => m.texto).join(' '), inventario: this.config.inventario });
     const decision = await this.cerebro.decidir(conv, { articuloSugerido: articulo });
     return validarSalida({ salida: decision.salida, articulo, config: this.config });

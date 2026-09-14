@@ -85,15 +85,19 @@ export function vistaConversacion({ conv, config, mensaje = null, error = null }
     ${alertas ? `<h2>Últimas alertas</h2><div class="tarjeta">${alertas}</div>` : ''}`);
 }
 
-export function vistaCopiloto({ hilo = '', resultado = null, error = null }) {
+export function vistaCopiloto({ hilo = '', resultado = null, error = null, conCaptura = false }) {
   const salida = resultado
-    ? `<div class="tarjeta borrador"><div class="suave">Acción: <strong>${escapar(resultado.accion)}</strong> · ${escapar(resultado.motivo)}${resultado.correcciones?.length ? ` · reglas: ${escapar(resultado.correcciones.join('; '))}` : ''}</div>
+    ? `<div class="tarjeta borrador"><div class="suave">Acción: <strong>${escapar(resultado.accion)}</strong> · ${escapar(resultado.motivo)}${resultado.correcciones?.length ? ` · reglas: ${escapar(resultado.correcciones.join('; '))}` : ''}${conCaptura ? ' · leído de la captura' : ''}</div>
        <textarea id="respuesta" readonly>${escapar(resultado.respuesta)}</textarea>
        <p><button type="button" onclick="navigator.clipboard.writeText(document.getElementById('respuesta').value).then(()=>{this.textContent='Copiado'})">Copiar respuesta</button></p></div>`
     : '';
   return layout('Copiloto', `<h1>Copiloto</h1>
-    <p class="suave">Pega aquí lo que te escribió el comprador (una línea por mensaje). Si quieres incluir lo que ya respondiste, empieza la línea con <code>yo:</code>. No se guarda nada ni se envía nada: es para usarlo con cualquier chat, incluso el de tu perfil personal.</p>
+    <p class="suave">Sube una <strong>captura de pantalla del chat</strong> o pega los mensajes (una línea por mensaje; los tuyos empiezan con <code>yo:</code>). No se guarda nada ni se envía nada: sirve para cualquier chat, incluido el de tu perfil personal.</p>
     ${error ? `<div class="tarjeta aviso">${escapar(error)}</div>` : ''}
-    <form method="post" action="/copiloto"><textarea name="hilo" placeholder="Hola, ¿sigue disponible el iPhone?&#10;yo: Sí, disponible&#10;¿Me lo dejas en 200?">${escapar(hilo)}</textarea><p><button class="primario">Redactar respuesta</button></p></form>
+    <form method="post" action="/copiloto" enctype="multipart/form-data">
+      <p><input type="file" name="captura" accept="image/png,image/jpeg,image/webp"></p>
+      <textarea name="hilo" placeholder="Hola, ¿sigue disponible el iPhone?&#10;yo: Sí, disponible&#10;¿Me lo dejas en 200?">${escapar(hilo)}</textarea>
+      <p><button class="primario">Redactar respuesta</button></p>
+    </form>
     ${salida}`);
 }

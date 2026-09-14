@@ -91,3 +91,17 @@ test('EsquemaRespuesta valida la forma esperada', () => {
   assert.ok(EsquemaRespuesta.safeParse({ accion: 'responder', respuesta: 'hola', articulo_id: null, motivo: 'm', precio_ofrecido: 10, precio_comprometido: null }).success);
   assert.equal(EsquemaRespuesta.safeParse({ accion: 'otra', respuesta: 'hola', articulo_id: null, motivo: 'm', precio_ofrecido: null, precio_comprometido: null }).success, false);
 });
+
+test('construirMensajes incluye la captura como bloque de imagen antes del texto', () => {
+  const conv = { mensajes: [{ rol: 'comprador', texto: 'mira', imagen: { media_type: 'image/png', data: 'AAAA' } }, { rol: 'comprador', texto: 'y esto' }] };
+  const t = construirMensajes(conv, { articuloSugerido: config.inventario[1] });
+  assert.equal(t.length, 1);
+  assert.ok(Array.isArray(t[0].content));
+  assert.equal(t[0].content[0].type, 'image');
+  assert.deepEqual(t[0].content[0].source, { type: 'base64', media_type: 'image/png', data: 'AAAA' });
+  assert.equal(t[0].content[1].type, 'text');
+  assert.match(t[0].content[1].text, /^\[Contexto: .*Monitor LG/);
+  assert.match(t[0].content[1].text, /mira\ny esto$/);
+  const vendedorConImagen = construirMensajes({ mensajes: [{ rol: 'comprador', texto: 'a' }, { rol: 'vendedor', texto: 'b', imagen: { media_type: 'image/png', data: 'x' } }, { rol: 'comprador', texto: 'c' }] });
+  assert.equal(vendedorConImagen[1].content, 'b', 'las imágenes solo van en turnos del comprador');
+});

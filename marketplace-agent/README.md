@@ -5,7 +5,7 @@ Servicio en Node.js que recibe los mensajes de compradores de Facebook Marketpla
 Antes de leer nada más, lo importante:
 
 - **Funciona con anuncios publicados desde una Página de Facebook**, que son los que Meta entrega por la Messenger Platform. Los anuncios de un **perfil personal no tienen API**: Meta no envía esos chats a ningún webhook y automatizarlos exige un bot de navegador sobre tu cuenta, que va contra las condiciones de Facebook y puede costarte la cuenta. Ese camino no está incluido.
-- Para el perfil personal (o mientras configuras la Página) está el **Copiloto**: pegas el chat, Claude redacta la respuesta y tú la copias. Sirve desde el primer minuto y no necesita nada de Meta.
+- Para el perfil personal (o mientras configuras la Página) está el **Copiloto**: subes una captura del chat o pegas los mensajes, Claude redacta la respuesta y tú la copias en Messenger. Sirve desde el primer minuto y no necesita nada de Meta.
 - El modo por defecto es **borrador**: el agente redacta y tú apruebas cada respuesta desde el panel. Cuando confíes en él, lo pasas a **auto**.
 
 ## Cómo funciona
@@ -49,6 +49,16 @@ Para probar la personalidad del agente en la terminal, jugando tú de comprador:
 ```bash
 npm run probar
 ```
+
+## Usarlo desde el teléfono con tu perfil personal
+
+Marketplace se atiende desde el teléfono, así que el Copiloto tiene que estar a mano ahí:
+
+1. Arranca `npm start` en tu computadora y averigua su IP en la red local (`ipconfig` en Windows, `ifconfig` o Ajustes de red en Mac). En el teléfono, conectado al mismo Wi-Fi, abre `http://ESA-IP:3000/copiloto` y guárdalo como acceso directo en la pantalla de inicio.
+2. Cuando un comprador escriba: captura de pantalla del chat, abre el Copiloto, elige la captura, pulsa *Redactar respuesta*, *Copiar respuesta* y pégala en Messenger.
+3. Si quieres que funcione fuera de casa, despliega el servicio en la nube (sección *Desplegar*) y usa esa URL. El panel pide contraseña, pero no lo dejes sin `DASHBOARD_PASSWORD`.
+
+Lo que **no** hace en un perfil personal: responder solo. Meta no entrega esos chats a ningún webhook y automatizarlos con un bot de navegador sobre tu cuenta va contra sus condiciones y puede acabar en bloqueo.
 
 ## Configurar tu negocio
 
@@ -101,7 +111,7 @@ Para probar el webhook desde tu máquina antes de desplegar, expón el puerto co
 
 - **Conversaciones**: lista con estado (automático, borradores, pausado, manual) y borradores pendientes.
 - **Conversación**: historial, borradores con el motivo del agente para editarlos, enviarlos o descartarlos; botones *Tomar el chat*, *Reanudar bot*, *Automático solo aquí*; caja para responder tú por Messenger; últimas alertas.
-- **Copiloto**: pega un chat de cualquier origen (una línea por mensaje; las tuyas empiezan por `yo:`), obtén la respuesta y cópiala. No guarda nada.
+- **Copiloto**: sube una captura de pantalla del chat (PNG, JPG o WebP, hasta 5 MB) o pega los mensajes (una línea por mensaje; las tuyas empiezan por `yo:`), obtén la respuesta y cópiala. No guarda nada.
 - **/api/health**: estado público sin datos personales.
 
 ## Variables de entorno

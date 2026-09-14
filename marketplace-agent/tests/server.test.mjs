@@ -103,3 +103,38 @@ test('el copiloto devuelve una respuesta sin tocar el almacén', async () => {
     assert.equal(almacen.listar().length, 0);
   });
 });
+
+test('el copiloto acepta una captura por multipart y rechaza formatos raros', async () => {
+  await conServidor(async ({ base, cerebro }) => {
+    const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==', 'base64');
+    const form = new FormData();
+    form.set('hilo', '');
+    form.set('captura', new Blob([png], { type: 'image/png' }), 'chat.png');
+    const r = await fetch(`${base}/copiloto`, { method: 'POST', headers: auth, body: form });
+    assert.equal(r.status, 200);
+    const pagina = await r.text();
+    assert.match(pagina, /leído de la captura/);
+    assert.match(pagina, /Sí, disponible\./);
+    const conv = cerebro.llamadas[0].conv;
+    assert.equal(conv.mensajes[0].imagen.media_type, 'image/png');
+    assert.equal(conv.mensajes[0].imagen.data, png.toString('base64'));
+
+    const malo = new FormData();
+    malo.set('hilo', '');
+    malo.set('captura', new Blob([Buffer.from('hola')], { type: 'text/plain' }), 'nota.txt');
+    const r2 = await fetch(`${base}/copiloto`, { method: 'POST', headers: auth, body: malo });
+    assert.match(await r2.text(), /no admitido/);
+    assert.equal(cerebro.llamadas.length, 1);
+
+    const vacio = new FormData();
+    vacio.set('hilo', '');
+    const r3 = await fetch(`${base}/copiloto`, { method: 'POST', headers: auth, body: vacio });
+    assert.match(await r3.text(), /al menos un mensaje/);
+
+    const soloTexto = new FormData();
+    soloTexto.set('hilo', 'precio de la bici?');
+    const r4 = await fetch(`${base}/copiloto`, { method: 'POST', headers: auth, body: soloTexto });
+    assert.match(await r4.text(), /Sí, disponible\./);
+    assert.equal(cerebro.llamadas.at(-1).conv.mensajes[0].imagen, undefined);
+  });
+});

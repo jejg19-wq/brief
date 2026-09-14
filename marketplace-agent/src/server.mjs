@@ -10,9 +10,11 @@ import { Cerebro } from './brain.mjs';
 import { Agente } from './agent.mjs';
 import { firmaValida, responderVerificacion, extraerEventos } from './webhook.mjs';
 import { layout, vistaLista, vistaConversacion, vistaCopiloto, escapar } from './vistas.mjs';
+import { TIPOS_IMAGEN } from './brain.mjs';
 
 export const VERSION = '1.0.0';
 const LIMITE_CUERPO = 1024 * 1024;
+const LIMITE_CAPTURA = 8 * 1024 * 1024;
 
 export function crearLogger(salida = console) {
   const marca = () => new Date().toISOString();
@@ -23,13 +25,13 @@ export function crearLogger(salida = console) {
   };
 }
 
-function leerCuerpo(req) {
+function leerCuerpo(req, limite = LIMITE_CUERPO) {
   return new Promise((resolve, reject) => {
     const trozos = [];
     let total = 0;
     req.on('data', (t) => {
       total += t.length;
-      if (total > LIMITE_CUERPO) {
+      if (total > limite) {
         reject(Object.assign(new Error('cuerpo demasiado grande'), { status: 413 }));
         req.destroy();
         return;
@@ -64,6 +66,24 @@ function autorizado(req, password) {
   const a = Buffer.from(clave);
   const b = Buffer.from(password);
   return a.length === b.length && crypto.timingSafeEqual(a, b);
+}
+
+/** Lee el formulario del copiloto: texto pegado y, opcionalmente, una captura del chat. */
+async function leerFormularioCopiloto(req) {
+  const tipo = req.headers['content-type'] ?? '';
+  if (!tipo.startsWith('multipart/form-data')) {
+    const form = new URLSearchParams((await leerCuerpo(req)).toString('utf8'));
+    return { hilo: form.get('hilo') ?? '', imagen: null };
+  }
+  const raw = await leerCuerpo(req, LIMITE_CAPTURA);
+  const form = await new Response(raw, { headers: { 'content-type': tipo } }).formData();
+  const hilo = String(form.get('hilo') ?? '');
+  const archivo = form.get('captura');
+  if (!archivo || typeof archivo === 'string' || !archivo.size) return { hilo, imagen: null };
+  if (!TIPOS_IMAGEN.includes(archivo.type)) return { hilo, imagen: null, error: `formato ${archivo.type || 'desconocido'} no admitido; usa PNG, JPG o WebP` };
+  if (archivo.size > 5 * 1024 * 1024) return { hilo, imagen: null, error: 'la captura supera 5 MB; recórtala o bájale la calidad' };
+  const data = Buffer.from(await archivo.arrayBuffer()).toString('base64');
+  return { hilo, imagen: { media_type: archivo.type, data } };
 }
 
 /**
@@ -131,11 +151,11 @@ export function crearServidor({ config, agente, almacen, logger = crearLogger(),
         return html(res, 200, vistaCopiloto({}));
       }
       if (url.pathname === '/copiloto' && req.method === 'POST') {
-        const form = new URLSearchParams((await leerCuerpo(req)).toString('utf8'));
-        const hilo = form.get('hilo') ?? '';
+        const { hilo, imagen, error } = await leerFormularioCopiloto(req);
+        if (error) return html(res, 200, vistaCopiloto({ hilo, error }));
         try {
-          const resultado = await agente.copiloto(hilo);
-          return html(res, 200, vistaCopiloto({ hilo, resultado }));
+          const resultado = await agente.copiloto(hilo, imagen);
+          return html(res, 200, vistaCopiloto({ hilo, resultado, conCaptura: Boolean(imagen) }));
         } catch (err) {
           return html(res, 200, vistaCopiloto({ hilo, error: err.message }));
         }

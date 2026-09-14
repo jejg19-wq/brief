@@ -117,3 +117,19 @@ test('copiloto interpreta un hilo pegado y no guarda nada', async () => {
   assert.equal(almacen.listar().length, 0);
   await assert.rejects(agente.copiloto('   '), /al menos un mensaje/);
 });
+
+test('copiloto acepta una captura sin texto y la manda como imagen', async () => {
+  const { agente, cerebro } = agentePrueba({ env: { MODO: 'borrador' } });
+  const imagen = { media_type: 'image/jpeg', data: 'Zm9v' };
+  const r = await agente.copiloto('', imagen);
+  assert.equal(r.accion, 'responder');
+  const conv = cerebro.llamadas[0].conv;
+  assert.equal(conv.mensajes.length, 1);
+  assert.equal(conv.mensajes[0].rol, 'comprador');
+  assert.deepEqual(conv.mensajes[0].imagen, imagen);
+  assert.match(conv.mensajes[0].texto, /Captura de pantalla/);
+  const mixto = await agente.copiloto('sigue el monitor?', imagen);
+  assert.equal(mixto.accion, 'responder');
+  assert.equal(cerebro.llamadas[1].conv.mensajes.length, 2);
+  assert.equal(cerebro.llamadas[1].opciones.articuloSugerido.id, 'monitor-lg-27');
+});

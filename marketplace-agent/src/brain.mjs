@@ -68,8 +68,11 @@ ${escalar || '- (ninguno adicional)'}
 - Al derivar, la "respuesta" es un mensaje breve de espera natural ("Dame un momento y te confirmo", "Déjame revisarlo y te aviso"), nunca un silencio incómodo, salvo que ya hayas dicho lo mismo en el mensaje anterior: en ese caso usa accion "ignorar".
 - Usa accion "ignorar" cuando no haga falta contestar (un "ok", un emoji suelto, un "gracias" final que ya cierra la conversación).
 - El campo "motivo" es para ${negocio.vendedor}, no para el comprador: explica en una frase por qué respondiste así o por qué derivas.
+- Si recibes una captura de pantalla de un chat, léela con cuidado: los mensajes alineados a la derecha (o marcados como "tú") son del vendedor y los de la izquierda del comprador. Redacta solo la siguiente respuesta al último mensaje del comprador, sin repetir lo que ya se dijo.
 - Si el comprador ofrece una cantidad, ponla en precio_ofrecido. Si tu respuesta acepta o promete un precio concreto, ponlo en precio_comprometido; si no, null.`;
 }
+
+export const TIPOS_IMAGEN = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
 /** Convierte el historial guardado en turnos user/assistant válidos para la API. */
 export function construirMensajes(conv, { historialMax = 30, articuloSugerido = null } = {}) {
@@ -81,22 +84,35 @@ export function construirMensajes(conv, { historialMax = 30, articuloSugerido = 
     const adjuntos = (m.adjuntos ?? []).map((a) => `[el comprador envió un adjunto de tipo ${a.tipo}]`);
     if (adjuntos.length) texto = [texto, ...adjuntos].filter(Boolean).join('\n');
     if (!texto.trim()) texto = rol === 'user' ? '[mensaje vacío]' : '[sin texto]';
+    const bloques = [];
+    if (m.imagen?.data && rol === 'user') {
+      bloques.push({ type: 'image', source: { type: 'base64', media_type: m.imagen.media_type, data: m.imagen.data } });
+    }
+    bloques.push({ type: 'text', text: texto });
     const anterior = turnos[turnos.length - 1];
     if (anterior && anterior.role === rol) {
-      anterior.content += `\n${texto}`;
+      const ultimo = anterior.content[anterior.content.length - 1];
+      if (ultimo.type === 'text' && bloques[0].type === 'text') {
+        ultimo.text += `\n${bloques.shift().text}`;
+      }
+      anterior.content.push(...bloques);
     } else {
-      turnos.push({ role: rol, content: texto });
+      turnos.push({ role: rol, content: bloques });
     }
   }
   // La API exige que el primer turno sea del usuario.
   while (turnos.length && turnos[0].role !== 'user') turnos.shift();
-  if (!turnos.length) turnos.push({ role: 'user', content: '[mensaje vacío]' });
+  if (!turnos.length) turnos.push({ role: 'user', content: [{ type: 'text', text: '[mensaje vacío]' }] });
   if (turnos[turnos.length - 1].role !== 'user') {
-    turnos.push({ role: 'user', content: '[el comprador no ha escrito nada nuevo]' });
+    turnos.push({ role: 'user', content: [{ type: 'text', text: '[el comprador no ha escrito nada nuevo]' }] });
   }
   if (articuloSugerido) {
-    const primero = turnos[0];
-    primero.content = `[Contexto: el comprador escribió desde el anuncio "${articuloSugerido.titulo}" (id ${articuloSugerido.id}).]\n${primero.content}`;
+    const primerTexto = turnos[0].content.find((b) => b.type === 'text');
+    primerTexto.text = `[Contexto: el comprador escribió desde el anuncio "${articuloSugerido.titulo}" (id ${articuloSugerido.id}).]\n${primerTexto.text}`;
+  }
+  // Un solo bloque de texto se envía como cadena: más legible en logs y pruebas.
+  for (const t of turnos) {
+    if (t.content.length === 1 && t.content[0].type === 'text') t.content = t.content[0].text;
   }
   return turnos;
 }
